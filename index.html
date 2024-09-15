@@ -128,7 +128,9 @@
 
         function forceFullScreen() {
             // Tam ekranı zorla
-            Telegram.WebApp.requestViewMode('full');
+            setTimeout(function() {
+    Telegram.WebApp.requestViewMode('full');
+             }, 500);  // 500ms bekleyip tam ekranı zorla
         }
     </script>
 </body>
