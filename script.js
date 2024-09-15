@@ -1,5 +1,8 @@
-// Telegram WebApp tam ekran moduna geçiş
-Telegram.WebApp.ready();
+// Telegram WebApp API'sini başlat
+const tele = window.Telegram.WebApp;
+
+// WebApp hazır olduğunda ekranı genişlet
+tele.expand(); 
 
 function setFullHeight() {
     // Dinamik olarak yükseklik ayarlamak
@@ -9,27 +12,22 @@ function setFullHeight() {
 document.addEventListener("DOMContentLoaded", function() {
     // Sayfa yüklendiğinde tam ekranı zorla
     setFullHeight();
-    Telegram.WebApp.expand(); // WebApp tam ekran moduna geçiş
-
     window.addEventListener("resize", function() {
         setFullHeight();
     });
 
-    // Tam ekran zorlamasını tekrar et (500ms, 1sn ve 2sn sonra)
-    setTimeout(function() {
-        Telegram.WebApp.requestViewMode('full'); // İlk zorlamayı 500ms sonra yap
-    }, 500);
+    // Tam ekran zorlamasını sürekli tekrar et (500ms, 1sn ve 2sn sonra)
+    let forceFullScreenInterval = setInterval(function() {
+        tele.requestViewMode('full');
+    }, 1000);  // Her saniyede bir tam ekran modunu zorla
 
+    // Belirli bir süre sonra tam ekran zorlamasını durdur (örneğin, 10 saniye sonra)
     setTimeout(function() {
-        Telegram.WebApp.requestViewMode('full'); // 1 saniye sonra tekrar zorla
-    }, 1000);
-
-    setTimeout(function() {
-        Telegram.WebApp.requestViewMode('full'); // 2 saniye sonra tekrar zorla
-    }, 2000);
+        clearInterval(forceFullScreenInterval);
+    }, 10000); // 10 saniye boyunca zorlamaya devam et
 });
 
 // Telegram WebApp görünüm modu değişikliklerinde tam ekranı zorla
-Telegram.WebApp.onEvent('viewportChanged', function() {
-    Telegram.WebApp.requestViewMode('full');  // Tam ekranı her viewport değişiminde zorla
+tele.onEvent('viewportChanged', function() {
+    tele.requestViewMode('full');  // Tam ekranı her viewport değişiminde zorla
 });
