@@ -1,9 +1,9 @@
-/* Ekran boyutlarına dinamik ayarlama */
+/* Tam ekran boyutlarını dinamik hale getirme */
 body, html {
     margin: 0;
     padding: 0;
     width: 100vw;
-    height: 100vh; /* Yükseklik viewport'a tam oturur */
+    height: 100vh; /* Ekran yüksekliğini tam olarak kullan */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,14 +12,14 @@ body, html {
     overflow: hidden;
 }
 
-/* Arka planı bozulmadan ortala ve ekran boyutuna göre sığdır */
+/* Arka planı bozulmadan ortala ve tam ekran yap */
 .loading-container {
-    background-image: url('https://i.imgur.com/bDoxXFj.jpeg'); /* Arka plan resmi URL'nizi buraya ekleyin */
-    background-size: cover; /* Arka plan resmi tüm ekrana sığdırılır */
+    background-image: url('https://i.imgur.com/bDoxXFj.jpeg'); /* Arka plan resmi */
+    background-size: cover; /* Arka planı ekrana sığdır */
     background-position: center;
     background-repeat: no-repeat;
     width: 100vw;
-    height: 100vh; /* Ekran boyutunu tam doldurur */
+    height: 100vh; /* Tam ekran boyutlandırma */
     text-align: center;
     color: white;
     display: flex;
@@ -28,7 +28,7 @@ body, html {
     align-items: center;
 }
 
-/* Dönen daire (80x80px) */
+/* Dönen yükleme dairesi */
 .loading-circle {
     width: 80px;
     height: 80px;
@@ -39,28 +39,31 @@ body, html {
     margin: 20px auto;
 }
 
-/* Döndürme animasyonu */
+/* Dönen dairenin animasyonu */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
+/* Başlık */
 h1 {
     font-size: 2em;
     margin-top: 10px;
 }
 
+/* Paragraflar */
 p {
     margin: 5px 0;
 }
 
+/* Önemli yazı */
 .important-text {
     font-size: 1.5em;
     font-weight: bold;
     margin-top: 20px;
 }
 
-/* Sosyal medya ikonları (50x50px) */
+/* Sosyal medya ikonları */
 .social-icons {
     margin-top: 20px;
     display: flex;
@@ -78,7 +81,7 @@ p {
     transform: scale(1.1);
 }
 
-/* Alt bilgilendirme yazısı */
+/* Alt yazı */
 .footer-text {
     margin-top: 30px;
     font-size: 1.2em;
