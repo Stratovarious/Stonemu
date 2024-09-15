@@ -1,9 +1,9 @@
-/* Tam ekran boyutları ayarlamak için tüm container'ları genişlet */
+/* Ekran boyutlarına dinamik ayarlama */
 body, html {
     margin: 0;
     padding: 0;
     width: 100vw;
-    height: 100%; /* Tam ekran zorlaması */
+    height: 100vh; /* Yükseklik viewport'a tam oturur */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,14 +12,14 @@ body, html {
     overflow: hidden;
 }
 
-/* Arka planı bozulmadan ortala ve 720x1280 piksel olacak şekilde ayarla */
+/* Arka planı bozulmadan ortala ve ekran boyutuna göre sığdır */
 .loading-container {
     background-image: url('https://i.imgur.com/bDoxXFj.jpeg'); /* Arka plan resmi URL'nizi buraya ekleyin */
-    background-size: 720px 1280px; /* 720x1280 boyutunda */
+    background-size: cover; /* Arka plan resmi tüm ekrana sığdırılır */
     background-position: center;
     background-repeat: no-repeat;
     width: 100vw;
-    height: 100%; /* Tam ekran */
+    height: 100vh; /* Ekran boyutunu tam doldurur */
     text-align: center;
     color: white;
     display: flex;
@@ -28,7 +28,7 @@ body, html {
     align-items: center;
 }
 
-/* CSS ile yükleme dairesi (80x80px) */
+/* Dönen daire (80x80px) */
 .loading-circle {
     width: 80px;
     height: 80px;
