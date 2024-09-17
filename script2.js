@@ -1,10 +1,20 @@
-let score = 149559687;
+let clickCount = 10000;
 
-function incrementScore() {
-    score += 1;
-    document.querySelector('.score-section').innerText = score.toLocaleString();
+function handleClick() {
+    if (clickCount > 0) {
+        clickCount--;
+        document.getElementById('click-counter').innerText = clickCount;
+    }
 }
 
-function changePage(page) {
-    alert("Navigating to " + page + " page.");
-}
+// Tıklama butonuna gölge efekti eklemek için
+const navItems = document.querySelectorAll('.nav-item');
+
+navItems.forEach(item => {
+    item.addEventListener('click', () => {
+        // Seçilen menüye tıklandığını belirtmek için sınıf ekleme
+        navItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+    });
+});
+
