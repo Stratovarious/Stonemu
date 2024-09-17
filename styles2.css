@@ -18,14 +18,14 @@ body, html {
     box-sizing: border-box;
 }
 
-/* Üst kısım */
-.header {
+/* Üst menü (Profil resmi ve oyuncu bilgisi) */
+.top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    width: 100%;
     background-color: #333;
+    color: white;
 }
 
 .profile-section {
@@ -37,169 +37,94 @@ body, html {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    margin-right: 10px;
 }
 
-.buy-skin {
-    background-color: #ff6347;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.player-name {
+    font-weight: bold;
 }
 
-.buy-skin:hover {
-    background-color: #ff4030;
+.hourly-profit {
+    font-size: 1.1em;
+    color: yellow;
 }
 
-/* Kazanç kısmı */
-.earnings-section p {
-    margin: 0;
-    font-size: 1.2em;
-    text-align: right;
-}
-
-/* Daily options */
-.daily-options {
+/* Karakterin yer aldığı yuvarlak alan */
+.character-circle {
+    margin: 0 auto;
+    width: 250px;
+    height: 250px;
+    border: 10px solid #f3f3f3;
+    border-radius: 50%;
     display: flex;
-    justify-content: space-around;
-    margin: 20px 0;
-}
-
-.daily-item {
-    background-color: #444;
-    padding: 15px;
-    border-radius: 10px;
-    width: 90px;
-    text-align: center;
-    color: white;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.daily-item span {
-    font-size: 0.8em;
-    color: #ff6347;
-}
-
-.daily-item:hover {
-    background-color: #555;
-}
-
-/* Puan göstergesi */
-.score-section {
-    font-size: 2.5em;
-    color: #ff6347;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Karakter */
-.character-section {
-    display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    background-color: #333;
 }
 
 .character-image {
-    width: 150px;
-    height: auto;
-    margin-bottom: 10px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
 }
 
-.boost-btn {
+/* Alt menü (Tıklama sayacı ve Boost butonu) */
+.bottom-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #444;
+    border-radius: 15px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    margin: 20px;
+}
+
+/* Tıklama sayacı */
+.click-counter {
+    color: white;
+    font-size: 1.5em;
+}
+
+.clicks-left {
+    text-align: left;
+}
+
+/* Boost butonu */
+.boost-button {
     background-color: #ff6347;
     color: white;
+    font-size: 1em;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 25px;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
 }
 
-.boost-btn:hover {
-    background-color: #ff4030;
+.boost-button:hover {
+    background-color: #ff4b2d;
 }
 
-/* Alt menü */
-.footer-menu {
+/* Alt gezinme menüsü */
+.bottom-navigation {
     display: flex;
     justify-content: space-around;
     background-color: #333;
     padding: 10px;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    border-radius: 20px 20px 0 0;
 }
 
-.menu-item {
+.nav-item {
     color: white;
-    font-size: 1em;
-    text-align: center;
+    font-size: 1.2em;
+    padding: 10px;
     cursor: pointer;
-    padding: 5px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
-.menu-item:hover {
-    background-color: #444;
-    border-radius: 5px;
-}
-
-/* Ortadaki tıklama oyunu için CSS */
-.click-game {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: #ff6347;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2em;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.circle:hover {
-    background-color: #ff4030;
-}
-
-/* Küçük ekranlar (mobil cihazlar) için */
-@media (max-width: 600px) {
-    .profile-image {
-        width: 40px;
-        height: 40px;
-    }
-
-    .daily-item {
-        width: 70px;
-        font-size: 0.9em;
-    }
-
-    .character-image {
-        width: 120px;
-    }
-
-    .score-section {
-        font-size: 2em;
-    }
-
-    .circle {
-        width: 120px;
-        height: 120px;
-    }
-
-    .footer-menu {
-        font-size: 0.8em;
-    }
+.nav-item:hover {
+    background-color: #555;
+    border-radius: 10px;
 }
