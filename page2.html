@@ -3,42 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hamster Kombat - Score Screen</title>
+    <title>Stonemu - Game Screen</title>
     <link rel="stylesheet" href="styles2.css"> <!-- 2. sayfa için özel stil -->
 </head>
 <body>
-    <div class="score-container">
-        <!-- Üst kısımda profil bilgileri -->
-        <div class="profile-section">
-            <div class="profile-info">
-                <img src="profile-image.png" alt="Profile Picture" class="profile-image">
-                <div class="profile-details">
-                    <p class="profile-name">Adisna S (CEO)</p>
-                    <p class="profile-rank">Grandmaster</p>
-                    <p class="profile-points">9 / 11</p>
+    <div class="game-container">
+        <!-- Üst kısımda profil ve kazanç bilgileri -->
+        <div class="header">
+            <div class="profile-section">
+                <div class="profile-left">
+                    <div class="skin-selector">
+                        <img src="profile-image.png" alt="Profile Picture" class="profile-image">
+                        <button class="buy-skin">Buy skin</button>
+                    </div>
+                    <div class="profile-info">
+                        <p class="profile-name">Adisna S (CEO)</p>
+                        <p class="profile-rank">Grandmaster</p>
+                        <p class="profile-points">9 / 11</p>
+                    </div>
+                </div>
+                <div class="earnings-section">
+                    <p class="profit-per-hour">Profit per hour:</p>
+                    <p class="earnings">$4.44M</p>
                 </div>
             </div>
-            <div class="daily-info">
-                <p>Daily reward: 14:04</p>
-                <p>Daily cipher: 09:04</p>
-                <p>Daily combo: 02:04</p>
+        </div>
+
+        <!-- Daily options ve ana puan göstergesi -->
+        <div class="main-section">
+            <div class="daily-options">
+                <div class="daily-item">Daily reward<br><span>14:04</span></div>
+                <div class="daily-item">Daily cipher<br><span>09:04</span></div>
+                <div class="daily-item">Daily combo<br><span>02:04</span></div>
+                <div class="daily-item">Minigames</div>
+            </div>
+
+            <div class="score-section">
+                <h1 class="score">149,559,687</h1>
+            </div>
+
+            <div class="character-section">
+                <img src="Stonemu-character.png" alt="Stonemu Character" class="character-image">
+                <p>10000 / 10000</p>
+                <button class="boost-btn">Boost</button>
             </div>
         </div>
 
-        <!-- Puan göstergesi -->
-        <div class="score-section">
-            <h1 class="score">149,559,687</h1>
-        </div>
-
-        <!-- Karakter ve oyun durumu -->
-        <div class="character-section">
-            <img src="hamster-character.png" alt="Hamster Character" class="character-image">
-            <p>10000 / 10000</p>
-            <button class="boost-btn">Boost</button>
-        </div>
-
-        <!-- Menü ikonları -->
-        <div class="menu-section">
+        <!-- Alt menü -->
+        <div class="footer-menu">
             <div class="menu-item">Exchange</div>
             <div class="menu-item">Mine</div>
             <div class="menu-item">Playground</div>
@@ -47,8 +59,6 @@
         </div>
     </div>
 
-    <script>
-        // Burada bir geçişe gerek yok çünkü bu zaten 5 saniye sonra gelinen sayfa.
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
