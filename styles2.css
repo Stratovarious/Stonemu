@@ -5,34 +5,35 @@ body, html {
     width: 100vw;
     height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: #1a1a1a;
     font-family: Arial, sans-serif;
+    overflow: hidden;
     color: white;
 }
 
 .game-container {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    width: 100%;
 }
 
 /* Üst kısım - profil ve kazanç */
 .header {
     display: flex;
     justify-content: space-between;
-    width: 100%;
     padding: 10px;
+    width: 100%;
 }
 
 .profile-section {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    width: 90%;
+    width: 100%;
 }
 
 .profile-left {
@@ -52,13 +53,15 @@ body, html {
     color: white;
     border: none;
     padding: 5px;
-    margin-top: 5px;
-    cursor: pointer;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .earnings-section {
     text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .profit-per-hour {
@@ -74,7 +77,6 @@ body, html {
 .daily-options {
     display: flex;
     justify-content: space-around;
-    width: 100%;
     margin: 20px 0;
 }
 
@@ -96,22 +98,24 @@ body, html {
 /* Puan göstergesi */
 .score-section {
     text-align: center;
+    margin-top: 10px;
 }
 
 .score {
     font-size: 3em;
     font-weight: bold;
-    margin: 20px 0;
+    color: #ff6347;
 }
 
 /* Karakter ve oyun durumu */
 .character-section {
     text-align: center;
+    margin-bottom: 20px;
 }
 
 .character-image {
     width: 150px;
-    height: 150px;
+    height: auto;
     border-radius: 50%;
 }
 
@@ -126,17 +130,15 @@ body, html {
     border-radius: 5px;
 }
 
-.boost-btn:hover {
-    background-color: #ff4500;
-}
-
-/* Menü alt kısmı */
+/* Alt menü */
 .footer-menu {
     display: flex;
     justify-content: space-around;
     width: 100%;
     background-color: #333;
     padding: 10px;
+    position: absolute;
+    bottom: 0;
 }
 
 .menu-item {
