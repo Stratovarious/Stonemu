@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stonemu - Game Screen</title>
-    <link rel="stylesheet" href="styles2.css"> <!-- Güncellenmiş CSS -->
+    <link rel="stylesheet" href="styles2.css">
 </head>
 <body>
     <div class="game-container">
@@ -30,6 +30,13 @@
 
         <!-- Puan ve karakter -->
         <div class="score-section">149,559,687</div>
+
+        <!-- Tıklama oyunu -->
+        <div class="click-game">
+            <div class="circle" onclick="incrementScore()">Click</div>
+        </div>
+
+        <!-- Boost -->
         <div class="character-section">
             <img src="character-image.png" alt="Stonemu Character" class="character-image">
             <p>10000 / 10000</p>
@@ -38,13 +45,13 @@
 
         <!-- Alt menü -->
         <div class="footer-menu">
-            <div class="menu-item">Exchange</div>
-            <div class="menu-item">Mine</div>
-            <div class="menu-item">Playground</div>
-            <div class="menu-item">Friends</div>
-            <div class="menu-item">AirDrop</div>
+            <div class="menu-item" onclick="changePage('exchange')">Exchange</div>
+            <div class="menu-item" onclick="changePage('mine')">Mine</div>
+            <div class="menu-item" onclick="changePage('playground')">Playground</div>
+            <div class="menu-item" onclick="changePage('friends')">Friends</div>
+            <div class="menu-item" onclick="changePage('airdrop')">AirDrop</div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="script2.js"></script>
 </body>
 </html>
