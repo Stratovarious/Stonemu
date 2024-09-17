@@ -1,0 +1,40 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a1a;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+.scoreboard-container {
+    text-align: center;
+    color: white;
+}
+
+.header {
+    background-color: #ff6347;
+    padding: 10px;
+}
+
+.main-content {
+    margin-top: 20px;
+}
+
+.score-details img {
+    width: 200px;
+    height: 200px;
+}
+
+.score-details h3 {
+    font-size: 2em;
+    margin-top: 10px;
+}
+
+.score-details p {
+    font-size: 1.2em;
+}
