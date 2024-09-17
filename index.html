@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stomenu - Fullscreen Loading</title>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#ff6347">
-    <link rel="icon" href="/icon-192x192.png" sizes="192x192">
-    <link rel="icon" href="/icon-512x512.png" sizes="512x512">
+    <title>Hamster Kombat - Fullscreen Loading</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -37,6 +33,11 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- 5 saniye sonra page2.html'e yönlendirmek için -->
+    <script>
+        setTimeout(function() {
+            window.location.href = 'page2.html';  // 5 saniye sonra page2.html'e yönlendirme
+        }, 5000);
+    </script>
 </body>
 </html>
