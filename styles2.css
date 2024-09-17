@@ -1,3 +1,4 @@
+/* Genel ayarlar */
 body, html {
     margin: 0;
     padding: 0;
@@ -8,33 +9,101 @@ body, html {
     align-items: center;
     background-color: #1a1a1a;
     font-family: Arial, sans-serif;
-    overflow: hidden;
-}
-
-.scoreboard-container {
-    text-align: center;
     color: white;
 }
 
-.header {
+.score-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+/* Profil bölümü */
+.profile-section {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    padding-top: 10px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-details {
+    color: white;
+}
+
+.profile-name {
+    font-size: 1.2em;
+}
+
+.profile-rank {
+    font-size: 1em;
+    color: #ff6347;
+}
+
+.profile-points {
+    font-size: 0.9em;
+}
+
+/* Puan göstergesi */
+.score-section {
+    text-align: center;
+}
+
+.score {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+/* Karakter bölümü */
+.character-section {
+    text-align: center;
+}
+
+.character-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.boost-btn {
     background-color: #ff6347;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+}
+
+.boost-btn:hover {
+    background-color: #ff4500;
+}
+
+/* Menü ikonu */
+.menu-section {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    background-color: #333;
     padding: 10px;
 }
 
-.main-content {
-    margin-top: 20px;
-}
-
-.score-details img {
-    width: 200px;
-    height: 200px;
-}
-
-.score-details h3 {
-    font-size: 2em;
-    margin-top: 10px;
-}
-
-.score-details p {
-    font-size: 1.2em;
+.menu-item {
+    color: white;
+    font-size: 1.1em;
 }
