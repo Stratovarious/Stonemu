@@ -11,20 +11,7 @@ body, html {
     font-family: Arial, sans-serif;
     overflow: hidden;
     color: white;
-}
-
-/* Arka planı bozulmadan ortala ve tam ekran yap */
-.game-container {
-    width: 100vw;
-    height: 100vh;
-    background-image: url('your-background-image.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 10px;
+    box-sizing: border-box;
 }
 
 /* Üst kısım */
@@ -32,8 +19,9 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
     padding: 10px;
+    width: 100%;
+    background-color: #333;
 }
 
 .profile-section {
@@ -54,65 +42,80 @@ body, html {
     border-radius: 5px;
     margin-left: 10px;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.buy-skin:hover {
+    background-color: #ff4030;
 }
 
 /* Kazanç kısmı */
-.earnings-section {
-    text-align: right;
-}
-
 .earnings-section p {
     margin: 0;
     font-size: 1.2em;
+    text-align: right;
 }
 
 /* Daily options */
 .daily-options {
     display: flex;
     justify-content: space-around;
-    padding: 20px 0;
+    margin: 20px 0;
 }
 
 .daily-item {
-    background-color: #333;
-    padding: 10px;
+    background-color: #444;
+    padding: 15px;
     border-radius: 10px;
+    width: 90px;
     text-align: center;
-    width: 100px;
+    color: white;
     font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .daily-item span {
-    display: block;
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: #ff6347;
+}
+
+.daily-item:hover {
+    background-color: #555;
 }
 
 /* Puan göstergesi */
 .score-section {
-    text-align: center;
-    font-size: 3em;
+    font-size: 2.5em;
     color: #ff6347;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 /* Karakter */
 .character-section {
-    text-align: center;
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .character-image {
     width: 150px;
     height: auto;
+    margin-bottom: 10px;
 }
 
 .boost-btn {
     background-color: #ff6347;
     color: white;
     padding: 10px 20px;
-    margin-top: 10px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.boost-btn:hover {
+    background-color: #ff4030;
 }
 
 /* Alt menü */
@@ -130,6 +133,41 @@ body, html {
     color: white;
     font-size: 1em;
     text-align: center;
+    cursor: pointer;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+.menu-item:hover {
+    background-color: #444;
+    border-radius: 5px;
+}
+
+/* Ortadaki tıklama oyunu için CSS */
+.click-game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #ff6347;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.circle:hover {
+    background-color: #ff4030;
 }
 
 /* Küçük ekranlar (mobil cihazlar) için */
@@ -140,7 +178,7 @@ body, html {
     }
 
     .daily-item {
-        width: 80px;
+        width: 70px;
         font-size: 0.9em;
     }
 
@@ -148,11 +186,16 @@ body, html {
         width: 120px;
     }
 
-    .footer-menu {
-        font-size: 0.9em;
+    .score-section {
+        font-size: 2em;
     }
 
-    .earnings-section p {
-        font-size: 1em;
+    .circle {
+        width: 120px;
+        height: 120px;
+    }
+
+    .footer-menu {
+        font-size: 0.8em;
     }
 }
