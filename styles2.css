@@ -1,4 +1,5 @@
 /* Genel ayarlar */
+/* Tüm container'ı kaplayan arka plan resmi */
 body, html {
     margin: 0;
     padding: 0;
@@ -7,7 +8,10 @@ body, html {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #1a1a1a;
+    background-image: url('https://i.imgur.com/bDoxXFj.jpeg'); /* Arka plan resmi URL'sini buraya ekleyin */
+    background-size: cover; /* Resmi tam ekran yapar */
+    background-position: center; /* Resmi ortalar */
+    background-repeat: no-repeat; /* Resmin tekrar etmesini önler */
     font-family: Arial, sans-serif;
     overflow: hidden;
     color: white;
