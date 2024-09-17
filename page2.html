@@ -3,55 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stonemu - Game Screen</title>
+    <title>Stonemu Game</title>
     <link rel="stylesheet" href="styles2.css">
 </head>
 <body>
     <div class="game-container">
-        <!-- Üst kısımda profil ve kazanç bilgileri -->
-        <div class="header">
+        <!-- Üst menü (profil resmi ve oyuncu bilgisi) -->
+        <div class="top-bar">
             <div class="profile-section">
-                <img src="profile-image.png" alt="Profile" class="profile-image">
-                <button class="buy-skin">Buy skin</button>
+                <img src="profile-image.png" alt="Profile Image" class="profile-image">
+                <div class="player-name">Adisna S (CEO)</div>
             </div>
-            <div class="earnings-section">
-                <p>Profit per hour:</p>
-                <p>$4.44M</p>
+            <div class="hourly-profit">
+                <span>Profit per hour: </span><span>+4.44M</span>
             </div>
         </div>
 
-        <!-- Daily options ve ana puan göstergesi -->
-        <div class="daily-options">
-            <div class="daily-item">Daily reward<br><span>14:04</span></div>
-            <div class="daily-item">Daily cipher<br><span>09:04</span></div>
-            <div class="daily-item">Daily combo<br><span>02:04</span></div>
-            <div class="daily-item">Minigames</div>
-        </div>
-
-        <!-- Puan ve karakter -->
-        <div class="score-section">149,559,687</div>
-
-        <!-- Tıklama oyunu -->
-        <div class="click-game">
-            <div class="circle" onclick="incrementScore()">Click</div>
-        </div>
-
-        <!-- Boost -->
-        <div class="character-section">
-            <img src="character-image.png" alt="Stonemu Character" class="character-image">
-            <p>10000 / 10000</p>
-            <button class="boost-btn">Boost</button>
+        <!-- Karakterin yer aldığı tıklanabilir yuvarlak alan -->
+        <div class="character-circle" onclick="handleClick()">
+            <img src="character-image.png" alt="Character Image" class="character-image">
         </div>
 
         <!-- Alt menü -->
-        <div class="footer-menu">
-            <div class="menu-item" onclick="changePage('exchange')">Exchange</div>
-            <div class="menu-item" onclick="changePage('mine')">Mine</div>
-            <div class="menu-item" onclick="changePage('playground')">Playground</div>
-            <div class="menu-item" onclick="changePage('friends')">Friends</div>
-            <div class="menu-item" onclick="changePage('airdrop')">AirDrop</div>
+        <div class="bottom-menu">
+            <div class="click-counter">
+                <div class="clicks-left">10000 / <span id="click-counter">10000</span></div>
+            </div>
+            <button class="boost-button">Boost</button>
+        </div>
+
+        <!-- Alt gezinme menüsü -->
+        <div class="bottom-navigation">
+            <div class="nav-item">Exchange</div>
+            <div class="nav-item">Mine</div>
+            <div class="nav-item">Playground</div>
+            <div class="nav-item">Friends</div>
+            <div class="nav-item">Airdrop</div>
         </div>
     </div>
+
     <script src="script2.js"></script>
 </body>
 </html>
