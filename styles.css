@@ -1,88 +1,303 @@
-/* Tam ekran boyutlarını dinamik hale getirme */
-body, html {
+/* Genel Ayarlar */
+body {
     margin: 0;
     padding: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #1a1a1a;
-    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Your Font', sans-serif;
     overflow: hidden;
 }
 
-/* Arka planı bozulmadan ortala ve tam ekran yap */
-.loading-container {
-    background-image: url('https://i.imgur.com/bDoxXFj.jpeg'); /* Arka plan resmi */
-    background-size: cover; /* Arka planı ekrana sığdır */
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100vw;
-    height: 100vh; /* Tam ekran boyutlandırma */
-    text-align: center;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+#slideshow, #exchange-selection, #homepage, #pages, #settings-window, #boost-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
-/* Dönen yükleme dairesi */
-.loading-circle {
+/* Slayt Gösterisi */
+#slideshow {
+    display: block;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+#loading-bar {
+    position: absolute;
+    bottom: 10%;
+    left: 10%;
+    width: 80%;
+    height: 10px;
+    background-color: #333;
+}
+
+#progress {
+    width: 0%;
+    height: 100%;
+    background-color: #0f0;
+}
+
+/* Exchange Seçim Ekranı */
+#exchange-selection {
+    display: none;
+    text-align: center;
+    padding-top: 20%;
+}
+
+/* Anasayfa */
+#homepage {
+    display: none;
+    background-color: #000;
+}
+
+/* Üst Kısım */
+#top-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#top-section .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#top-section #connect-button, #top-section #logo {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+#top-section img {
+    width: 100%;
+    height: 100%;
+}
+
+/* İkinci Kısım */
+#second-section {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+/* Level ve Puan Bölümleri */
+#level-section, #points-section {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+#level-section .frame, #points-section .frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#level-section .content, #points-section .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+#level-bar {
+    width: 80%;
+    height: 10px;
+    background-color: #555;
+    margin: 10px auto;
+    position: relative;
+    overflow: hidden;
+}
+
+#level-progress {
+    height: 100%;
+    background-color: #0f0;
+    width: 0%;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Ayraç */
+#divider {
+    width: 100%;
+    text-align: center;
+}
+
+#divider img {
+    width: 100%;
+}
+
+/* Tuşlar Bölümü */
+#buttons-section {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.button-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.button-frame {
+    position: relative;
     width: 80px;
     height: 80px;
-    border: 10px solid #f3f3f3;
-    border-top: 10px solid #ff6347;
-    border-radius: 50%;
-    animation: spin 2s linear infinite;
-    margin: 20px auto;
 }
 
-/* Dönen dairenin animasyonu */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.button-frame img {
+    width: 100%;
+    height: 100%;
 }
 
-/* Başlık */
-h1 {
-    font-size: 2em;
+.button-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+.button-content img {
+    width: 50%;
     margin-top: 10px;
 }
 
-/* Paragraflar */
-p {
-    margin: 5px 0;
+.button-content span {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
 }
 
-/* Önemli yazı */
-.important-text {
-    font-size: 1.5em;
-    font-weight: bold;
+/* Settings */
+#settings-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+}
+
+#settings-icon .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Tıklama Oyunu */
+#click-game {
+    text-align: center;
     margin-top: 20px;
 }
 
-/* Sosyal medya ikonları */
-.social-icons {
-    margin-top: 20px;
+.circle-frame {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.circle-frame .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+/* Sayaç ve Boost */
+#counter-boost {
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    justify-content: space-around;
+    padding: 20px;
 }
 
-.social-icons img {
+#counter, #boost {
+    position: relative;
+    width: 100px;
+    height: 50px;
+}
+
+#counter .frame, #boost .frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#counter .content, #boost .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Alt Menü */
+#bottom-menu {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #111;
+}
+
+.menu-button {
+    position: relative;
     width: 50px;
     height: 50px;
-    transition: transform 0.3s ease;
 }
 
-.social-icons img:hover {
-    transform: scale(1.1);
+.menu-button .frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
-/* Alt yazı */
-.footer-text {
-    margin-top: 30px;
-    font-size: 1.2em;
+.menu-button .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
 }
+
+.menu-button .content img {
+    width: 50%;
+    margin-top: 5px;
+}
+
+.menu-button .content span {
+    display: block;
+    font-size: 10px;
+}
+
+/* Alt Ayraç */
+#bottom-divider {
+    width: 100%;
+    text-align: center;
+}
+
+#bottom-divider img {
+    width: 100%;
+}
+
+/* Diğer stiller ve responsive ayarlar eklenecek */
