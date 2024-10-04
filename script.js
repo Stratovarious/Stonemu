@@ -6,13 +6,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let progressInterval;
     let slideInterval;
 
-    // Slayt Gösterisi
+    // Start the slideshow
     function startSlideshow() {
         slides[currentSlide].classList.add('active');
         progressInterval = setInterval(updateProgressBar, 50);
         slideInterval = setInterval(nextSlide, 3000);
     }
 
+    // Update the loading bar
     function updateProgressBar() {
         if (progressWidth >= 100) {
             clearInterval(progressInterval);
@@ -24,196 +25,306 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Show the next slide
     function nextSlide() {
         slides[currentSlide].classList.remove('active');
         currentSlide = (currentSlide + 1) % slides.length;
         slides[currentSlide].classList.add('active');
     }
 
+    // Check if exchange selection is required
     function checkExchangeSelection() {
-        // Sunucudan exchange seçimi kontrolü
-        fetch('/api/check_exchange_selection', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ telegram_id: getTelegramID() })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.exchange_selected) {
-                document.getElementById('slideshow').style.display = 'none';
-                document.getElementById('exchange-selection').style.display = 'block';
-            } else {
-                document.getElementById('slideshow').style.display = 'none';
-                document.getElementById('homepage').style.display = 'block';
-                initializeHomepage();
-            }
-        });
+        // Here you would make an API call to check exchange selection
+        // For simplicity, we'll assume it's not selected
+        let exchangeSelected = localStorage.getItem('exchangeSelected');
+        if (!exchangeSelected) {
+            document.getElementById('slideshow').style.display = 'none';
+            document.getElementById('exchange-selection').style.display = 'block';
+        } else {
+            document.getElementById('slideshow').style.display = 'none';
+            document.getElementById('homepage').style.display = 'block';
+            initializeHomepage();
+        }
     }
 
-    // Exchange Seçimi
+    // Handle exchange selection
     document.getElementById('exchange-ok-button').addEventListener('click', function() {
         let exchange = document.getElementById('exchange-dropdown').value;
         if (exchange) {
-            // Sunucuya exchange seçimini kaydet
-            fetch('/api/set_exchange_selection', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ telegram_id: getTelegramID(), exchange: exchange })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.getElementById('exchange-selection').style.display = 'none';
-                    document.getElementById('homepage').style.display = 'block';
-                    initializeHomepage();
-                } else {
-                    alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-                }
-            });
+            // Save exchange selection locally
+            localStorage.setItem('exchangeSelected', exchange);
+            document.getElementById('exchange-selection').style.display = 'none';
+            document.getElementById('homepage').style.display = 'block';
+            initializeHomepage();
+            // Optionally, send the selection to the server via an API call
         } else {
-            alert('Lütfen bir exchange seçin.');
+            alert('Please select an exchange.');
         }
     });
 
-    // Anasayfa Başlatma
+    // Initialize the homepage
     function initializeHomepage() {
-        // Kullanıcı verilerini sunucudan çek
-        fetch('/api/get_user_data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ telegram_id: getTelegramID() })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Level ve Puan Bilgilerini Güncelle
-                updateLevelAndPoints(data.level, data.points, data.total_points);
-                // Diğer başlangıç işlemleri
-                setupEventListeners();
-            } else {
-                alert('Kullanıcı verileri alınamadı.');
-            }
-        });
-    }
+        // Set up event listeners and initial values
+        document.getElementById('connect-button').addEventListener('click', showWalletPage);
+        document.getElementById('settings-icon').addEventListener('click', showSettings);
+        document.getElementById('close-settings').addEventListener('click', closeSettings);
+        document.getElementById('boost').addEventListener('click', showBoost);
+        document.getElementById('close-boost').addEventListener('click', closeBoost);
 
-    function updateLevelAndPoints(level, points, totalPoints) {
-        document.getElementById('level-text').innerText = `Level ${level}`;
-        document.getElementById('points-number').innerText = points;
-        // Level çubuğunu güncelle
-        updateLevelProgress(level, totalPoints);
-    }
-
-    function updateLevelProgress(level, totalPoints) {
-        let levelThresholds = [50000, 150000, 500000];
-        let currentLevelThreshold = levelThresholds[level - 2] || 0;
-        let nextLevelThreshold = levelThresholds[level - 1];
-        let progressPercentage = ((totalPoints - currentLevelThreshold) / (nextLevelThreshold - currentLevelThreshold)) * 100;
-        document.getElementById('level-progress').style.width = progressPercentage + '%';
-    }
-
-    function setupEventListeners() {
-        // Connect butonu tıklaması
-        document.getElementById('connect-button').addEventListener('click', function() {
-            // Wallet sayfasını aç
-            alert('Wallet sayfası açılacak.');
-        });
-
-        // Settings
-        document.getElementById('settings-icon').addEventListener('click', function() {
-            document.getElementById('settings-window').style.display = 'block';
-        });
-
-        document.getElementById('close-settings').addEventListener('click', function() {
-            document.getElementById('settings-window').style.display = 'none';
-        });
-
-        // Boost
-        document.getElementById('boost').addEventListener('click', function() {
-            document.getElementById('boost-window').style.display = 'block';
-        });
-
-        document.getElementById('close-boost').addEventListener('click', function() {
-            document.getElementById('boost-window').style.display = 'none';
-        });
-
-        // Tıklama Oyunu ve Hile Kontrolü
+        // Initialize click game
         setupClickGame();
+
+        // Initialize menu buttons
+        document.getElementById('events-button').addEventListener('click', showEventsPage);
+        document.getElementById('tournaments-button').addEventListener('click', showTournamentsPage);
+        document.getElementById('leaderboard-button').addEventListener('click', showLeaderboardPage);
+        document.getElementById('friends-button').addEventListener('click', showFriendsPage);
+        document.getElementById('shop-button').addEventListener('click', showShopPage);
+        document.getElementById('mine-button').addEventListener('click', showMinePage);
+        document.getElementById('playground-button').addEventListener('click', showPlaygroundPage);
+
+        // Initialize wallet page
+        document.getElementById('back-from-wallet').addEventListener('click', closePage);
+        document.getElementById('connect-ton-wallet').addEventListener('click', connectTonWallet);
+        document.getElementById('connect-okx-wallet').addEventListener('click', connectOkxWallet);
+
+        // Initialize other pages
+        document.getElementById('back-from-events').addEventListener('click', closePage);
+        document.getElementById('back-from-tournaments').addEventListener('click', closePage);
+        document.getElementById('back-from-leaderboard').addEventListener('click', closePage);
+        document.getElementById('back-from-friends').addEventListener('click', closePage);
+        document.getElementById('back-from-shop').addEventListener('click', closePage);
+        document.getElementById('back-from-mine').addEventListener('click', closePage);
+        document.getElementById('back-from-playground').addEventListener('click', closePage);
     }
 
+    // Show wallet page
+    function showWalletPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('wallet-page').style.display = 'block';
+    }
+
+    // Show settings
+    function showSettings() {
+        document.getElementById('settings-window').style.display = 'block';
+    }
+
+    // Close settings
+    function closeSettings() {
+        document.getElementById('settings-window').style.display = 'none';
+    }
+
+    // Show boost
+    function showBoost() {
+        document.getElementById('boost-window').style.display = 'block';
+    }
+
+    // Close boost
+    function closeBoost() {
+        document.getElementById('boost-window').style.display = 'none';
+    }
+
+    // Setup click game
     function setupClickGame() {
-        let lastClickTime = 0;
+        let counterA = 5000;
+        let counterB = 5000;
+        let clickValue = 1;
+        let points = 0;
+        let totalPoints = 0;
+        let level = 1;
+        let levelThresholds = [50000, 150000, 500000];
+        let clickInterval = 20000; // 20 seconds
+
         document.getElementById('click-circle').addEventListener('click', function() {
-            let currentTime = Date.now();
-            if (currentTime - lastClickTime < 100) {
-                // Hile tespit edildi
-                alert('Hile tespit edildi!');
-                // Kullanıcı veritabanında işaretlenecek
-                reportCheat();
-            } else {
-                // Normal tıklama işlemleri
-                processClick();
+            // Hile kontrolü
+            let now = Date.now();
+            let lastClickTime = parseInt(localStorage.getItem('lastClickTime')) || 0;
+            if (now - lastClickTime < 100) {
+                // Cheating detected
+                alert('Cheating detected!');
+                // Report to server
+                reportCheating();
+                return;
             }
-            lastClickTime = currentTime;
+            localStorage.setItem('lastClickTime', now);
+
+            // Process click
+            if (counterA >= clickValue) {
+                counterA -= clickValue;
+                points += clickValue;
+                totalPoints += clickValue;
+                updatePointsDisplay();
+                updateCounterDisplay();
+                checkLevelUp();
+            } else {
+                alert('Not enough counter!');
+            }
+        });
+
+        function updatePointsDisplay() {
+            document.getElementById('points-number').innerText = points;
+        }
+
+        function updateCounterDisplay() {
+            document.getElementById('counter-a').innerText = counterA;
+            document.getElementById('counter-b').innerText = counterB;
+        }
+
+        function checkLevelUp() {
+            if (level <= levelThresholds.length && totalPoints >= levelThresholds[level - 1]) {
+                level += 1;
+                document.getElementById('level-text').innerText = 'Level ' + level;
+            }
+        }
+
+        // Automatic counter refill
+        setInterval(function() {
+            if (counterA < counterB) {
+                counterA += 1;
+                updateCounterDisplay();
+            }
+        }, clickInterval);
+    }
+
+    // Report cheating to server
+    function reportCheating() {
+        // Implement API call to report cheating
+        alert('You have been banned for cheating.');
+        // Redirect or disable app
+    }
+
+    // Show events page
+    function showEventsPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('events-page').style.display = 'block';
+        // Load tasks
+        loadTasks();
+    }
+
+    function loadTasks() {
+        let tasksList = document.getElementById('tasks-list');
+        tasksList.innerHTML = '';
+        // Example tasks
+        let tasks = [
+            { name: 'Like Twitter Page', points: 500 },
+            { name: 'Retweet Post', points: 600 },
+            // ... other tasks
+        ];
+        tasks.forEach(task => {
+            let taskItem = document.createElement('div');
+            taskItem.className = 'task-item';
+            taskItem.innerHTML = `
+                <p>${task.name} - ${task.points} Points</p>
+                <button class="task-button">Do Task</button>
+            `;
+            tasksList.appendChild(taskItem);
         });
     }
 
-    function processClick() {
-        // Sayaç ve puan güncelleme işlemleri
-        fetch('/api/process_click', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ telegram_id: getTelegramID() })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                updateLevelAndPoints(data.level, data.points, data.total_points);
-                updateCounter(data.counter_a, data.counter_b);
-            } else {
-                alert(data.message);
-            }
+    // Show tournaments page
+    function showTournamentsPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('tournaments-page').style.display = 'block';
+    }
+
+    // Show leaderboard page
+    function showLeaderboardPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('leaderboard-page').style.display = 'block';
+        // Load leaderboard data
+        loadLeaderboard();
+    }
+
+    function loadLeaderboard() {
+        let leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardList.innerHTML = '';
+        // Example data
+        let leaderboard = [
+            { username: 'User1', level: 5, points: 100000 },
+            // ... other users
+        ];
+        leaderboard.forEach(user => {
+            let entry = document.createElement('div');
+            entry.className = 'leaderboard-entry';
+            entry.innerHTML = `<p>${user.username} - Level ${user.level} - ${user.points} Points</p>`;
+            leaderboardList.appendChild(entry);
         });
     }
 
-    function updateCounter(counterA, counterB) {
-        document.getElementById('counter-a').innerText = counterA;
-        document.getElementById('counter-b').innerText = counterB;
+    // Show friends page
+    function showFriendsPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('friends-page').style.display = 'block';
+        // Display invite code
+        let inviteCode = localStorage.getItem('inviteCode');
+        if (!inviteCode) {
+            inviteCode = generateInviteCode();
+            localStorage.setItem('inviteCode', inviteCode);
+        }
+        document.getElementById('invite-code').innerText = inviteCode;
+        // Load invitees
+        loadInvitees();
     }
 
-    function reportCheat() {
-        fetch('/api/report_cheat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ telegram_id: getTelegramID() })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Uygulamaya erişim engellenir
-                alert('Hesabınız engellendi.');
-                // Uygulamayı kapatabilir veya kullanıcıyı çıkışa yönlendirebilirsiniz
-            } else {
-                alert('Bir hata oluştu.');
-            }
+    function generateInviteCode() {
+        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let code = '';
+        for (let i = 0; i < 12; i++) {
+            code += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return code;
+    }
+
+    function loadInvitees() {
+        let inviteesList = document.getElementById('invitees-list');
+        inviteesList.innerHTML = '';
+        // Example invitees
+        let invitees = [
+            { username: 'Friend1' },
+            // ... other invitees
+        ];
+        invitees.forEach(invitee => {
+            let item = document.createElement('div');
+            item.className = 'invitee-item';
+            item.innerText = invitee.username;
+            inviteesList.appendChild(item);
         });
     }
 
-    // Diğer event listenerlar ve fonksiyonlar eklenecek
+    // Show shop page
+    function showShopPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('shop-page').style.display = 'block';
+    }
 
-    function getTelegramID() {
-        // Telegram WebApp içinde kullanıcının Telegram ID'sini almak için kullanılır
-        // Örnek olarak sabit bir değer döndürüyoruz
-        return '123456789';
+    // Show mine page
+    function showMinePage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('mine-page').style.display = 'block';
+    }
+
+    // Show playground page
+    function showPlaygroundPage() {
+        document.getElementById('homepage').style.display = 'none';
+        document.getElementById('playground-page').style.display = 'block';
+    }
+
+    // Close the current page and go back to homepage
+    function closePage() {
+        document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+        document.getElementById('homepage').style.display = 'block';
+    }
+
+    // Connect TON wallet
+    function connectTonWallet() {
+        // Implement wallet connection logic
+        document.getElementById('wallet-status').innerText = 'TON Wallet connected.';
+    }
+
+    // Connect OKX wallet
+    function connectOkxWallet() {
+        // Implement wallet connection logic
+        document.getElementById('wallet-status').innerText = 'OKX Web3 Wallet connected.';
     }
 
     startSlideshow();
