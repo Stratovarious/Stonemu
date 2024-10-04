@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let progressBar = document.getElementById('progress');
     let progressWidth = 0;
     let progressInterval;
-    let slideInterval;
+    let slideInterval; 
 
     // Start the slideshow
     function startSlideshow() {
