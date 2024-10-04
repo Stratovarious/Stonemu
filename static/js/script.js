@@ -114,6 +114,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // Click oyunu ayarları
         setupClickGame();
 
+        // Seçilen exchange'i anasayfada göster
+        let exchangeSelected = localStorage.getItem('exchangeSelected');
+        if (exchangeSelected) {
+            let exchangeFrame = document.getElementById('exchange-button');
+            exchangeFrame.style.backgroundImage = `url('images/${exchangeSelected}_logo.png')`;
+        }
+
         // Menü butonları
         document.getElementById('events-button').addEventListener('click', showEventsPage);
         document.getElementById('tournaments-button').addEventListener('click', showTournamentsPage);
