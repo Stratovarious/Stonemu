@@ -1,0 +1,25 @@
+<!-- templates/admin/edit_user.html -->
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Düzenle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_styles.css') }}">
+</head>
+<body>
+    <h2>Kullanıcı Düzenle</h2>
+    <form method="POST">
+        <label>Kullanıcı Adı:</label>
+        <input type="text" name="username" value="{{ user.username }}" required><br>
+        <label>Rol:</label>
+        <select name="role" required>
+            <option value="user" {% if user.role == 'user' %}selected{% endif %}>Kullanıcı</option>
+            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+            <option value="moderator" {% if user.role == 'moderator' %}selected{% endif %}>Moderatör</option>
+        </select><br>
+        <button type="submit">Kaydet</button>
+    </form>
+    <a href="{{ url_for('manage_users') }}">Geri Dön</a>
+</body>
+</html>
