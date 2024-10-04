@@ -1,0 +1,25 @@
+<!-- templates/admin/edit_task.html -->
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Görev Düzenle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_styles.css') }}">
+</head>
+<body>
+    <h2>Görev Düzenle</h2>
+    <form method="POST">
+        <label>Görev Adı:</label>
+        <input type="text" name="name" value="{{ task.name }}" required><br>
+        <label>Açıklama:</label>
+        <textarea name="description">{{ task.description }}</textarea><br>
+        <label>Puan:</label>
+        <input type="number" name="points" value="{{ task.points }}" required><br>
+        <label>Link:</label>
+        <input type="text" name="link" value="{{ task.link }}"><br>
+        <button type="submit">Kaydet</button>
+    </form>
+    <a href="{{ url_for('manage_tasks') }}">Geri Dön</a>
+</body>
+</html>
