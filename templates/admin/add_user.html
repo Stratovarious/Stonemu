@@ -1,0 +1,27 @@
+<!-- templates/admin/add_user.html -->
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Yeni Kullanıcı Ekle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_styles.css') }}">
+</head>
+<body>
+    <h2>Yeni Kullanıcı Ekle</h2>
+    <form method="POST">
+        <label>Kullanıcı Adı:</label>
+        <input type="text" name="username" required><br>
+        <label>Şifre:</label>
+        <input type="password" name="password" required><br>
+        <label>Rol:</label>
+        <select name="role" required>
+            <option value="user">Kullanıcı</option>
+            <option value="admin">Admin</option>
+            <option value="moderator">Moderatör</option>
+        </select><br>
+        <button type="submit">Ekle</button>
+    </form>
+    <a href="{{ url_for('manage_users') }}">Geri Dön</a>
+</body>
+</html>
