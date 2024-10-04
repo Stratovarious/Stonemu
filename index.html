@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <title>Stonemu App</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Responsive tasarım için -->
+    <!-- Responsive design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Fontlar ve ikonlar için -->
+    <!-- Icons and fonts -->
     <link rel="stylesheet" href="path_to_your_icon_library.css">
 </head>
 <body>
-    <!-- Slayt Gösterisi -->
+    <!-- Slideshow -->
     <div id="slideshow">
-        <div class="slide active" style="background-image: url('images/slider1.jpg');"></div>
-        <div class="slide" style="background-image: url('images/slider2.jpg');"></div>
-        <div class="slide" style="background-image: url('images/slider3.jpg');"></div>
+        <div class="slide active" style="background-image: url('images/slide1.jpg');"></div>
+        <div class="slide" style="background-image: url('images/slide2.jpg');"></div>
+        <div class="slide" style="background-image: url('images/slide3.jpg');"></div>
         <div id="loading-bar">
             <div id="progress"></div>
         </div>
     </div>
 
-    <!-- Exchange Seçim Ekranı -->
+    <!-- Exchange Selection Screen -->
     <div id="exchange-selection">
         <h2>Select your Exchange</h2>
         <div class="dropdown">
@@ -34,9 +34,9 @@
         <button id="exchange-ok-button">OK</button>
     </div>
 
-    <!-- Anasayfa -->
+    <!-- Homepage -->
     <div id="homepage">
-        <!-- Üst Kısım -->
+        <!-- Top Section -->
         <div id="top-section">
             <div id="connect-button">
                 <img src="images/connect_icon.png" alt="Connect Icon" class="icon">
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <!-- İkinci Kısım -->
+        <!-- Second Section -->
         <div id="second-section">
             <!-- Level -->
             <div id="level-section">
@@ -54,13 +54,13 @@
                     <img src="images/level_frame.png" alt="Level Frame">
                     <div class="content">
                         <span id="level-text">1</span>
-                        <div id="level-bar">
-                            <div id="level-progress"><img src="images/level_bar.png" alt="Level Bar"</div>
+                        <img src="images/level_bar.png" alt="Level Bar">
+                            <div id="level-progress"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Puan -->
+            <!-- Points -->
             <div id="points-section">
                 <div class="frame">
                     <img src="images/points_frame.png" alt="Points Frame">
@@ -72,18 +72,18 @@
             </div>
         </div>
 
-        <!-- Ayraç -->
+        <!-- Divider -->
         <div id="divider">
             <img src="images/divider.png" alt="Divider">
         </div>
 
-        <!-- Üçüncü Kısım (Tuşlar) -->
+        <!-- Third Section (Buttons) -->
         <div id="buttons-section">
             <div class="button-wrapper">
                 <div class="button-frame">
                     <img src="images/events_frame.png" alt="Button Frame">
                     <div class="button-content" id="events-button">
-                        <img src="images/events_icon.jpeg" alt="Events">
+                        <img src="images/events_icon.png" alt="Events">
                     </div>
                 </div>
                 <div class="button-frame">
@@ -95,7 +95,7 @@
                 <div class="button-frame">
                     <img src="images/leaderboard_frame.png" alt="Button Frame">
                     <div class="button-content" id="leaderboard-button">
-                        <img src="images/leaderboard_icon.jpeg" alt="Leaderboard">
+                        <img src="images/leaderboard_icon.png" alt="Leaderboard">
                     </div>
                 </div>
             </div>
@@ -103,10 +103,10 @@
 
         <!-- Settings -->
         <div id="settings-icon">
-            <img src="images/settings.png" alt="Settings Icon" class="icon">
+            <img src="images/settings_icon.png" alt="Settings Icon" class="icon">
         </div>
 
-        <!-- Tıklama Oyunu -->
+        <!-- Click Game -->
         <div id="click-game">
             <div class="circle-frame">
                 <img src="images/click_circle_frame.png" alt="Click Circle Frame">
@@ -114,27 +114,31 @@
             </div>
         </div>
 
-        <!-- Sayaç ve Boost -->
+        <!-- Counter and Boost -->
         <div id="counter-boost">
             <div id="counter">
-                <div class="content">                    
-                    <span id="counter-text"><span id="counter-a">5000</span>/<span id="counter-b">5000</span></span>
+                <div class="frame">
+                    <div class="content">
+                        <span id="counter-text"><span id="counter-a">5000</span>/<span id="counter-b">5000</span></span>
+                    </div>
                 </div>
             </div>
             <div id="boost">
-                <div class="content">
+                <div class="frame">
+                    <div class="content">
                         <span id="boost-text">Boost</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Alt Menü -->
+        <!-- Bottom Menu -->
         <div id="bottom-menu">
             <div class="menu-button" id="exchange-button">
                 <div class="frame">
                     <img src="images/exchange_button_frame.png" alt="Menu Button Frame">
                     <div class="content">
-                        <img src="images/exchange_icon.jpeg" alt="Exchange">
+                        <img src="images/exchange_icon.png" alt="Exchange">
                     </div>
                 </div>
             </div>
@@ -150,7 +154,7 @@
                 <div class="frame">
                     <img src="images/playground_button_frame.png" alt="Menu Button Frame">
                     <div class="content">
-                        <img src="images/playground_icon.jpeg" alt="Playground">
+                        <img src="images/playground_icon.png" alt="Playground">
                     </div>
                 </div>
             </div>
@@ -158,7 +162,7 @@
                 <div class="frame">
                     <img src="images/friends_button_frame.png" alt="Menu Button Frame">
                     <div class="content">
-                        <img src="images/friends_icon.jpeg" alt="Friends">
+                        <img src="images/friends_icon.png" alt="Friends">
                     </div>
                 </div>
             </div>
@@ -172,56 +176,112 @@
             </div>
         </div>
 
-        <!-- Alt Ayraç -->
+        <!-- Bottom Divider -->
         <div id="bottom-divider">
             <img src="images/bottom_divider.png" alt="Bottom Divider">
         </div>
     </div>
 
-    <!-- Sayfalar -->
+    <!-- Pages -->
     <div id="pages">
-        <!-- Events Sayfası -->
-        <div id="events-page" class="page">
-            <h2>Events</h2>
-            <!-- Görevler listelenecek -->
-            <div id="tasks-list">
-                <!-- Görevler dinamik olarak JavaScript ile eklenecek -->
-            </div>
-            <button id="back-from-events">Geri</button>
+        <!-- Wallet Page -->
+        <div id="wallet-page" class="page">
+            <h2>Wallet</h2>
+            <!-- Wallet connection options -->
+            <button id="connect-ton-wallet">Connect TON Wallet</button>
+            <button id="connect-okx-wallet">Connect OKX Web3 Wallet</button>
+            <p id="wallet-status">No wallet connected.</p>
+            <button id="back-from-wallet">Back</button>
         </div>
 
-        <!-- Diğer sayfalar benzer şekilde eklenecek -->
+        <!-- Events Page -->
+        <div id="events-page" class="page">
+            <h2>Events</h2>
+            <div id="tasks-list">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+            <button id="back-from-events">Back</button>
+        </div>
+
+        <!-- Tournaments Page -->
+        <div id="tournaments-page" class="page">
+            <h2>Tournaments</h2>
+            <p>Under Construction</p>
+            <button id="back-from-tournaments">Back</button>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div id="leaderboard-page" class="page">
+            <h2>Leaderboard</h2>
+            <div id="leaderboard-list">
+                <!-- Leaderboard entries will be dynamically added here -->
+            </div>
+            <button id="back-from-leaderboard">Back</button>
+        </div>
+
+        <!-- Friends Page -->
+        <div id="friends-page" class="page">
+            <h2>Friends</h2>
+            <p>Your Invite Code: <span id="invite-code"></span></p>
+            <button id="copy-invite-code">Copy</button>
+            <button id="share-invite-link">Share</button>
+            <div id="invitees-list">
+                <!-- List of invited users -->
+            </div>
+            <button id="back-from-friends">Back</button>
+        </div>
+
+        <!-- Shop Page -->
+        <div id="shop-page" class="page">
+            <h2>Shop</h2>
+            <p>Under Construction</p>
+            <button id="back-from-shop">Back</button>
+        </div>
+
+        <!-- Mine Page -->
+        <div id="mine-page" class="page">
+            <h2>Mine</h2>
+            <p>Under Construction</p>
+            <button id="back-from-mine">Back</button>
+        </div>
+
+        <!-- Playground Page -->
+        <div id="playground-page" class="page">
+            <h2>Playground</h2>
+            <p>Under Construction</p>
+            <button id="back-from-playground">Back</button>
+        </div>
     </div>
 
-    <!-- Settings Penceresi -->
+    <!-- Settings Window -->
     <div id="settings-window">
         <h2>Settings</h2>
         <label>
-            <input type="checkbox" id="sound-toggle"> Uygulama Sesi
+            <input type="checkbox" id="sound-toggle"> Application Sound
         </label>
-        <!-- Diğer ayarlar -->
-        <button id="close-settings">Kapat</button>
+        <button id="connect-twitter">Connect Twitter Account</button>
+        <button id="close-settings">Close</button>
     </div>
 
-    <!-- Boost Penceresi -->
+    <!-- Boost Window -->
     <div id="boost-window">
         <h2>Boost</h2>
         <div class="boost-option">
-            <h3>Tıklama Arttır (Level <span id="click-boost-level">1</span>)</h3>
-            <button class="upgrade-button" data-type="click">Yükselt - 10000 Puan</button>
+            <h3>Increase Click (Level <span id="click-boost-level">1</span>)</h3>
+            <button class="upgrade-button" data-type="click">Upgrade - 10000 Points</button>
         </div>
         <div class="boost-option">
-            <h3>Kasa Arttır (Level <span id="storage-boost-level">1</span>)</h3>
-            <button class="upgrade-button" data-type="storage">Yükselt - 10000 Puan</button>
+            <h3>Increase Storage (Level <span id="storage-boost-level">1</span>)</h3>
+            <button class="upgrade-button" data-type="storage">Upgrade - 10000 Points</button>
         </div>
         <div class="boost-option">
-            <h3>Dolum Hızı Arttır (Level <span id="speed-boost-level">1</span>)</h3>
-            <button class="upgrade-button" data-type="speed">Yükselt - 20000 Puan</button>
+            <h3>Increase Filling Speed (Level <span id="speed-boost-level">1</span>)</h3>
+            <button class="upgrade-button" data-type="speed">Upgrade - 20000 Points</button>
         </div>
-        <button id="close-boost">Kapat</button>
+        <button id="close-boost">Close</button>
     </div>
 
-    <!-- JavaScript dosyası -->
+    <!-- JavaScript File -->
     <script src="script.js"></script>
 </body>
 </html>
