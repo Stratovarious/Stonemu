@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let progressBar = document.getElementById('progress');
     let progressWidth = 0;
     let progressInterval;
-    let slideInterval; 
+    let slideInterval;
 
     // Start the slideshow
     function startSlideshow() {
@@ -34,8 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check if exchange selection is required
     function checkExchangeSelection() {
-        // Here you would make an API call to check exchange selection
-        // For simplicity, we'll assume it's not selected
         let exchangeSelected = localStorage.getItem('exchangeSelected');
         if (!exchangeSelected) {
             document.getElementById('slideshow').style.display = 'none';
@@ -51,12 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('exchange-ok-button').addEventListener('click', function() {
         let exchange = document.getElementById('exchange-dropdown').value;
         if (exchange) {
-            // Save exchange selection locally
             localStorage.setItem('exchangeSelected', exchange);
             document.getElementById('exchange-selection').style.display = 'none';
             document.getElementById('homepage').style.display = 'block';
             initializeHomepage();
-            // Optionally, send the selection to the server via an API call
         } else {
             alert('Please select an exchange.');
         }
@@ -96,6 +92,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('back-from-shop').addEventListener('click', closePage);
         document.getElementById('back-from-mine').addEventListener('click', closePage);
         document.getElementById('back-from-playground').addEventListener('click', closePage);
+
+        // Update level and points display
+        document.getElementById('level-text').innerText = 'Level 1';
+        document.getElementById('points-number').innerText = '0';
     }
 
     // Show wallet page
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let clickInterval = 20000; // 20 seconds
 
         document.getElementById('click-circle').addEventListener('click', function() {
-            // Hile kontrolü
+            // Cheat detection
             let now = Date.now();
             let lastClickTime = parseInt(localStorage.getItem('lastClickTime')) || 0;
             if (now - lastClickTime < 100) {
