@@ -24,6 +24,44 @@
         }
     </style>
 </head>
+    <script>
+    	function scalePage() {
+        	// Tüm sayfanın kapsayıcısını seç
+        	const container = document.querySelector('.container');
+
+        	// Ekran boyutlarını al
+        	const viewportWidth = window.innerWidth;
+        	const viewportHeight = window.innerHeight;
+
+        	// Sayfanın orijinal genişlik ve yüksekliğini belirle (CSS'te tanımlanan oranlara göre ayar)
+        	const pageWidth = container.offsetWidth;
+       		const pageHeight = container.offsetHeight;
+
+        	// Ölçek faktörlerini hesapla
+        	const scaleX = viewportWidth / pageWidth;
+        	const scaleY = viewportHeight / pageHeight;
+
+        	// En küçük ölçek faktörünü kullanarak oranı koru
+        	const scale = Math.min(scaleX, scaleY);
+
+        	// Container'a ölçek uygula
+        	container.style.transform = `scale(${scale})`;
+        	container.style.transformOrigin = 'top left';
+
+        	// Eğer sayfa merkezlenecekse, kalan alanı ortala
+        	const offsetX = (viewportWidth - pageWidth * scale) / 2;
+        	const offsetY = (viewportHeight - pageHeight * scale) / 2;
+
+        	// Container'ı ortala
+        	container.style.position = 'absolute';
+        	container.style.left = `${offsetX}px`;
+        	container.style.top = `${offsetY}px`;
+    	}
+
+    	// Ölçekleme fonksiyonunu yükle ve pencere boyut değişiminde çağır
+    	window.addEventListener('resize', scalePage);
+    	window.addEventListener('load', scalePage);
+    </script>
 <body>
 </body>
 </html>
