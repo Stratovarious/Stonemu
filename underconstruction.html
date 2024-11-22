@@ -15,7 +15,7 @@
             height: 100%;
         }
         body {
-            background: url('uc_img/underconstruction/Under Construction.png') no-repeat center center fixed;
+            background: url('uc_img/underconstruction/uc.png') no-repeat center center fixed;
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -23,22 +23,22 @@
             overflow: hidden;
         }
 	.back-button {
-  position: absolute;
-  top: 10px; /* Üstten 10 piksel boşluk */
-  left: 10px; /* Soldan 10 piksel boşluk */
-  cursor: pointer;
-  z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
-}
+  		position: absolute;
+  		top: 2%; /* Üstten 10 piksel boşluk */
+  		left: 2%; /* Soldan 10 piksel boşluk */
+  		cursor: pointer;
+  		z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
+	}
 
-.back-button img {
-  width: 40px; /* Geri tuşunun genişliği */
-  height: 40px; /* Geri tuşunun yüksekliği */
-  object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */
-}
+	.back-button img {
+  		width: 20%; /* Geri tuşunun genişliği */
+		height: 20%; /* Geri tuşunun yüksekliği */
+		object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */ 
+	}
     </style>
-<div class="back-button" onclick="goBack()">
-    <img src="uc_img/back-arrow.png" alt="Geri Tuşu">
-  </div>
+	<div class="back-button" onclick="goBack()">
+    		<img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu">
+  	</div>
   <script>
     	function scalePage() {
         	// Tüm sayfanın kapsayıcısını seç
