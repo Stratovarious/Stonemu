@@ -51,57 +51,65 @@
             height: auto; /* Oranını koruyarak yüksekliği ayarla */
         }
     </style>
-    <script>
-        // Geri tuşu fonksiyonunu global kapsamda tanımlayın
-        function goBack() {
-            window.location.href = "index.html"; // Kullanıcıyı index.html sayfasına yönlendir
-        }
-
-        function scalePage() {
-            const container = document.querySelector('.container');
-            if (!container) return;
-
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-
-            const pageWidth = container.offsetWidth;
-            const pageHeight = container.offsetHeight;
-
-            const scaleX = viewportWidth / pageWidth;
-            const scaleY = viewportHeight / pageHeight;
-
-            const scale = Math.min(scaleX, scaleY);
-
-            container.style.transform = `scale(${scale})`;
-            container.style.transformOrigin = 'top left';
-
-            const offsetX = (viewportWidth - pageWidth * scale) / 2;
-            const offsetY = (viewportHeight - pageHeight * scale) / 2;
-
-            container.style.position = 'absolute';
-            container.style.left = `${offsetX}px`;
-            container.style.top = `${offsetY}px`;
-        }
-
-        function watchResize() {
-            requestAnimationFrame(() => {
-                scalePage();
-                watchResize();
-            });
-        }
-
-        window.addEventListener('load', () => {
-            scalePage();
-            watchResize();
-        });
-    </script>
 </head>
 <body>
     <div class="container">
         <!-- Geri tuşu -->
-        <div class="back-button" onclick="goBack()">
+        <div class="back-button" id="back-button">
             <img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu">
         </div>
     </div>
+
+    <script>
+        // JavaScript kodu yüklendikten sonra çalıştırılacak
+        window.onload = function() {
+            // Geri tuşu elementini seç
+            const backButton = document.getElementById('back-button');
+            if (backButton) {
+                backButton.onclick = function() {
+                    window.location.href = "index.html"; // Kullanıcıyı index.html sayfasına yönlendir
+                };
+            }
+
+            // Ölçekleme fonksiyonu
+            function scalePage() {
+                const container = document.querySelector('.container');
+                if (!container) return;
+
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                const pageWidth = container.offsetWidth;
+                const pageHeight = container.offsetHeight;
+
+                const scaleX = viewportWidth / pageWidth;
+                const scaleY = viewportHeight / pageHeight;
+
+                const scale = Math.min(scaleX, scaleY);
+
+                container.style.transform = `scale(${scale})`;
+                container.style.transformOrigin = 'top left';
+
+                const offsetX = (viewportWidth - pageWidth * scale) / 2;
+                const offsetY = (viewportHeight - pageHeight * scale) / 2;
+
+                container.style.position = 'absolute';
+                container.style.left = `${offsetX}px`;
+                container.style.top = `${offsetY}px`;
+            }
+
+            // Ölçeklemeyi sürekli izleyin
+            function watchResize() {
+                requestAnimationFrame(() => {
+                    scalePage();
+                    watchResize();
+                });
+            }
+
+            // Sayfa yüklendiğinde ölçeklemeyi başlat
+            scalePage();
+            watchResize();
+        };
+    </script>
 </body>
 </html>
