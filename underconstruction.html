@@ -22,8 +22,24 @@
             align-items: center;
             overflow: hidden;
         }
+	.back-button {
+  position: absolute;
+  top: 10px; /* Üstten 10 piksel boşluk */
+  left: 10px; /* Soldan 10 piksel boşluk */
+  cursor: pointer;
+  z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
+}
+
+.back-button img {
+  width: 40px; /* Geri tuşunun genişliği */
+  height: 40px; /* Geri tuşunun yüksekliği */
+  object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */
+}
     </style>
-    <script>
+<div class="back-button" onclick="goBack()">
+    <img src="uc_img/back-arrow.png" alt="Geri Tuşu">
+  </div>
+  <script>
     	function scalePage() {
         	// Tüm sayfanın kapsayıcısını seç
         	const container = document.querySelector('.container');
@@ -61,6 +77,11 @@
     	window.addEventListener('resize', scalePage);
     	window.addEventListener('load', scalePage);
     </script>
+  <script>
+    function goBack() {
+      window.history.back(); // Kullanıcıyı bir önceki sayfaya yönlendirir.
+    }
+  </script>
 </head>
 <body>
 </body>
