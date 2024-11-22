@@ -126,7 +126,7 @@ body {
     //align-right: 0;
     color: white; /* Yazı rengi görünür */
     transform: translate(50%, 50%);
-    font-size: 230%; /* Daha büyük görünür */
+    font-size: 150%; /* Daha büyük görünür */
     font-weight: bold;
     text-shadow: 1px 1px 2px #000; /* Kontrast için gölge */
 }
@@ -259,14 +259,14 @@ body {
 }
 
 .counter {
-  font-size: 22px;
+  font-size: 16px;
 }
 
 .boost-button {
     background-color: #333;
     color: white;
     padding: 8px 20px;
-    font-size: 22px;
+    font-size: 16px;
     font-weight: bold;
     border-radius: 5px;
     text-align: center;
