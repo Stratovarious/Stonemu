@@ -23,17 +23,20 @@
             overflow: hidden;
         }
 	.back-button {
-  		position: absolute;
-  		top: 2%; /* Üstten 10 piksel boşluk */
-  		left: 2%; /* Soldan 10 piksel boşluk */
-  		cursor: pointer;
-  		z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
+		  position: absolute;
+		  top: 2%; /* Üstten 10 piksel boşluk */
+		  left: 2%; /* Soldan 10 piksel boşluk */
+		  width: 20%;
+		  cursor: pointer;
+		  z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
+		 background-color: grey; /* Arka plan rengi beyaz */
+		 border-radius: 50%;
 	}
 
 	.back-button img {
-  		width: 20%; /* Geri tuşunun genişliği */
-		height: 20%; /* Geri tuşunun yüksekliği */
-		object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */ 
+		  width: 100%; /* Geri tuşunun genişliği */
+		  height: auto; /* Geri tuşunun yüksekliği */
+		  object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */
 	}
     </style>
 	<div class="back-button" onclick="goBack()">
