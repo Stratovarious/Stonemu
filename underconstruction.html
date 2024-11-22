@@ -16,13 +16,13 @@
         html, body {
             width: 100%;
             height: 100%;
-            //overflow: hidden;
+            overflow: hidden;
         }
 
         /* Arka plan ve genel yapı */
         .container {
-            width: 100%; /* Sayfanın tasarım genişliği */
-            height: 100%; /* Sayfanın tasarım yüksekliği */
+            width: 1000px; /* Sayfanın tasarım genişliği */
+            height: 600px; /* Sayfanın tasarım yüksekliği */
             background: url('uc_img/underconstruction/uc.png') no-repeat center center;
             background-size: cover;
             position: relative;
@@ -33,8 +33,8 @@
             position: absolute;
             top: 3%; /* Üstten boşluk */
             left: 3%; /* Soldan boşluk */
-            width: 20%; /* Tuşun genişliği */
-            height: auto; /* Tuşun yüksekliği */
+            width: 60px; /* Tuşun genişliği */
+            height: 60px; /* Tuşun yüksekliği */
             background-color: grey; /* Arka plan rengi */
             border-radius: 50%; /* Yuvarlak tuş */
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Hafif gölge */
@@ -47,67 +47,52 @@
 
         /* Geri tuşu ikonu */
         .back-button img {
-            width: 100%; /* İkon boyutu */
+            width: 50%; /* İkon boyutu */
             height: auto; /* Oranını koruyarak yüksekliği ayarla */
         }
     </style>
     <script>
-        let previousWidth = window.innerWidth;
-        let previousHeight = window.innerHeight;
+        // Geri tuşu fonksiyonunu global kapsamda tanımlayın
+        function goBack() {
+            window.location.href = "index.html"; // Kullanıcıyı index.html sayfasına yönlendir
+        }
 
         function scalePage() {
-            // Container'ı seç
             const container = document.querySelector('.container');
-            if (!container) return; // Container yoksa işlemi durdur
+            if (!container) return;
 
-            // Görüntüleme alanı boyutlarını al
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
 
-            // Sayfanın orijinal genişlik ve yüksekliği
             const pageWidth = container.offsetWidth;
             const pageHeight = container.offsetHeight;
 
-            // Ölçek faktörlerini hesapla
             const scaleX = viewportWidth / pageWidth;
             const scaleY = viewportHeight / pageHeight;
 
-            // En küçük ölçek faktörünü kullanarak oranı koru
             const scale = Math.min(scaleX, scaleY);
 
-            // Container'a ölçek uygula
             container.style.transform = `scale(${scale})`;
             container.style.transformOrigin = 'top left';
 
-            // Kalan alanı merkezlemek için ofset hesapla
             const offsetX = (viewportWidth - pageWidth * scale) / 2;
             const offsetY = (viewportHeight - pageHeight * scale) / 2;
 
-            // Container'ı ortala
             container.style.position = 'absolute';
             container.style.left = `${offsetX}px`;
             container.style.top = `${offsetY}px`;
         }
 
-        // Boyut değişimlerini sürekli kontrol et
         function watchResize() {
-            if (window.innerWidth !== previousWidth || window.innerHeight !== previousHeight) {
-                previousWidth = window.innerWidth;
-                previousHeight = window.innerHeight;
-                scalePage(); // Ölçekleme işlemini yeniden çalıştır
-            }
-            requestAnimationFrame(watchResize); // Kontrolü sürekli devam ettir
+            requestAnimationFrame(() => {
+                scalePage();
+                watchResize();
+            });
         }
 
-        // Geri tuşu fonksiyonu
-        function goBack() {
-            window.location.href = "index.html"; // Kullanıcıyı index.html sayfasına yönlendir
-        }
-
-        // Sayfa yüklendiğinde başlat
         window.addEventListener('load', () => {
-            scalePage(); // İlk yüklemede ölçekleme
-            watchResize(); // Sürekli boyut kontrolü
+            scalePage();
+            watchResize();
         });
     </script>
 </head>
