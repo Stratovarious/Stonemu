@@ -118,6 +118,20 @@
         </div>
     </div>
 
+    <script>
+	    // Dinamik ölçekleme fonksiyonu
+	    function scaleToFit() {
+	        const container = document.querySelector('.container');
+	        const scale = Math.min(window.innerWidth / container.offsetWidth, window.innerHeight / container.offsetHeight);
+	        container.style.transform = `scale(${scale})`;
+	        container.style.transformOrigin = 'top left';
+	    }
+	
+	    // Ölçekleme her yeniden boyutlandırmada tetiklenir
+	    window.addEventListener('resize', scaleToFit);
+	    window.addEventListener('load', scaleToFit); // Sayfa yüklendiğinde çalışır
+    </script>
+
     <!-- JavaScript File -->
     <script src="js/main.js"></script>
 </body>
