@@ -99,10 +99,10 @@
             requestAnimationFrame(watchResize); // Kontrolü sürekli devam ettir
         }
 
-        /*// Geri tuşu fonksiyonu
+        // Geri tuşu fonksiyonu
         function goBack() {
             window.location.href = "index.html"; // Kullanıcıyı index.html sayfasına yönlendir
-        }*/
+        }
 
         // Sayfa yüklendiğinde başlat
         window.addEventListener('load', () => {
@@ -114,8 +114,8 @@
 <body>
     <div class="container">
         <!-- Geri tuşu -->
-        <div class="back-button"> //onclick="goBack()"
-            <a href="index.html"><img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu"></a>
+        <div class="back-button" onclick="goBack()">
+            <img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu">
         </div>
     </div>
 </body>
