@@ -23,25 +23,25 @@
             overflow: hidden;
         }
 	.back-button {
-		  position: absolute;
-		  top: 2%; /* Üstten 10 piksel boşluk */
-		  left: 2%; /* Soldan 10 piksel boşluk */
-		  width: 20%;
-		  cursor: pointer;
-		  z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
-		 background-color: grey; /* Arka plan rengi beyaz */
-		 border-radius: 50%;
-	}
+  position: absolute;
+  top: 2%; /* Üstten 10 piksel boşluk */
+  left: 2%; /* Soldan 10 piksel boşluk */
+  width: 20%;
+  cursor: pointer;
+  z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
+ background-color: grey; /* Arka plan rengi beyaz */
+ border-radius: 50%;
+}
 
-	.back-button img {
-		  width: 100%; /* Geri tuşunun genişliği */
-		  height: auto; /* Geri tuşunun yüksekliği */
-		  object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */
-	}
+.back-button img {
+  width: 100%; /* Geri tuşunun genişliği */
+  height: auto; /* Geri tuşunun yüksekliği */
+  object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */
+}
     </style>
-	<div class="back-button" onclick="goBack()">
-    		<img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu">
-  	</div>
+<div class="back-button" onclick="goBack()">
+    <img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu">
+  </div>
   <script>
     	function scalePage() {
         	// Tüm sayfanın kapsayıcısını seç
@@ -81,10 +81,9 @@
     	window.addEventListener('load', scalePage);
     </script>
   <script>
-    /*function goBack() {
-      window.history.back(); // Kullanıcıyı bir önceki sayfaya yönlendirir.
-    }*/
-	  window.location.href = "index.html"; // Kullanıcıyı doğrudan index.html sayfasına yönlendirir.
+    function goBack() {
+      window.location.href = "index.html"; // Kullanıcıyı bir önceki sayfaya yönlendirir.
+    }
   </script>
 </head>
 <body>
