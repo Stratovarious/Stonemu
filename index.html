@@ -1,298 +1,124 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Stonemu App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Responsive tasarım -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- İkonlar ve fontlar -->
-    <link rel="stylesheet" href="path_to_your_icon_library.css">
+    <title>Stonemu Mobile Main Page</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Slideshow -->
-    <div id="slideshow">
-        <div class="slide active" style="background-image: url('{{ url_for('static', filename='images/slide1.jpg') }}');"></div>
-        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/slide2.jpg') }}');"></div>
-        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/slide3.jpg') }}');"></div>
-        <div id="loading-bar">
-            <div id="progress"></div>
+    <div class="container">
+	
+        <!-- Top Section -->
+        <div class="top-section">
+            <div class="wallet">
+                <a href="wallet.html" class="nav-link"><img src="img/1/wallet.png" alt="Wallet Image"></a>
+            </div>
+            <div class="logo">
+                <img src="img/1/logo.png" alt="Logo Image">
+            </div>
+        </div>
+
+        <!-- Level and Points Section -->
+        <div class="level-section">
+            <div class="left-column">
+                <div class="level">
+                    <img src="img/2/level.png" alt="Level Image">
+                </div>
+                <div class="level-bar">
+                    <img src="img/2/level-bar.png" alt="Level Bar">
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="points">
+                    <img src="img/2/points.png" alt="Points">
+                    <div class="points-value">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider">
+            <img src="img/3/divider.png" alt="Divider">
+        </div>
+
+        <!-- Menu Section -->
+        <div class="menu">
+            <div class="menu-item events">
+                <a href="events.html" class="nav-link">
+                    <div class="background"></div>
+                    <img src="img/4/events_frame.png" alt="Events Frame">
+                </a>
+            </div>
+            <div class="menu-item tournaments">
+                <a href="tournaments.html" class="nav-link">
+                    <div class="background"></div>
+                    <img src="img/4/events_frame.png" alt="Tournaments Frame">
+                </a>
+            </div>
+            <div class="menu-item leaderboard">
+                <a href="leaderboard.html" class="nav-link">
+                    <div class="background"></div>
+                    <img src="img/4/events_frame.png" alt="Leaderboard Frame">
+                </a>
+            </div>
+        </div>
+
+        <!-- Game Section -->
+        <div class="frame-wrapper">
+            <div class="frame">
+                <div class="background"></div>
+                <img src="img/5/game-frame.png" alt="Main Frame">
+                <div class="game-info">
+                    <span class="counter">5000/5000</span>
+                    <button class="boost-button">Boost</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Menu Section -->
+        <div class="bottom-menu-wrapper">
+            <div class="bottom-menu">
+                <div class="bottom-menu-item exchange">
+                    <a href="exchange.html" class="nav-link">
+                        <div class="background"></div>
+                        <img src="img/6/exchange_frame.png" alt="Exchange Frame">
+                    </a>
+                </div>
+                <div class="bottom-menu-item mine">
+                    <a href="mine.html" class="nav-link">
+                        <div class="background"></div>
+                        <img src="img/6/exchange_frame.png" alt="Mine Frame">
+                    </a>
+                </div>
+                <div class="bottom-menu-item playground">
+                    <a href="playground.html" class="nav-link">
+                        <div class="background"></div>
+                        <img src="img/6/exchange_frame.png" alt="Playground Frame">
+                    </a>
+                </div>
+                <div class="bottom-menu-item friends">
+                    <a href="friends.html" class="nav-link">
+                        <div class="background"></div>
+                        <img src="img/6/exchange_frame.png" alt="Friends Frame">
+                    </a>
+                </div>
+                <div class="bottom-menu-item store">
+                    <a href="store.html" class="nav-link">
+                        <div class="background"></div>
+                        <img src="img/6/exchange_frame.png" alt="Store Frame">
+                    </a>
+                </div>
+            </div>
+            <!-- Bottom Divider -->
+            <div class="bottom-divider">
+                <img src="img/6/bottom_divider.png" alt="Bottom Divider">
+            </div>
         </div>
     </div>
 
-    <!-- Ban Sayfası -->
-    <div id="ban-page" style="display: none;">
-        <h2>Yasaklandınız</h2>
-        <p>Hizmet şartlarını ihlal ettiğiniz için hesabınız yasaklanmıştır.</p>
-    </div>
-
-    <!-- Exchange Seçim Ekranı -->
-    <div id="exchange-selection" style="display: none;">
-    <h2>Borsanızı Seçin</h2>
-    <div class="dropdown">
-        <select id="exchange-dropdown">
-            <option value="" disabled selected>Borsa Seç</option>
-            <option value="binance" data-icon="images/binance_logo.png">Binance</option>
-            <option value="okx" data-icon="images/okx_logo.png">OKX</option>
-            <option value="bitget" data-icon="images/bitget_logo.png">Bitget</option>
-        </select>
-    </div>
-    <button id="exchange-ok-button">Tamam</button>
-</div>
-
-    <!-- Anasayfa -->
-    <div id="homepage" style="display: none;">
-        <!-- Üst Kısım -->
-        <div id="top-section">
-            <div id="connect-button">
-                <img src="{{ url_for('static', filename='images/connect_icon.png') }}" alt="Bağlan" class="icon">
-            </div>
-            <div id="logo">
-                <img src="{{ url_for('static', filename='images/stonemu_logo.png') }}" alt="Stonemu Logo" class="icon">
-            </div>
-        </div>
-
-        <!-- İkinci Kısım -->
-        <div id="second-section">
-            <!-- Seviye -->
-            <div id="level-section">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/level_frame.png') }}" alt="Seviye Çerçevesi">
-                    <div class="content">
-                        <span id="level-text">Seviye 1</span>
-                        <div id="level-bar">
-                            <img src="{{ url_for('static', filename='images/level_bar.png') }}" alt="Seviye Barı">
-                            <div id="level-progress"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Puanlar -->
-            <div id="points-section">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/points_frame.png') }}" alt="Puan Çerçevesi">
-                    <div class="content">
-                        <span id="points-text">Puanlar</span>
-                        <span id="points-number">0</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Ayırıcı -->
-        <div id="divider">
-            <img src="{{ url_for('static', filename='images/divider.png') }}" alt="Ayırıcı">
-        </div>
-
-        <!-- Üçüncü Kısım (Butonlar) -->
-        <div id="buttons-section">
-            <div class="button-wrapper">
-                <div class="button-frame">
-                    <img src="{{ url_for('static', filename='images/events_frame.png') }}" alt="Etkinlikler Çerçevesi">
-                    <div class="button-content" id="events-button">
-                        <img src="{{ url_for('static', filename='images/events_icon.png') }}" alt="Etkinlikler">
-                    </div>
-                </div>
-                <div class="button-frame">
-                    <img src="{{ url_for('static', filename='images/tournaments_frame.png') }}" alt="Turnuvalar Çerçevesi">
-                    <div class="button-content" id="tournaments-button">
-                        <img src="{{ url_for('static', filename='images/tournaments_icon.png') }}" alt="Turnuvalar">
-                    </div>
-                </div>
-                <div class="button-frame">
-                    <img src="{{ url_for('static', filename='images/leaderboard_frame.png') }}" alt="Lider Tablosu Çerçevesi">
-                    <div class="button-content" id="leaderboard-button">
-                        <img src="{{ url_for('static', filename='images/leaderboard_icon.png') }}" alt="Lider Tablosu">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Ayarlar -->
-        <div id="settings-icon">
-            <img src="{{ url_for('static', filename='images/settings_icon.png') }}" alt="Ayarlar" class="icon">
-        </div>
-
-        <!-- Click Oyunu -->
-        <div id="click-game">
-            <div class="circle-frame">
-                <img src="{{ url_for('static', filename='images/click_circle_frame.png') }}" alt="Click Çemberi Çerçevesi">
-                <img src="{{ url_for('static', filename='images/click_circle.png') }}" id="click-circle" alt="Click Çemberi" class="icon">
-            </div>
-        </div>
-
-        <!-- Sayaç ve Boost -->
-        <div id="counter-boost">
-            <div id="counter">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/counter_frame.png') }}" alt="Sayaç Çerçevesi">
-                    <div class="content">
-                        <span id="counter-text"><span id="counter-a">5000</span>/<span id="counter-b">5000</span></span>
-                    </div>
-                </div>
-            </div>
-            <div id="boost">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/boost_frame.png') }}" alt="Boost Çerçevesi">
-                    <div class="content">
-                        <span id="boost-text">Boost</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Alt Menü -->
-        <div id="bottom-menu">
-            <div class="menu-button" id="exchange-button">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/exchange_button_frame.png') }}" alt="Borsa Buton Çerçevesi">
-                    <div class="content">
-                        <img src="{{ url_for('static', filename='images/exchange_icon.png') }}" alt="Borsa">
-                    </div>
-                </div>
-            </div>
-            <div class="menu-button" id="mine-button">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/mine_button_frame.png') }}" alt="Mine Buton Çerçevesi">
-                    <div class="content">
-                        <img src="{{ url_for('static', filename='images/mine_icon.png') }}" alt="Mine">
-                    </div>
-                </div>
-            </div>
-            <div class="menu-button" id="playground-button">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/playground_button_frame.png') }}" alt="Oyun Alanı Buton Çerçevesi">
-                    <div class="content">
-                        <img src="{{ url_for('static', filename='images/playground_icon.png') }}" alt="Oyun Alanı">
-                    </div>
-                </div>
-            </div>
-            <div class="menu-button" id="friends-button">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/friends_button_frame.png') }}" alt="Arkadaşlar Buton Çerçevesi">
-                    <div class="content">
-                        <img src="{{ url_for('static', filename='images/friends_icon.png') }}" alt="Arkadaşlar">
-                    </div>
-                </div>
-            </div>
-            <div class="menu-button" id="shop-button">
-                <div class="frame">
-                    <img src="{{ url_for('static', filename='images/shop_button_frame.png') }}" alt="Mağaza Buton Çerçevesi">
-                    <div class="content">
-                        <img src="{{ url_for('static', filename='images/shop_icon.png') }}" alt="Mağaza">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Alt Ayırıcı -->
-        <div id="bottom-divider">
-            <img src="{{ url_for('static', filename='images/bottom_divider.png') }}" alt="Alt Ayırıcı">
-        </div>
-    </div>
-
-    <!-- Sayfalar -->
-    <div id="pages" style="display: none;">
-        <!-- Cüzdan Sayfası -->
-        <div id="wallet-page" class="page">
-            <h2>Cüzdan</h2>
-            <!-- Cüzdan bağlantı seçenekleri -->
-            <button id="connect-ton-wallet">TON Cüzdan Bağla</button>
-            <button id="connect-okx-wallet">OKX Web3 Cüzdan Bağla</button>
-            <p id="wallet-status">Hiçbir cüzdan bağlı değil.</p>
-            <button id="back-from-wallet">Geri</button>
-        </div>
-
-        <!-- Etkinlikler Sayfası -->
-        <div id="events-page" class="page">
-            <h2>Etkinlikler</h2>
-            <div id="tasks-list">
-                <!-- Görevler burada dinamik olarak eklenecek -->
-            </div>
-            <button id="back-from-events">Geri</button>
-        </div>
-
-        <!-- Turnuvalar Sayfası -->
-        <div id="tournaments-page" class="page">
-            <h2>Turnuvalar</h2>
-            <p>Yapım Aşamasında</p>
-            <button id="back-from-tournaments">Geri</button>
-        </div>
-
-        <!-- Lider Tablosu Sayfası -->
-        <div id="leaderboard-page" class="page">
-            <h2>Lider Tablosu</h2>
-            <div id="leaderboard-list">
-                <!-- Lider tablosu girişleri burada dinamik olarak eklenecek -->
-            </div>
-            <button id="back-from-leaderboard">Geri</button>
-        </div>
-
-        <!-- Arkadaşlar Sayfası -->
-        <div id="friends-page" class="page">
-            <h2>Arkadaşlar</h2>
-            <p>Davet Kodunuz: <span id="invite-code"></span></p>
-            <button id="copy-invite-code">Kopyala</button>
-            <button id="share-invite-link">Paylaş</button>
-            <div id="invitees-list">
-                <!-- Davet edilen kullanıcılar listesi -->
-            </div>
-            <button id="back-from-friends">Geri</button>
-        </div>
-
-        <!-- Mağaza Sayfası -->
-        <div id="shop-page" class="page">
-            <h2>Mağaza</h2>
-            <p>Yapım Aşamasında</p>
-            <button id="back-from-shop">Geri</button>
-        </div>
-
-        <!-- Mine Sayfası -->
-        <div id="mine-page" class="page">
-            <h2>Mine</h2>
-            <p>Yapım Aşamasında</p>
-            <button id="back-from-mine">Geri</button>
-        </div>
-
-        <!-- Oyun Alanı Sayfası -->
-        <div id="playground-page" class="page">
-            <h2>Oyun Alanı</h2>
-            <p>Yapım Aşamasında</p>
-            <button id="back-from-playground">Geri</button>
-        </div>
-    </div>
-
-    <!-- Ayarlar Penceresi -->
-    <div id="settings-window" style="display: none;">
-        <h2>Ayarlar</h2>
-        <label>
-            <input type="checkbox" id="sound-toggle"> Uygulama Sesi
-        </label>
-        <button id="connect-twitter">Twitter Hesabı Bağla</button>
-        <button id="close-settings">Kapat</button>
-    </div>
-
-    <!-- Boost Penceresi -->
-    <div id="boost-window" style="display: none;">
-        <h2>Boost</h2>
-        <div class="boost-option">
-            <h3>Tıklamayı Artır (Seviye <span id="click-boost-level">1</span>)</h3>
-            <button class="upgrade-button" data-type="click">Yükselt - 10000 Puan</button>
-        </div>
-        <div class="boost-option">
-            <h3>Depolamayı Artır (Seviye <span id="storage-boost-level">1</span>)</h3>
-            <button class="upgrade-button" data-type="storage">Yükselt - 10000 Puan</button>
-        </div>
-        <div class="boost-option">
-            <h3>Doldurma Hızını Artır (Seviye <span id="speed-boost-level">1</span>)</h3>
-            <button class="upgrade-button" data-type="speed">Yükselt - 20000 Puan</button>
-        </div>
-        <button id="close-boost">Kapat</button>
-    </div>
-
-    <!-- JavaScript Dosyası -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- JavaScript File -->
+    <script src="js/main.js"></script>
 </body>
 </html>
