@@ -5,87 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Under Construction</title>
     <style>
+        /* Genel sıfırlama */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body, html {
+
+        /* Tam ekran */
+        html, body {
             width: 100%;
             height: 100%;
+            //overflow: hidden;
         }
-        body {
-            background: url('uc_img/underconstruction/uc.png') no-repeat center center fixed;
+
+        /* Arka plan ve genel yapı */
+        .container {
+            width: 100%; /* Sayfanın tasarım genişliği */
+            height: 100%; /* Sayfanın tasarım yüksekliği */
+            background: url('uc_img/underconstruction/uc.png') no-repeat center center;
             background-size: cover;
+            position: relative;
+        }
+
+        /* Geri tuşu */
+        .back-button {
+            position: absolute;
+            top: 3%; /* Üstten boşluk */
+            left: 3%; /* Soldan boşluk */
+            width: 20%; /* Tuşun genişliği */
+            height: auto; /* Tuşun yüksekliği */
+            background-color: grey; /* Arka plan rengi */
+            border-radius: 50%; /* Yuvarlak tuş */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Hafif gölge */
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            cursor: pointer;
+            z-index: 1000; /* Üstte kalması için */
         }
-	.back-button {
-  position: absolute;
-  top: 2%; /* Üstten 10 piksel boşluk */
-  left: 2%; /* Soldan 10 piksel boşluk */
-  width: 20%;
-  cursor: pointer;
-  z-index: 1000; /* Diğer içeriklerin üstünde görünmesi için yüksek bir z-index değeri */
- background-color: grey; /* Arka plan rengi beyaz */
- border-radius: 50%;
-}
 
-.back-button img {
-  width: 100%; /* Geri tuşunun genişliği */
-  height: auto; /* Geri tuşunun yüksekliği */
-  object-fit: contain; /* Resim boyutlandırmasını düzgün yapar */
-}
+        /* Geri tuşu ikonu */
+        .back-button img {
+            width: 100%; /* İkon boyutu */
+            height: auto; /* Oranını koruyarak yüksekliği ayarla */
+        }
     </style>
-<div class="back-button" onclick="goBack()">
-    <img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu">
-  </div>
-  <script>
-    	function scalePage() {
-        	// Tüm sayfanın kapsayıcısını seç
-        	const container = document.querySelector('.container');
+    <script>
+        let previousWidth = window.innerWidth;
+        let previousHeight = window.innerHeight;
 
-        	// Ekran boyutlarını al
-        	const viewportWidth = window.innerWidth;
-        	const viewportHeight = window.innerHeight;
+        function scalePage() {
+            // Container'ı seç
+            const container = document.querySelector('.container');
+            if (!container) return; // Container yoksa işlemi durdur
 
-        	// Sayfanın orijinal genişlik ve yüksekliğini belirle (CSS'te tanımlanan oranlara göre ayar)
-        	const pageWidth = container.offsetWidth;
-       		const pageHeight = container.offsetHeight;
+            // Görüntüleme alanı boyutlarını al
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
 
-        	// Ölçek faktörlerini hesapla
-        	const scaleX = viewportWidth / pageWidth;
-        	const scaleY = viewportHeight / pageHeight;
+            // Sayfanın orijinal genişlik ve yüksekliği
+            const pageWidth = container.offsetWidth;
+            const pageHeight = container.offsetHeight;
 
-        	// En küçük ölçek faktörünü kullanarak oranı koru
-        	const scale = Math.min(scaleX, scaleY);
+            // Ölçek faktörlerini hesapla
+            const scaleX = viewportWidth / pageWidth;
+            const scaleY = viewportHeight / pageHeight;
 
-        	// Container'a ölçek uygula
-        	container.style.transform = `scale(${scale})`;
-        	container.style.transformOrigin = 'top left';
+            // En küçük ölçek faktörünü kullanarak oranı koru
+            const scale = Math.min(scaleX, scaleY);
 
-        	// Eğer sayfa merkezlenecekse, kalan alanı ortala
-        	const offsetX = (viewportWidth - pageWidth * scale) / 2;
-        	const offsetY = (viewportHeight - pageHeight * scale) / 2;
+            // Container'a ölçek uygula
+            container.style.transform = `scale(${scale})`;
+            container.style.transformOrigin = 'top left';
 
-        	// Container'ı ortala
-        	container.style.position = 'absolute';
-        	container.style.left = `${offsetX}px`;
-        	container.style.top = `${offsetY}px`;
-    	}
+            // Kalan alanı merkezlemek için ofset hesapla
+            const offsetX = (viewportWidth - pageWidth * scale) / 2;
+            const offsetY = (viewportHeight - pageHeight * scale) / 2;
 
-    	// Ölçekleme fonksiyonunu yükle ve pencere boyut değişiminde çağır
-    	window.addEventListener('resize', scalePage);
-    	window.addEventListener('load', scalePage);
+            // Container'ı ortala
+            container.style.position = 'absolute';
+            container.style.left = `${offsetX}px`;
+            container.style.top = `${offsetY}px`;
+        }
+
+        // Boyut değişimlerini sürekli kontrol et
+        function watchResize() {
+            if (window.innerWidth !== previousWidth || window.innerHeight !== previousHeight) {
+                previousWidth = window.innerWidth;
+                previousHeight = window.innerHeight;
+                scalePage(); // Ölçekleme işlemini yeniden çalıştır
+            }
+            requestAnimationFrame(watchResize); // Kontrolü sürekli devam ettir
+        }
+
+        // Geri tuşu fonksiyonu
+        function goBack() {
+            window.location.href = "index.html"; // Kullanıcıyı index.html sayfasına yönlendir
+        }
+
+        // Sayfa yüklendiğinde başlat
+        window.addEventListener('load', () => {
+            scalePage(); // İlk yüklemede ölçekleme
+            watchResize(); // Sürekli boyut kontrolü
+        });
     </script>
 </head>
 <body>
-	<script>
-	function goBack() {
-      window.location.href = "index.html"; // Kullanıcıyı bir önceki sayfaya yönlendirir.
-    }
-    </script>
+    <div class="container">
+        <!-- Geri tuşu -->
+        <div class="back-button" onclick="goBack()">
+            <img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu">
+        </div>
+    </div>
 </body>
 </html>
