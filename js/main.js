@@ -114,41 +114,44 @@ document.addEventListener('DOMContentLoaded', function () {
         const viewportHeight = window.innerHeight;
     
         // Sabit oranlarla çalış: %85 üst, %15 alt
-        const containerRatio = 0.85;
-        const footerRatio = 0.15;
+        const containerRatio = 0.85; // Container oranı
+        const footerRatio = 0.15; // Footer oranı
     
-        // Elemanların yüksekliklerini hesapla
+        // Yükseklik hesaplamaları
         const containerHeight = viewportHeight * containerRatio;
         const footerHeight = viewportHeight * footerRatio;
     
-        // Container ve Footer için yükseklik ve genişlik ayarları
-        container.style.height = `${containerHeight}px`;
-        container.style.width = `${viewportWidth}px`;
+        // Container boyutlandırma
         container.style.position = 'absolute';
         container.style.top = '0';
         container.style.left = '0';
+        container.style.width = `${viewportWidth}px`;
+        container.style.height = `${containerHeight}px`;
     
-        footer.style.height = `${footerHeight}px`;
-        footer.style.width = `${viewportWidth}px`;
+        // Footer boyutlandırma
         footer.style.position = 'absolute';
-        footer.style.bottom = '0'; // Footer her zaman en altta
         footer.style.left = '0';
+        footer.style.bottom = '0'; // Her zaman alt kenarda
+        footer.style.width = `${viewportWidth}px`;
+        footer.style.height = `${footerHeight}px`;
     
-        // Ölçekleme için faktör hesaplama
-        const pageWidth = container.offsetWidth;
+        // Ölçekleme faktörleri
+        const pageWidth = viewportWidth;
         const pageHeight = containerHeight + footerHeight;
     
         const scaleX = viewportWidth / pageWidth;
         const scaleY = viewportHeight / pageHeight;
+    
         const scale = Math.min(scaleX, scaleY);
     
-        // Container ve Footer'a ölçek uygula
+        // Ölçek uygula
         container.style.transform = `scale(${scale})`;
         container.style.transformOrigin = 'top left';
     
         footer.style.transform = `scale(${scale})`;
         footer.style.transformOrigin = 'top left';
-    }
+}
+
 
 
     window.addEventListener('resize', scalePage);
