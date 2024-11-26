@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Başlangıç değerleri
+    let a = 5000; // Sayaç başlangıç değeri
+    let b = 5000; // Sayaç maksimum değeri
+    let points = 0; // Puan başlangıç değeri
+
     // Linklerin tıklanmasını ve sürüklenmesini tamamen engelle
     function preventLinkInteractions() {
         const links = document.querySelectorAll('a.nav-link');
