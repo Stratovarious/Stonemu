@@ -29,40 +29,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Dinamik sayfa yükleme
     function attachNavLinkEventListeners() {
-        const navLinks = document.querySelectorAll('a.nav-link');
+    const navLinks = document.querySelectorAll('a.nav-link');
 
-        navLinks.forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const page = this.getAttribute('href');
+    navLinks.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const page = this.getAttribute('href');
 
-                fetch(page)
-                    .then((response) => {
-                        if (response.ok) {
-                            return response.text();
-                        } else {
-                            throw new Error('Sayfa yüklenemedi.');
-                        }
-                    })
-                    .then((html) => {
-                        // Yalnızca .container içeriğini güncelle
-                        const container = document.querySelector('.container');
-                        if (container) {
-                            container.innerHTML = html;
-                        }
+            fetch(page)
+                .then((response) => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Sayfa yüklenemedi.');
+                    }
+                })
+                .then((html) => {
+                    // Sadece container içeriğini güncelle
+                    const dynamicContent = document.querySelector('.container');
+                    if (dynamicContent) {
+                        dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
+                    }
 
-                        // Dinamik içerik yüklendikten sonra event listener'ları tekrar ata
-                        attachNavLinkEventListeners();
-                        attachFrameClickListener();
-                        preventImageDragging();
-                        preventLinkInteractions();
-                    })
-                    .catch((error) => {
-                        console.error('Hata:', error);
-                    });
-            });
+                    // Dinamik içerik yüklendikten sonra event listener'ları tekrar ata
+                    attachNavLinkEventListeners();
+                    attachFrameClickListener();
+                    preventImageDragging();
+                    preventLinkInteractions();
+                })
+                .catch((error) => {
+                    console.error('Hata:', error);
+                });
         });
-    }
+    });
+}
 
     // Frame tıklama işlemi
     function attachFrameClickListener() {
