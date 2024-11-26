@@ -122,14 +122,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const footerHeight = viewportHeight * footerRatio; // Footer yüksekliği
     
         // Container boyutlandırma ve konumlandırma
-        container.style.position = 'absolute';
+        container.style.position = 'relative';
         container.style.top = '0'; // Üst kenara yapışır
         container.style.left = '0';
         container.style.width = `${viewportWidth}px`;
         container.style.height = `${containerHeight}px`; // Ekranın %85'ini kaplar
     
         // Footer boyutlandırma ve konumlandırma
-        footer.style.position = 'absolute';
+        footer.style.position = 'relative';
         footer.style.left = '0';
         footer.style.top = `${containerHeight}px`; // Container'ın hemen altına yerleşir
         footer.style.width = `${viewportWidth}px`;
