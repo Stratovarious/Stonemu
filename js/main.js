@@ -110,44 +110,17 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!container || !footer) return;
     
         // Ekran boyutlarını al
-        const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
     
-        // Sabit oranlarla çalış: %85 üst, %15 alt
-        const containerRatio = 0.85; // Container ekranın %85'i
-        const footerRatio = 0.15; // Footer ekranın %15'i
+        // Oranlara göre yükseklik hesaplamaları
+        const footerHeight = viewportHeight * 0.15; // Footer %15
+        const containerHeight = viewportHeight - footerHeight; // Container kalan %85
     
-        // Container ve Footer için yükseklik hesaplamaları
-        const containerHeight = viewportHeight * containerRatio; // Container yüksekliği
-        const footerHeight = viewportHeight * footerRatio; // Footer yüksekliği
-    
-        // Container boyutlandırma ve konumlandırma
-        container.style.position = 'relative';
-        container.style.top = '0'; // Üst kenara yapışır
-        container.style.left = '0';
-        container.style.width = `${viewportWidth}px`;
-        container.style.height = `${containerHeight}px`; // Ekranın %85'ini kaplar
-    
-        // Footer boyutlandırma ve konumlandırma
-        footer.style.position = 'relative';
-        footer.style.left = '0';
-        footer.style.top = `${containerHeight}px`; // Container'ın hemen altına yerleşir
-        footer.style.width = `${viewportWidth}px`;
-        footer.style.height = `${footerHeight}px`; // Ekranın %15'ini kaplar
-    
-        // Ölçekleme faktörleri
-        const scaleX = viewportWidth / viewportWidth; // Genişlik için ölçek (her zaman 1)
-        const scaleY = viewportHeight / (containerHeight + footerHeight); // Yükseklik için ölçek
-    
-        const scale = Math.min(scaleX, scaleY); // Küçük olanı seçerek oranı koruyoruz
-    
-        // Container ve Footer'a ölçek uygula
-        container.style.transform = `scale(${scale})`;
-        container.style.transformOrigin = 'top left';
-    
-        footer.style.transform = `scale(${scale})`;
-        footer.style.transformOrigin = 'top left';
+        // CSS ile Flex düzeni ayarlı olduğu için, boyutları sadece kontrol ederiz
+        container.style.height = `${containerHeight}px`;
+        footer.style.height = `${footerHeight}px`;
     }
+
 
 
 
