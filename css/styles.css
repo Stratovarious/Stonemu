@@ -23,15 +23,9 @@ a {
 
 /* Genel ayarlar */
 html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
-    height: 100%; /* HTML ve BODY tam ekranı kapsar */
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Body, görüntüleme alanının tamamını kaplar */
     background-color: black;
 }
 
@@ -40,6 +34,7 @@ body {
     width: 100%;
     height: 100%;
     transform-origin: top left;
+    position: relative;
 }
 
 
@@ -51,11 +46,11 @@ body {
     position: relative;
 }*/
 
+/* Container içeriği tam yüksekliği kapsar */
 .container {
-    flex: 1 0 auto; /* Container, kalan alanı doldurur */
-    overflow: auto; /* İçerik taşarsa kaydırma sağlar */
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    height: calc(100% - 15vh); /* Footer'ın yüksekliğini çıkarıyoruz */
+    overflow: hidden;
 }
 
 /* Wallet ve Logo Bölgesi */
@@ -296,10 +291,12 @@ body {
     z-index: 5; /* Sayaç ve diğer öğelerin üstünde */
 }
 
+/* Footer ayarları */
 footer {
-    flex-shrink: 0; /* Footer'ın küçülmesini engeller */
-    height: 15vh; /* Footer, görüntüleme alanının %15'i kadar yükseklik alır */
+    width: 100%;
+    height: 15vh; /* Footer yüksekliği */
     background-color: #272A2F;
+    flex-shrink: 0;
     z-index: 10; /* Üstte görünmesi için öncelik */
 }
 
