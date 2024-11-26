@@ -23,24 +23,20 @@ a {
 
 /* Genel ayarlar */
 html, body {
-    margin: 0;
-    padding: 0;
     width: 100%;
-    height: 100%; /* HTML ve BODY tam ekranı kapsar */
+    height: 100%;
+    overflow: hidden; /* Taşmaları engeller */
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh; /* Body, görüntüleme alanının tamamını kaplar */
     background-color: black;
 }
 
+/* Wrapper */
 #wrapper {
     width: 100%;
     height: 100%;
-    transform-origin: top left; /* Ölçekleme orijini */
+    transform-origin: top left;
 }
 
 
@@ -53,8 +49,9 @@ body {
 }*/
 
 .container {
-    flex: 1 0 auto; /* Container, kalan alanı doldurur */
-    overflow: auto; /* İçerik taşarsa kaydırma sağlar */
+    width: 100%;
+    height: calc(85vh); /* Görünüm yüksekliğinin %85'i */
+    overflow: auto; /* Taşan içerik için kaydırma */
     display: flex;
     flex-direction: column;
 }
@@ -298,8 +295,8 @@ body {
 }
 
 footer {
-    flex-shrink: 0; /* Footer'ın küçülmesini engeller */
-    height: 15vh; /* Footer, görüntüleme alanının %15'i kadar yükseklik alır */
+    width: 100%;
+    height: calc(15vh); /* Görünüm yüksekliğinin %15'i */
     background-color: #272A2F;
     z-index: 10; /* Üstte görünmesi için öncelik */
 }
@@ -376,6 +373,7 @@ footer {
     display: block;
 }"
 
+/* Responsive Tasarım */
 @media screen and (max-width: 768px) {
     .top-section {
         flex-direction: column;
@@ -391,8 +389,14 @@ footer {
         flex-direction: column;
     }
 
-    .points, .level {
+    .left-column, .right-column {
+        width: 100%;
+        align-items: center;
+    }
+
+    .level, .points {
         width: 80%;
+        margin: 10px 0;
     }
 
     .menu-item, .bottom-menu-item {
@@ -408,4 +412,4 @@ footer {
     .frame {
         width: 80%;
     }
-} 
+}
