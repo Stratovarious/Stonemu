@@ -114,43 +114,41 @@ document.addEventListener('DOMContentLoaded', function () {
         const viewportHeight = window.innerHeight;
     
         // Sabit oranlarla çalış: %85 üst, %15 alt
-        const containerRatio = 0.85; // Container oranı
-        const footerRatio = 0.15; // Footer oranı
+        const containerRatio = 0.85; // Container ekranın %85'i
+        const footerRatio = 0.15; // Footer ekranın %15'i
     
-        // Yükseklik hesaplamaları
-        const containerHeight = viewportHeight * containerRatio;
-        const footerHeight = viewportHeight * footerRatio;
+        // Container ve Footer için yükseklik hesaplamaları
+        const containerHeight = viewportHeight * containerRatio; // Container yüksekliği
+        const footerHeight = viewportHeight * footerRatio; // Footer yüksekliği
     
-        // Container boyutlandırma
+        // Container boyutlandırma ve konumlandırma
         container.style.position = 'absolute';
-        container.style.top = '0';
+        container.style.top = '0'; // Üst kenara yapışır
         container.style.left = '0';
         container.style.width = `${viewportWidth}px`;
-        container.style.height = `${containerHeight}px`;
+        container.style.height = `${containerHeight}px`; // Ekranın %85'ini kaplar
     
-        // Footer boyutlandırma
+        // Footer boyutlandırma ve konumlandırma
         footer.style.position = 'absolute';
         footer.style.left = '0';
-        footer.style.bottom = '0'; // Her zaman alt kenarda
+        footer.style.top = `${containerHeight}px`; // Container'ın hemen altına yerleşir
         footer.style.width = `${viewportWidth}px`;
-        footer.style.height = `${footerHeight}px`;
+        footer.style.height = `${footerHeight}px`; // Ekranın %15'ini kaplar
     
         // Ölçekleme faktörleri
-        const pageWidth = viewportWidth;
-        const pageHeight = containerHeight + footerHeight;
+        const scaleX = viewportWidth / viewportWidth; // Genişlik için ölçek (her zaman 1)
+        const scaleY = viewportHeight / (containerHeight + footerHeight); // Yükseklik için ölçek
     
-        const scaleX = viewportWidth / pageWidth;
-        const scaleY = viewportHeight / pageHeight;
+        const scale = Math.min(scaleX, scaleY); // Küçük olanı seçerek oranı koruyoruz
     
-        const scale = Math.min(scaleX, scaleY);
-    
-        // Ölçek uygula
+        // Container ve Footer'a ölçek uygula
         container.style.transform = `scale(${scale})`;
         container.style.transformOrigin = 'top left';
     
         footer.style.transform = `scale(${scale})`;
         footer.style.transformOrigin = 'top left';
-}
+    }
+
 
 
 
