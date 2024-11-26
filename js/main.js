@@ -10,18 +10,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!body || !container || !footer) return;
 
-        // Pencere boyutlarını al
+        // Pencere yüksekliğini al
         const viewportHeight = window.innerHeight;
 
         // Oranlar
         const bodyHeight = viewportHeight * 0.85; // Body %85
         const footerHeight = viewportHeight * 0.15; // Footer %15
 
-        // Body ve footer yüksekliğini ayarla
-        body.style.height = `${bodyHeight}px`;
-        container.style.height = `100%`; // Container body'nin tamamını doldurur
-        footer.style.height = `${footerHeight}px`;
-        footer.style.top = `${bodyHeight}px`; // Footer body'nin altına sabitlenir
+        // Yükseklikleri ayarla
+        body.style.height = `${bodyHeight}px`; // Body %85
+        container.style.height = `${bodyHeight}px`; // Container, body'nin tamamını kaplar
+        footer.style.height = `${footerHeight}px`; // Footer %15
+        footer.style.top = `${bodyHeight}px`; // Footer body'nin hemen altına sabitlenir
     }
     
     function preventLinkInteractions() {
