@@ -26,7 +26,7 @@ html, body {
     padding: 0;
     height: 100%;
     display: flex;
-    flex-direction: column; /* Dikey hizalama */
+    flex-direction: column; /* Dikine hizalama */
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
@@ -43,8 +43,10 @@ html, body {
 .container {
     flex: 1; /* Kalan alanı doldur */
     width: 100%;
-    overflow-y: auto; /* Taşan içerik kaydırılabilir */
-    position: relative;
+    position: relative; /* Dinamik içerik için gerekli */
+    display: flex; /* İçeriklerin hizalanması için */
+    flex-direction: column; /* İçerikler dikey hizalanır */
+    justify-content: space-between; /* İçeriği yukarı ve aşağıda tutar */
 }
 
 /* Wallet ve Logo Bölgesi */
