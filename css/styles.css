@@ -26,10 +26,11 @@ html, body {
     padding: 0;
     height: 100%;
     display: flex;
-    flex-direction: column; /* Dikine hizalama */
+    flex-direction: column; /* Dikey hizalama */
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
+    overflow: hidden; /* Kaydırma çubuğunu kaldırır */
 }
 
 /*.container {
@@ -41,12 +42,13 @@ html, body {
 }*/
 
 .container {
-    flex: 1; /* Kalan alanı doldur */
+    flex: 1; /* Kalan alanı doldurur */
     width: 100%;
     position: relative; /* Dinamik içerik için gerekli */
     display: flex; /* İçeriklerin hizalanması için */
     flex-direction: column; /* İçerikler dikey hizalanır */
     justify-content: space-between; /* İçeriği yukarı ve aşağıda tutar */
+    overflow: hidden; /* Kaydırma engellenir */
 }
 
 /* Wallet ve Logo Bölgesi */
