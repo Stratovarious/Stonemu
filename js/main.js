@@ -4,24 +4,23 @@ document.addEventListener('DOMContentLoaded', function () {
     let points = 0; // Puan başlangıç değeri
 
     function scalePage() {
-        const html = document.documentElement; // HTML öğesi
-        const body = document.body; // Body öğesi
-        const container = document.querySelector('.container'); // Container div'i
-        const footer = document.querySelector('footer'); // Footer
+        const body = document.body;
+        const container = document.querySelector('.container');
+        const footer = document.querySelector('footer');
 
-        if (!html || !body || !container || !footer) return;
+        if (!body || !container || !footer) return;
 
-        // Pencere yüksekliğini al
+        // Ekran yüksekliği
         const viewportHeight = window.innerHeight;
 
-        // Body ve footer oranları
-        const footerHeight = viewportHeight * 0.15; // Footer %15
-        const bodyHeight = viewportHeight - footerHeight; // Body %85 (kalan alan)
+        // Body ve footer yüksekliklerini hesapla
+        const footerHeight = viewportHeight * 0.15; // %15 footer
+        const bodyHeight = viewportHeight - footerHeight; // %85 body
 
-        // Yükseklikleri ayarla
-        body.style.height = `${bodyHeight}px`; // Body yüksekliği
-        container.style.height = `100%`; // Container, body'yi tamamen doldurur
-        footer.style.height = `${footerHeight}px`; // Footer yüksekliği sabit
+        // Yükseklikleri uygula
+        body.style.height = `${bodyHeight}px`;
+        container.style.height = `100%`; // Container, body'nin tamamını kapsar
+        footer.style.height = `${footerHeight}px`;
     }
     
     function preventLinkInteractions() {
