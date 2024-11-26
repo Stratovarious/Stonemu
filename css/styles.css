@@ -21,20 +21,28 @@ a {
     color: inherit; /* Yazı rengi korunur */
 }
 
-html,body {
+html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
-.container {
+/*.container {
     padding: 0;
-    margin: 0; /*auto*/
+    margin: 0; /*auto
     width: 100%;
     height: 100%;
+    position: relative;
+}*/
+
+.container {
+    flex: 1 0 auto; /* Container, kalan alanı doldurur */
+    width: 100%;
     position: relative;
 }
 
@@ -276,6 +284,13 @@ html,body {
     z-index: 5; /* Sayaç ve diğer öğelerin üstünde */
 }
 
+footer {
+    flex-shrink: 0; /* Footer küçülmez */
+    height: 15%; /* Ekranın %15'ini kaplar */
+    background-color: #272A2F;
+    color: white;
+    text-align: center;
+}
 
 /* 6. Sıra: Wrapper */
 .bottom-menu-wrapper {
