@@ -3,6 +3,18 @@ document.addEventListener('DOMContentLoaded', function () {
     let b = 5000; // Sayaç maksimum değeri
     let points = 0; // Puan başlangıç değeri
 
+    function scaleContent() {
+        const wrapper = document.getElementById('wrapper');
+        const scaleWidth = window.innerWidth / wrapper.offsetWidth;
+        const scaleHeight = window.innerHeight / wrapper.offsetHeight;
+        const scale = Math.min(scaleWidth, scaleHeight);
+
+        wrapper.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleContent);
+    window.addEventListener('load', scaleContent);
+
     function preventLinkInteractions() {
         const links = document.querySelectorAll('a.nav-link');
         links.forEach(function (link) {
@@ -46,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
                         }
                         attachNavLinkEventListeners();
+                        attachFrameClickListener(); // Yeni içerik için tıklama olayını tekrar ekle
                     })
                     .catch((error) => {
                         console.error('Hata:', error);
@@ -102,12 +115,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return number.toLocaleString('tr-TR');
     }
 
+    // Sayfayı başlat
     function initializePage() {
         loadData();
         attachFrameClickListener();
         attachNavLinkEventListeners();
         preventImageDragging();
         preventLinkInteractions();
+        scaleContent(); // Sayfa yüklendiğinde ölçekleme yap
     }
 
     initializePage();
