@@ -29,40 +29,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Dinamik sayfa yükleme
     function attachNavLinkEventListeners() {
-    const navLinks = document.querySelectorAll('a.nav-link');
+        const navLinks = document.querySelectorAll('a.nav-link');
 
-    navLinks.forEach(function (link) {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const page = this.getAttribute('href');
+        navLinks.forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const page = this.getAttribute('href');
 
-            fetch(page)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Sayfa yüklenemedi.');
-                    }
-                })
-                .then((html) => {
-                    // Sadece container içeriğini güncelle
-                    const dynamicContent = document.querySelector('.container');
-                    if (dynamicContent) {
-                        dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
-                    }
+                fetch(page)
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Sayfa yüklenemedi.');
+                        }
+                    })
+                    .then((html) => {
+                        // Sadece container içeriğini güncelle
+                        const dynamicContent = document.querySelector('.container');
+                        if (dynamicContent) {
+                            dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
+                        }
 
-                    // Dinamik içerik yüklendikten sonra event listener'ları tekrar ata
-                    attachNavLinkEventListeners();
-                    attachFrameClickListener();
-                    preventImageDragging();
-                    preventLinkInteractions();
-                })
-                .catch((error) => {
-                    console.error('Hata:', error);
-                });
+                        // Dinamik içerik yüklendikten sonra event listener'ları tekrar ata
+                        attachNavLinkEventListeners();
+                        attachFrameClickListener();
+                        preventImageDragging();
+                        preventLinkInteractions();
+                        scalePage(); // Yüklenen içeriği yeniden ölçekle
+                    })
+                    .catch((error) => {
+                        console.error('Hata:', error);
+                    });
+            });
         });
-    });
-}
+    }
 
     // Frame tıklama işlemi
     function attachFrameClickListener() {
@@ -114,6 +115,46 @@ document.addEventListener('DOMContentLoaded', function () {
         return number.toLocaleString('tr-TR');
     }
 
+    // Sayfa ölçekleme işlemi
+    function scalePage() {
+        const container = document.querySelector('.container');
+        const footer = document.querySelector('footer');
+
+        if (!container || !footer) return;
+
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const pageWidth = container.offsetWidth;
+        const pageHeight = container.offsetHeight + footer.offsetHeight;
+
+        const scaleX = viewportWidth / pageWidth;
+        const scaleY = viewportHeight / pageHeight;
+
+        const scale = Math.min(scaleX, scaleY);
+
+        container.style.transform = `scale(${scale})`;
+        footer.style.transform = `scale(${scale})`;
+
+        container.style.transformOrigin = 'top left';
+        footer.style.transformOrigin = 'top left';
+
+        const offsetX = (viewportWidth - pageWidth * scale) / 2;
+        const offsetY = (viewportHeight - pageHeight * scale) / 2;
+
+        container.style.position = 'absolute';
+        container.style.left = `${offsetX}px`;
+        container.style.top = `${offsetY}px`;
+
+        footer.style.position = 'absolute';
+        footer.style.left = `${offsetX}px`;
+        footer.style.top = `${offsetY + container.offsetHeight * scale}px`;
+    }
+
+    // Sayfa yüklendiğinde ve pencere boyut değiştiğinde ölçekle
+    window.addEventListener('resize', scalePage);
+    window.addEventListener('load', scalePage);
+
     // Başlangıç ayarlarını yap
     function initializePage() {
         loadData();
@@ -121,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
         attachNavLinkEventListeners();
         preventImageDragging();
         preventLinkInteractions();
+        scalePage(); // Sayfa yüklendiğinde ölçekle
     }
 
     initializePage();
