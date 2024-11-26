@@ -25,9 +25,9 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 85%; /* Body yalnızca %85 olacak */
+    height: 85%; /* Body yüksekliği yalnızca %85 */
     display: flex;
-    flex-direction: column; /* Dikey hizalama */
+    flex-direction: column;
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
@@ -45,9 +45,8 @@ html, body {
     height: 100%; /* Body'nin tamamını kaplayacak */
     width: 100%; /* Tam genişlik */
     display: flex;
-    flex-direction: column; /* İçerikleri dikey hizalama */
-    justify-content: space-between; /* İçerikleri yukarı ve aşağıya yayıyor */
-    position: relative; /* İçerik konumlandırma için */
+    flex-direction: column; /* Dikey hizalama */
+    justify-content: space-between;
     background-color: transparent; /* İsteğe bağlı arka plan */
 }
 
@@ -290,9 +289,9 @@ html, body {
 }
 
 footer {
-    height: 15vh; /* Pencere yüksekliğinin %15’i */
+    height: 15%; /* Pencerenin %15’i */
     width: 100%; /* Tam genişlik */
-    position: fixed; /* Ekranın altına sabitlenir */
+    position: fixed; /* Pencerenin altına sabitlenir */
     bottom: 0; /* Alt kenara yapışır */
     background-color: #272A2F;
     display: flex;
@@ -300,6 +299,7 @@ footer {
     justify-content: center;
     color: white;
     text-align: center;
+    z-index: 10; /* Üstte olması için */
 }
 
 /* 6. Sıra: Wrapper */
