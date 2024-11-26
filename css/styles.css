@@ -42,6 +42,8 @@ html, body {
 }*/
 
 .container {
+    padding: 0;
+    margin: 0;
     height: 100%; /* Body'nin tamamını kaplayacak */
     width: 100%; /* Tam genişlik */
     display: flex;
