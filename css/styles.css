@@ -21,16 +21,24 @@ a {
     color: inherit; /* Yazı rengi korunur */
 }
 
-html, body {
+html {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%; /* Body yalnızca %85 yüksekliğe sahip */
+    height: 100%; /* HTML, ekranın tamamını kaplar */
     display: flex;
     flex-direction: column; /* Dikey hizalama */
     background-color: black;
-    font-family: Arial, sans-serif;
-    color: white;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 85vh; /* Body yalnızca %85 yüksekliği kaplar */
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
 }
 
 /*.container {
@@ -42,12 +50,11 @@ html, body {
 }*/
 
 .container {
-    height: 85%; /* Body'nin tamamını kaplar */
+    height: 100%; /* Body'nin tamamını kaplar */
     width: 100%; /* Tam genişlik */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* İçerikler yukarıdan başlar */
-    background-color: transparent;
+    justify-content: flex-start; /* İçerik yukarıdan başlar */
 }
 
 /* Wallet ve Logo Bölgesi */
@@ -289,7 +296,7 @@ html, body {
 }
 
 footer {
-    height: 15%; /* Pencerenin %15’i */
+    height: 15vh; /* Ekranın %15'ini kaplar */
     width: 100%; /* Tam genişlik */
     position: fixed; /* Pencerenin altına sabitlenir */
     bottom: 0; /* Alt kenara yapışır */
@@ -298,8 +305,7 @@ footer {
     align-items: center;
     justify-content: center;
     color: white;
-    text-align: center;
-    z-index: 10; /* Diğer içeriklerin üzerinde yer alır */
+    z-index: 10;
 }
 
 /* 6. Sıra: Wrapper */
