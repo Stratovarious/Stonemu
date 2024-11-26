@@ -25,17 +25,18 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    background-color: black;
-    font-family: Arial, sans-serif;
-    color: white;
-    overflow: hidden; /* Taşmaları engelle */
-}
-
-/* Body yalnızca %85 yükseklikte olmalı */
-body {
-    height: 85vh; /* Pencerenin %85'i */
+    height: 100%; /* HTML ve BODY tam ekranı kapsar */
     display: flex;
     flex-direction: column; /* Dikey hizalama */
+    background-color: black;
+}
+
+/* Body yalnızca container için çalışır */
+body {
+    height: 85vh; /* Pencerenin %85'i body alanı */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* İçerikler yukarıdan başlar */
 }
 
 /*.container {
@@ -51,8 +52,7 @@ body {
     width: 100%; /* Tam genişlik */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* İçerikler yukarıdan başlar */
-    background-color: transparent;
+    justify-content: space-between; /* İçerikleri yerleştirir */
 }
 
 /* Wallet ve Logo Bölgesi */
@@ -296,14 +296,12 @@ body {
 footer {
     height: 15vh; /* Pencerenin %15'lik alt kısmını kaplar */
     width: 100%; /* Tam genişlik */
-    position: fixed; /* Pencerenin altına sabitlenir */
-    bottom: 0; /* Alt kenara yapışır */
     background-color: #272A2F;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    position: relative;
     color: white;
-    z-index: 10; /* Üst katmanda olmasını sağlar */
 }
 
 /* 6. Sıra: Wrapper */
