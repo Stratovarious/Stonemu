@@ -1,125 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Construction</title>
-    <style>
-        /* Genel sıfırlama */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Tam ekran */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        /* Arka plan ve genel yapı */
-        .container {
-            margin: 0;
-            padding: 0;
-            width: 100%; /* Sayfanın tasarım genişliği */
-            height: 100%; /* Sayfanın tasarım yüksekliği */
-            display: flex;
-            background: url('uc_img/underconstruction/uc.png') no-repeat center center;
-            background-size: cover;
-            position: relative;
-        }
-
-        /* Geri tuşu */
-        .back-button {
-            position: absolute;
-            top: 3%; /* Üstten boşluk */
-            left: 3%; /* Soldan boşluk */
-            width: 60px; /* Tuşun genişliği */
-            height: 60px; /* Tuşun yüksekliği */
-            background-color: grey; /* Arka plan rengi */
-            border-radius: 50%; /* Yuvarlak tuş */
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Hafif gölge */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 1000; /* Üstte kalması için */
-        }
-
-        /* Geri tuşu ikonu */
-        .back-button img {
-            width: 50%; /* İkon boyutu */
-            height: auto; /* Oranını koruyarak yüksekliği ayarla */
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Geri tuşu -->
-        <div class="back-button" id="back-button">
-            <a href="index.html"><img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu"></a>
-        </div>
+<!-- Arka plan ve genel yapı -->
+<div class="under-construction-container" style="
+    width: 100%;
+    height: 100%;
+    background: url('uc_img/underconstruction/uc.png') no-repeat center center;
+    background-size: cover;
+    position: relative;
+    display: flex;">
+    
+    <!-- Geri tuşu -->
+    <div class="back-button" id="back-button" style="
+        position: absolute;
+        top: 3%;
+        left: 3%;
+        width: 60px;
+        height: 60px;
+        background-color: grey;
+        border-radius: 50%;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 1000;">
+        <a href="index.html"><img src="uc_img/underconstruction/back-arrow.png" alt="Geri Tuşu" style="width: 50%; height: auto;"></a>
     </div>
-
-    <script>
-        // JavaScript kodu yüklendikten sonra çalıştırılacak
-        window.onload = function() {
-            
-                function openFullscreen() {
-                    if (document.documentElement.requestFullscreen) {
-                        document.documentElement.requestFullscreen();
-                    } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
-                        document.documentElement.webkitRequestFullscreen();
-                    } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
-                        document.documentElement.msRequestFullscreen();
-                    }
-                }
-                
-
-            // Ölçekleme fonksiyonu
-            function scalePage() {
-                const container = document.querySelector('.container');
-                if (!container) return;
-
-                const viewportWidth = window.innerWidth;
-                const viewportHeight = window.innerHeight;
-
-                const pageWidth = container.offsetWidth;
-                const pageHeight = container.offsetHeight;
-
-                const scaleX = viewportWidth / pageWidth;
-                const scaleY = viewportHeight / pageHeight;
-
-                const scale = Math.min(scaleX, scaleY);
-
-                container.style.transform = `scale(${scale})`;
-                container.style.transformOrigin = 'top left';
-
-                const offsetX = (viewportWidth - pageWidth * scale) / 2;
-                const offsetY = (viewportHeight - pageHeight * scale) / 2;
-
-                container.style.position = 'absolute';
-                container.style.left = `${offsetX}px`;
-                container.style.top = `${offsetY}px`;
-            }
-
-            // Ölçeklemeyi sürekli izleyin
-            function watchResize() {
-                requestAnimationFrame(() => {
-                    scalePage();
-                    watchResize();
-                });
-            }
-
-            // Sayfa yüklendiğinde ölçeklemeyi başlat
-            scalePage();
-            watchResize();
-            openFullscreen();
-        };
-    </script>
-</body>
-</html>
+</div>
