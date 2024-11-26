@@ -219,6 +219,7 @@ body {
 }
 
 .frame {
+    user-select: none;
     position: relative;
     width: 85%;
     overflow: hidden;
