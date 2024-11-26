@@ -14,6 +14,8 @@
 
         /* Tam ekran */
         html, body {
+            margin: 0;
+            padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -21,8 +23,9 @@
 
         /* Arka plan ve genel yapı */
         .container {
-            width: 1000px; /* Sayfanın tasarım genişliği */
-            height: 600px; /* Sayfanın tasarım yüksekliği */
+            width: 100%; /* Sayfanın tasarım genişliği */
+            height: 100%; /* Sayfanın tasarım yüksekliği */
+            display: flex;
             background: url('uc_img/underconstruction/uc.png') no-repeat center center;
             background-size: cover;
             position: relative;
