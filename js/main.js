@@ -4,19 +4,24 @@ document.addEventListener('DOMContentLoaded', function () {
     let points = 0; // Puan başlangıç değeri
 
     function scalePage() {
+        const body = document.body;
         const container = document.querySelector('.container');
         const footer = document.querySelector('footer');
 
-        if (!container || !footer) return;
+        if (!body || !container || !footer) return;
 
         // Pencere boyutlarını al
         const viewportHeight = window.innerHeight;
-        const containerHeight = viewportHeight * 0.85; // Container %85
+
+        // Oranlar
+        const bodyHeight = viewportHeight * 0.85; // Body %85
         const footerHeight = viewportHeight * 0.15; // Footer %15
 
-        // Yükseklikleri ayarla
-        container.style.height = `${containerHeight}px`;
+        // Body ve footer yüksekliğini ayarla
+        body.style.height = `${bodyHeight}px`;
+        container.style.height = `100%`; // Container body'nin tamamını doldurur
         footer.style.height = `${footerHeight}px`;
+        footer.style.top = `${bodyHeight}px`; // Footer body'nin altına sabitlenir
     }
     
     function preventLinkInteractions() {
@@ -118,10 +123,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function formatNumber(number) {
         return number.toLocaleString('tr-TR');
     }
-
-
-
-
 
     window.addEventListener('resize', scalePage);
     window.addEventListener('load', scalePage);
