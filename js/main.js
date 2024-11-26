@@ -117,39 +117,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Sayfa ölçekleme işlemi
     function scalePage() {
-        const container = document.querySelector('.container');
-        const footer = document.querySelector('footer');
+    const container = document.querySelector('.container');
+    const footer = document.querySelector('footer');
 
-        if (!container || !footer) return;
+    if (!container || !footer) return;
 
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
+    // Ekran boyutlarını al
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
 
-        const pageWidth = container.offsetWidth;
-        const pageHeight = container.offsetHeight + footer.offsetHeight;
+    // Sabit oranlarla çalış
+    const containerRatio = 0.85; // Container %85 oranında
+    const footerRatio = 0.15; // Footer %15 oranında
 
-        const scaleX = viewportWidth / pageWidth;
-        const scaleY = viewportHeight / pageHeight;
+    // Elemanların orijinal boyutlarını hesapla
+    const containerHeight = viewportHeight * containerRatio;
+    const footerHeight = viewportHeight * footerRatio;
 
-        const scale = Math.min(scaleX, scaleY);
+    // Ölçekleme faktörlerini hesapla
+    const containerWidth = container.offsetWidth;
+    const scaleX = viewportWidth / containerWidth;
+    const scaleY = viewportHeight / (containerHeight + footerHeight);
 
-        container.style.transform = `scale(${scale})`;
-        footer.style.transform = `scale(${scale})`;
+    // Küçük olan ölçeği seç
+    const scale = Math.min(scaleX, scaleY);
 
-        container.style.transformOrigin = 'top left';
-        footer.style.transformOrigin = 'top left';
+    // Container için ölçek uygula
+    container.style.transform = `scale(${scale})`;
+    container.style.transformOrigin = 'top left';
+    container.style.height = `${containerHeight}px`;
+    container.style.width = `${viewportWidth}px`;
 
-        const offsetX = (viewportWidth - pageWidth * scale) / 2;
-        const offsetY = (viewportHeight - pageHeight * scale) / 2;
+    // Footer için ölçek uygula
+    footer.style.transform = `scale(${scale})`;
+    footer.style.transformOrigin = 'top left';
+    footer.style.height = `${footerHeight}px`;
+    footer.style.width = `${viewportWidth}px`;
 
-        container.style.position = 'absolute';
-        container.style.left = `${offsetX}px`;
-        container.style.top = `${offsetY}px`;
+    // Konumlandırma
+    container.style.position = 'absolute';
+    container.style.left = '0';
+    container.style.top = '0';
 
-        footer.style.position = 'absolute';
-        footer.style.left = `${offsetX}px`;
-        footer.style.top = `${offsetY + container.offsetHeight * scale}px`;
-    }
+    footer.style.position = 'absolute';
+    footer.style.left = '0';
+    footer.style.top = `${containerHeight}px`; // Container'ın altına yerleştir
+}
 
     // Sayfa yüklendiğinde ve pencere boyut değiştiğinde ölçekle
     window.addEventListener('resize', scalePage);
