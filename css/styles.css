@@ -25,20 +25,16 @@ a {
 html, body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%; /* Tüm ekranı kapsar */
-    display: flex;
-    flex-direction: column;
+    height: 100%; /* HTML ve BODY tam ekranı kapsar */
 }
 
-/* Body alanı yalnızca %85 yükseklikte olacak */
 body {
-    flex: 0 0 85%; /* Ekranın %85'i */
     display: flex;
     flex-direction: column;
-    background-color: black; /* Body arka planı */
-    overflow: hidden; /* Taşmaları engelle */
+    min-height: 100vh; /* Body, görüntüleme alanının tamamını kaplar */
+    background-color: black;
 }
+
 
 /*.container {
     padding: 0;
@@ -49,11 +45,10 @@ body {
 }*/
 
 .container {
-    flex: 1;
-    width: 100%;
+    flex: 1 0 auto; /* Container, kalan alanı doldurur */
+    overflow: auto; /* İçerik taşarsa kaydırma sağlar */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* İçerikleri düzgün hizalar */
 }
 
 /* Wallet ve Logo Bölgesi */
@@ -295,14 +290,9 @@ body {
 }
 
 footer {
-    flex: 0 0 15%; /* Ekranın %15'i */
-    width: 100%;
-    background-color: #272A2F; /* Footer arka planı */
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+    flex-shrink: 0; /* Footer'ın küçülmesini engeller */
+    height: 15vh; /* Footer, görüntüleme alanının %15'i kadar yükseklik alır */
+    background-color: #272A2F;
     z-index: 10; /* Üstte görünmesi için öncelik */
 }
 
