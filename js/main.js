@@ -3,36 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let b = 5000; // Sayaç maksimum değeri
     let points = 0; // Puan başlangıç değeri
 
-    function scalePage() {
-        const wrapper = document.getElementById('wrapper');
-        if (!wrapper) return;
-
-        // Wrapper'ın doğal boyutlarını al
-        const wrapperWidth = wrapper.offsetWidth;
-        const wrapperHeight = wrapper.offsetHeight;
-
-        // Pencere boyutlarını al
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-
-        // Ölçek faktörlerini hesapla
-        const scaleX = windowWidth / wrapperWidth;
-        const scaleY = windowHeight / wrapperHeight;
-
-        // Oranı korumak için minimum ölçeği kullan
-        const scale = Math.min(scaleX, scaleY);
-
-        // Ölçeği uygula
-        wrapper.style.transform = `scale(${scale})`;
-
-        // İçeriği merkezle
-        wrapper.style.position = 'absolute';
-        wrapper.style.left = '50%';
-        wrapper.style.top = '50%';
-        wrapper.style.transformOrigin = 'top left';
-        wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    }
-
     function preventLinkInteractions() {
         const links = document.querySelectorAll('a.nav-link');
         links.forEach(function (link) {
@@ -76,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
                         }
                         attachNavLinkEventListeners();
-                        scalePage(); // İçerik değiştikten sonra yeniden ölçekle
                     })
                     .catch((error) => {
                         console.error('Hata:', error);
@@ -133,16 +102,12 @@ document.addEventListener('DOMContentLoaded', function () {
         return number.toLocaleString('tr-TR');
     }
 
-    window.addEventListener('resize', scalePage);
-    window.addEventListener('load', scalePage);
-
     function initializePage() {
         loadData();
         attachFrameClickListener();
         attachNavLinkEventListeners();
         preventImageDragging();
         preventLinkInteractions();
-        scalePage(); // Sayfa yüklendiğinde ölçekle
     }
 
     initializePage();
