@@ -109,18 +109,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!container || !footer) return;
 
-        // Ekran boyutlarını al
+        // Pencere boyutlarını al
         const viewportHeight = window.innerHeight;
 
-        // Oranlarla yükseklik hesaplamaları
+        // Footer ve Container oranlarını belirle
         const footerHeight = viewportHeight * 0.15; // Footer %15
         const containerHeight = viewportHeight - footerHeight; // Container kalan %85
 
-        // Container ve Footer boyutlandırma
-        container.style.height = `${containerHeight}px`;
+        // CSS ile düzenlenen yapıyı kontrol et ve doğrula
+        container.style.height = `${containerHeight}px`; // Yalnızca yükseklik ayarı
         footer.style.height = `${footerHeight}px`;
-
-        // Flex düzeni sayesinde footer her zaman en alta sabit kalır
     }
 
 
