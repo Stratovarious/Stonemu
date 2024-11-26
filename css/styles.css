@@ -25,11 +25,11 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+    display: flex;
+    flex-direction: column; /* Dikine hizalama */
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
-    display: flex;
-    flex-direction: column;
 }
 
 /*.container {
@@ -41,8 +41,9 @@ html, body {
 }*/
 
 .container {
-    flex: 1 0 auto; /* Container, kalan alanı doldurur */
+    flex: 1; /* Kalan alanı doldurur */
     width: 100%;
+    overflow: hidden; /* Taşmayı engeller */
     position: relative;
 }
 
@@ -285,11 +286,15 @@ html, body {
 }
 
 footer {
+    height: 15%; /* Footer yüksekliği: %15 */
+    width: 100%;
     flex-shrink: 0; /* Footer küçülmez */
-    height: 15%; /* Ekranın %15'ini kaplar */
     background-color: #272A2F;
-    color: white;
     text-align: center;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 6. Sıra: Wrapper */
