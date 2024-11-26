@@ -310,8 +310,8 @@ footer {
     margin: 0;
     flex: 0 0 15%; /* Ekranın %15'ini kapla */
     position: relative; /* Konumlandırma için */
-    background: #333; /* Örnek bir arka plan */
-    color: #fff;
+    background: #272A2F; /* Örnek bir arka plan */
+    /*color: #fff;*/
     display: flex;
     justify-content: center;
     align-items: center;
