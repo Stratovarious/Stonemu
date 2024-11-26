@@ -111,14 +111,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Pencere boyutlarını al
         const viewportHeight = window.innerHeight;
-
-        // Footer ve Container oranlarını belirle
         const footerHeight = viewportHeight * 0.15; // Footer %15
         const containerHeight = viewportHeight - footerHeight; // Container kalan %85
 
-        // CSS ile düzenlenen yapıyı kontrol et ve doğrula
-        container.style.height = `${containerHeight}px`; // Yalnızca yükseklik ayarı
+        // Footer ve container yüksekliğini ayarla
         footer.style.height = `${footerHeight}px`;
+        container.style.height = `${containerHeight}px`; // Dinamik olarak kalan alan
     }
 
 
