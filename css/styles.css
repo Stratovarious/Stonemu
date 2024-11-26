@@ -30,11 +30,23 @@ a {
     text-align: center;
 }*/
 
-html, body {
+html {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    font-family: Arial, sans-serif;
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+} 
+
+body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
+    height: 85%;
     /*overflow: hidden;  Kaydırıcıyı gizler */
     display: flex;
     flex-direction: column;
@@ -294,6 +306,8 @@ html, body {
 }
 
 footer {
+    padding: 0;
+    margin: 0;
     flex: 0 0 15%; /* Ekranın %15'ini kapla */
     position: relative; /* Konumlandırma için */
     background: #333; /* Örnek bir arka plan */
