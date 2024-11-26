@@ -238,7 +238,7 @@ body {
 }
 
 .frame img {
-    cursor: pointer;
+    //cursor: pointer;
     width: 100%;
     height: auto;
     border-radius: 65%; /* Yuvarlak çerçeve */
