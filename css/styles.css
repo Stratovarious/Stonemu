@@ -21,13 +21,13 @@ a {
     color: inherit; /* Yazı rengi korunur */
 }
 
-body {
+html,body {
+    margin: 0;
+    padding: 0;
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
-    margin: 0;
-    padding: 0;
 }
 
 .container {
