@@ -3,26 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let b = 5000; // Sayaç maksimum değeri
     let points = 0; // Puan başlangıç değeri
 
-    function scalePage() {
-        const body = document.body;
-        const container = document.querySelector('.container');
-        const footer = document.querySelector('footer');
-
-        if (!body || !container || !footer) return;
-
-        // Ekran yüksekliği
-        const viewportHeight = window.innerHeight;
-
-        // Body ve footer yüksekliklerini hesapla
-        const footerHeight = viewportHeight * 0.15; // %15 footer
-        const bodyHeight = viewportHeight - footerHeight; // %85 body
-
-        // Yükseklikleri uygula
-        body.style.height = `${bodyHeight}px`;
-        container.style.height = `100%`; // Container, body'nin tamamını kapsar
-        footer.style.height = `${footerHeight}px`;
-    }
-    
     function preventLinkInteractions() {
         const links = document.querySelectorAll('a.nav-link');
         links.forEach(function (link) {
@@ -66,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
                         }
                         attachNavLinkEventListeners();
-                        scalePage(); // Yeni içeriği ölçekle
                     })
                     .catch((error) => {
                         console.error('Hata:', error);
@@ -123,16 +102,12 @@ document.addEventListener('DOMContentLoaded', function () {
         return number.toLocaleString('tr-TR');
     }
 
-    window.addEventListener('resize', scalePage);
-    window.addEventListener('load', scalePage);
-
     function initializePage() {
         loadData();
         attachFrameClickListener();
         attachNavLinkEventListeners();
         preventImageDragging();
         preventLinkInteractions();
-        scalePage(); // Sayfa yüklendiğinde ölçekle
     }
 
     initializePage();
