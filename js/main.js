@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Pencere boyutlarını al
         const viewportHeight = window.innerHeight;
+        const containerHeight = viewportHeight * 0.85; // Container %85
         const footerHeight = viewportHeight * 0.15; // Footer %15
-        const containerHeight = viewportHeight - footerHeight; // Container kalan %85
 
-        // Footer ve container yüksekliğini ayarla
-        footer.style.height = `${footerHeight}px`;
+        // Yükseklikleri ayarla
         container.style.height = `${containerHeight}px`;
+        footer.style.height = `${footerHeight}px`;
     }
     
     function preventLinkInteractions() {
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
                         }
                         attachNavLinkEventListeners();
-                        requestAnimationFrame(scalePage); // Yeni içeriği ölçekle
+                        scalePage(); // Yeni içeriği ölçekle
                     })
                     .catch((error) => {
                         console.error('Hata:', error);
