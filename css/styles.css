@@ -25,7 +25,7 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 85vh; /* Body yalnızca %85 yüksekliğe sahip */
+    height: 100%; /* Body yalnızca %85 yüksekliğe sahip */
     display: flex;
     flex-direction: column; /* Dikey hizalama */
     background-color: black;
@@ -42,7 +42,7 @@ html, body {
 }*/
 
 .container {
-    height: 100%; /* Body'nin tamamını kaplar */
+    height: 85%; /* Body'nin tamamını kaplar */
     width: 100%; /* Tam genişlik */
     display: flex;
     flex-direction: column;
@@ -289,7 +289,7 @@ html, body {
 }
 
 footer {
-    height: 15vh; /* Pencerenin %15’i */
+    height: 15%; /* Pencerenin %15’i */
     width: 100%; /* Tam genişlik */
     position: fixed; /* Pencerenin altına sabitlenir */
     bottom: 0; /* Alt kenara yapışır */
