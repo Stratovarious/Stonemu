@@ -25,13 +25,12 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
+    height: 85%; /* Body yalnızca %85 olacak */
     display: flex;
-    flex-direction: column; /* Dikine hizalama */
+    flex-direction: column; /* Dikey hizalama */
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
-    overflow: hidden; /* Kaydırma çubuğunu tamamen kaldır */
 }
 
 /*.container {
@@ -43,11 +42,13 @@ html, body {
 }*/
 
 .container {
-    flex: 0 0 85%; /* Yükseklik %85 olacak */
-    width: 100%; /* Genişlik tam olacak */
-    background-color: transparent; /* İsteğe bağlı arka plan */
+    height: 100%; /* Body'nin tamamını kaplayacak */
+    width: 100%; /* Tam genişlik */
+    display: flex;
+    flex-direction: column; /* İçerikleri dikey hizalama */
+    justify-content: space-between; /* İçerikleri yukarı ve aşağıya yayıyor */
     position: relative; /* İçerik konumlandırma için */
-    overflow: hidden; /* Taşma olmamalı */
+    background-color: transparent; /* İsteğe bağlı arka plan */
 }
 
 /* Wallet ve Logo Bölgesi */
@@ -289,13 +290,16 @@ html, body {
 }
 
 footer {
-    flex: 0 0 15%; /* Yükseklik %15 olacak */
-    width: 100%; /* Genişlik tam olacak */
-    background-color: #272A2F; /* Footer arka plan */
-    display: flex; /* İçerik hizalama */
+    height: 15vh; /* Pencere yüksekliğinin %15’i */
+    width: 100%; /* Tam genişlik */
+    position: fixed; /* Ekranın altına sabitlenir */
+    bottom: 0; /* Alt kenara yapışır */
+    background-color: #272A2F;
+    display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    text-align: center;
 }
 
 /* 6. Sıra: Wrapper */
