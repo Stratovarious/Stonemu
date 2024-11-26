@@ -3,6 +3,22 @@ document.addEventListener('DOMContentLoaded', function () {
     let b = 5000; // Sayaç maksimum değeri
     let points = 0; // Puan başlangıç değeri
 
+    function scalePage() {
+        const container = document.querySelector('.container');
+        const footer = document.querySelector('footer');
+
+        if (!container || !footer) return;
+
+        // Pencere boyutlarını al
+        const viewportHeight = window.innerHeight;
+        const footerHeight = viewportHeight * 0.15; // Footer %15
+        const containerHeight = viewportHeight - footerHeight; // Container kalan %85
+
+        // Footer ve container yüksekliğini ayarla
+        footer.style.height = `${footerHeight}px`;
+        container.style.height = `${containerHeight}px`;
+    }
+    
     function preventLinkInteractions() {
         const links = document.querySelectorAll('a.nav-link');
         links.forEach(function (link) {
@@ -46,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             dynamicContent.innerHTML = html; // Dinamik içeriği değiştir
                         }
                         attachNavLinkEventListeners();
-                        scalePage(); // Yüklenen içeriği yeniden ölçekle
+                        requestAnimationFrame(scalePage); // Yeni içeriği ölçekle
                     })
                     .catch((error) => {
                         console.error('Hata:', error);
@@ -101,22 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function formatNumber(number) {
         return number.toLocaleString('tr-TR');
-    }
-
-    function scalePage() {
-        const container = document.querySelector('.container');
-        const footer = document.querySelector('footer');
-
-        if (!container || !footer) return;
-
-        // Pencere boyutlarını al
-        const viewportHeight = window.innerHeight;
-        const footerHeight = viewportHeight * 0.15; // Footer %15
-        const containerHeight = viewportHeight - footerHeight; // Container kalan %85
-
-        // Footer ve container yüksekliğini ayarla
-        footer.style.height = `${footerHeight}px`;
-        container.style.height = `${containerHeight}px`; // Dinamik olarak kalan alan
     }
 
 
