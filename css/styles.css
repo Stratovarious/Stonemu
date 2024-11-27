@@ -27,35 +27,37 @@ html, body {
     text-align: center;
     overflow: hidden;
     height: 100%;
+    width: 100%;
 }
 
 /* 'wrapper' CSS */
 #wrapper {
     position: relative;
-    width: 375px; /* Tasarımınızın orijinal genişliği */
-    /* height: 667px;  Yüksekliği kaldırıyoruz */
+    width: 375px; /* Orijinal tasarım genişliği */
+    height: 667px; /* Orijinal tasarım yüksekliği */
     margin: 0 auto;
+    transform-origin: 0 0;
 }
 
-/* Container */
 .container {
     width: 100%;
-    /* height: calc(100% - 100px);  Yüksekliği otomatik yapıyoruz */
+    height: 100%;
     position: relative;
 }
 
 /* Footer */
 footer {
     width: 100%;
-    /* height: 100px; */
+    position: absolute;
+    bottom: 0;
 }
 
-/* Wallet ve Logo Bölgesi */
+/* Top Section */
 .top-section {
     display: flex;
-    justify-content: space-between; /* Sağ ve sol hizalama */
+    justify-content: space-between;
     align-items: center;
-    padding: 15px 5%; /* Üst boşluk */
+    padding: 15px 5%;
 }
 
 .top-section .wallet {
@@ -71,28 +73,26 @@ footer {
     height: auto;
 }
 
-/* Level ve Points Bölgesi */
+/* Level and Points Section */
 .level-section {
     display: flex;
-    flex-wrap: nowrap; /* Alt alta kaymayı önler */
     justify-content: space-between;
-    align-items: flex-start; /* Elemanları dikeyde hizala */
-    width: 100%; /* Tam genişlik */
-    margin: 0; /* Tüm dış boşluklar kaldırıldı */
-    padding-bottom: 15px; /* Divider ile arada az boşluk bırakıldı */
+    align-items: flex-start;
+    width: 100%;
+    margin: 0;
+    padding-bottom: 15px;
 }
 
-/* Sol sütun: Level ve Level-Bar */
 .left-column {
-    width: 50%; /* Sol sütun genişliği */
+    width: 50%;
     display: flex;
-    flex-direction: column; /* Alt alta düzenleme */
+    flex-direction: column;
 }
 
 .level {
-    width: 35%; /* Level genişliği */
-    margin-left: 7%; /* Sola hizalama */
-    margin-bottom: 0; /* Alt boşluk kaldırıldı */
+    width: 35%;
+    margin-left: 7%;
+    margin-bottom: 0;
 }
 
 .level img {
@@ -101,7 +101,7 @@ footer {
 }
 
 .level-bar {
-    width: 90%; /* Level-Bar genişliği */
+    width: 90%;
     margin: 0 auto;
     padding: 0;
 }
@@ -111,9 +111,8 @@ footer {
     height: auto;
 }
 
-/* Sağ sütun: Points */
 .right-column {
-    width: 50%; /* Sağ sütun genişliği */
+    width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -122,7 +121,7 @@ footer {
 }
 
 .points {
-    width: 95%; /* Points çerçevesi genişliği */
+    width: 95%;
     position: relative;
     margin: 0;
     padding: 0;
@@ -137,14 +136,14 @@ footer {
     position: absolute;
     bottom: 55%;
     left: 45%;
-    color: white; /* Yazı rengi görünür */
+    color: white;
     transform: translate(50%, 50%);
-    font-size: 80%; /* Daha büyük görünür */
+    font-size: 80%;
     font-weight: bold;
-    text-shadow: 1px 1px 2px #000; /* Kontrast için gölge */
+    text-shadow: 1px 1px 2px #000;
 }
 
-/* 3. Sıra: Divider */
+/* Divider */
 .divider {
     position: relative;
     width: 100%;
@@ -157,22 +156,23 @@ footer {
     height: auto;
 }
 
-/* 4. Sıra: 3 tuş */
+/* Menu Section */
 .menu {
     display: flex;
-    justify-content: space-around; /* Eşit boşluklarla hizalama */
-    align-items: flex-start; /* Elemanları üst hizala */
-    padding: 0; /* Üst ve alt boşluk */
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: nowrap; /* Öğelerin aşağı kaymasını engeller */
+    padding: 0;
     margin: -2% 0 0 0;
     background-color: #1C1F24;
 }
 
 .menu-item {
-    width: 25%; /* Genişlik yüzde bazlı */
-    position: relative; /* İç görselleri konumlandırmak için */
-    padding-top: 33%; /* Yüksekliği genişliğin %50'si olacak */
-    background-color: transparent; /* Arka plan yok */
-    overflow: hidden; /* Taşan içerikleri gizle */
+    width: 25%;
+    position: relative;
+    padding-top: 33%;
+    background-color: transparent;
+    overflow: hidden;
 }
 
 .menu-item .background {
@@ -188,13 +188,12 @@ footer {
 
 .menu-item img {
     z-index: 2;
-    position: absolute; /* Çerçeve boyutuna göre konumlanır */
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* Çerçeveyi tamamen kaplar */
-    height: 100%; /* Çerçeveyi tamamen kaplar */
+    width: 100%;
+    height: 100%;
     background-size: cover;
-    /* object-fit: cover; */
 }
 
 .events .background {
@@ -202,16 +201,15 @@ footer {
 }
 
 .tournaments .background {
-    background-image: url('../img/4/events_icon.png');
+    background-image: url('../img/4/tournaments_icon.png');
 }
 
 .leaderboard .background {
-    background-image: url('../img/4/events_icon.png');
+    background-image: url('../img/4/leaderboard_icon.png');
 }
 
-/* 5. Sıra: Tıklama oyunu görseli çember çerçeve içinde görsel */
-/* Frame Wrapper: Gri Arka Plan Rengi Tüm Genişliği Kapsar */
-/* Çerçeve ve içeriğin konumlandırılması */
+
+/* Game Section */
 .frame-wrapper {
     background-color: #1C1F24;
     width: 100%;
@@ -243,24 +241,23 @@ footer {
 }
 
 .frame img {
-    /* cursor: pointer; */
     width: 100%;
     height: auto;
-    border-radius: 65%; /* Yuvarlak çerçeve */
+    border-radius: 65%;
     pointer-events: auto;
-    z-index: 3; /* Resim en üstte */
+    z-index: 3;
 }
 
 .game-info {
     position: absolute;
-    bottom: 5%; /* Çerçevenin altına yerleştir */
+    bottom: 5%;
     left: 1%;
     right: 0%;
     display: flex;
-    justify-content: space-between; /* Yatayda simetrik hizalar */
+    justify-content: space-between;
     align-items: center;
     color: #fff;
-    z-index: 4; /* Resmin üst katmanında */
+    z-index: 4;
 }
 
 .counter {
@@ -275,23 +272,23 @@ footer {
     font-weight: bold;
     border-radius: 5px;
     text-align: center;
-    z-index: 5; /* Sayaç ve diğer öğelerin üstünde */
+    z-index: 5;
 }
 
-/* 6. Sıra: Wrapper */
+/* Bottom Menu Wrapper */
 .bottom-menu-wrapper {
-    background-color: #272A2F; /* Beyaz arka plan */
-    padding: 5px 0; /* Üst ve alt boşluk */
+    background-color: #272A2F;
+    padding: 5px 0;
     width: 100%;
     position: relative;
-    color: black; /* Metin rengi siyah */
+    color: black;
 }
 
-/* 6. Sıra: Menü */
 .bottom-menu {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: nowrap; /* Öğelerin aşağı kaymasını engeller */
     margin: 10px 0;
     position: relative;
     overflow: hidden;
@@ -322,18 +319,27 @@ footer {
     position: relative;
 }
 
-.exchange .background,
-.mine .background,
-.playground .background,
-.friends .background,
+
+.exchange .background {
+	background-image: url('../img/6/exchange_icon.png');
+}
+.missions .background {
+	background-image: url('../img/6/missions_icon.png');
+}
+.playground .background {
+	background-image: url('../img/6/playground_icon.png');
+}
+.friends .background {
+	background-image: url('../img/6/friends_icon.png');
+}
 .store .background {
-    background-image: url('../img/6/exchange_icon.png');
+    background-image: url('../img/6/store_icon.png');
 }
 
-/* 6. Sıra: Alt Ayırıcı */
+/* Bottom Divider */
 .bottom-divider {
     position: absolute;
-    bottom: -1%; /* Görselin yarısı yukarı çıkacak şekilde */
+    bottom: -1%;
     left: 0;
     width: 100%;
     height: auto;
@@ -344,43 +350,4 @@ footer {
     width: 100%;
     height: auto;
     display: block;
-}
-
-#wrapper {
-    height: auto;
-}
-
-/* Responsive Tasarım */
-@media screen and (max-width: 768px) {
-    .top-section {
-        flex-direction: column;
-        padding: 10px 0;
-    }
-
-    .top-section .wallet, .top-section .logo {
-        width: 50%;
-        margin-bottom: 10px;
-    }
-
-    .level-section {
-        flex-direction: column;
-    }
-
-    .points, .level {
-        width: 80%;
-    }
-
-    .menu-item, .bottom-menu-item {
-        width: 45%;
-        margin-bottom: 20px;
-    }
-
-    .menu, .bottom-menu {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .frame {
-        width: 80%;
-    }
 }
