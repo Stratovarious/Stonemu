@@ -13,7 +13,6 @@ img {
     -webkit-user-drag: none; /* WebKit tarayıcılar için sürükleme engeli */
 }
 
-
 /* Linklere tıklama engeli görünürlük ve etkileşim açısından */
 a {
     pointer-events: none; /* Linklere fare ile tıklanamaz */
@@ -21,49 +20,45 @@ a {
     color: inherit; /* Yazı rengi korunur */
 }
 
-/* Genel ayarlar */
 html, body {
-    height: 100%;
     margin: 0;
     padding: 0;
     background-color: black;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
 }
 
-/* Wrapper */
-#wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-
-/*.container {
+.container {
     padding: 0;
-    margin: 0; /*auto
+    margin: 0; /*auto*/
     width: 100%;
     height: 100%;
     position: relative;
-}*/
+}
 
-/* Container içeriği tam yüksekliği kapsar */
-.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+/* 'wrapper' CSS */
+#wrapper {
+    position: relative;
+    width: 375px; /* Tasarımınızın orijinal genişliği */
+    height: 667px; /* Tasarımınızın orijinal yüksekliği */
     overflow: hidden;
 }
 
 /* Wallet ve Logo Bölgesi */
 .top-section {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Sağ ve sol hizalama */
     align-items: center;
-    padding: 1%;
-    flex-shrink: 0;
+    padding: 15px 5%; /* Üst boşluk */
 }
 
-.top-section .wallet, .top-section .logo {
-    width: 45%; /* Yüzde bazlı genişlik */
+.top-section .wallet {
+    width: 30%;
+}
+
+.top-section .logo {
+    width: 35%;
 }
 
 .top-section img {
@@ -74,15 +69,17 @@ html, body {
 /* Level ve Points Bölgesi */
 .level-section {
     display: flex;
+    flex-wrap: nowrap; /* Alt alta kaymayı önler */
     justify-content: space-between;
-    align-items: center;
-    padding: 1%;
-    flex-shrink: 0;
+    align-items: flex-start; /* Elemanları dikeyde hizala */
+    width: 100%; /* Tam genişlik */
+    margin: 0; /* Tüm dış boşluklar kaldırıldı */
+    padding-bottom: 15px; /* Divider ile arada az boşluk bırakıldı */
 }
 
 /* Sol sütun: Level ve Level-Bar */
 .left-column {
-    width: 48%; /* Sol sütun genişliği */
+    width: 50%; /* Sol sütun genişliği */
     display: flex;
     flex-direction: column; /* Alt alta düzenleme */
 }
@@ -111,7 +108,7 @@ html, body {
 
 /* Sağ sütun: Points */
 .right-column {
-    width: 48%; /* Sağ sütun genişliği */
+    width: 50%; /* Sağ sütun genişliği */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -135,22 +132,12 @@ html, body {
     position: absolute;
     bottom: 55%;
     left: 45%;
-    //align-right: 0;
     color: white; /* Yazı rengi görünür */
     transform: translate(50%, 50%);
     font-size: 80%; /* Daha büyük görünür */
     font-weight: bold;
     text-shadow: 1px 1px 2px #000; /* Kontrast için gölge */
 }
-/*.points-value {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-}*/
 
 /* 3. Sıra: Divider */
 .divider {
@@ -168,10 +155,10 @@ html, body {
 /* 4. Sıra: 3 tuş */
 .menu {
     display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-    padding: 1%;
-    flex-shrink: 0;
+    justify-content: space-around; /* Eşit boşluklarla hizalama */
+    align-items: flex-start; /* Elemanları üst hizala */
+    padding: 0; /* Üst ve alt boşluk */
+    margin: -2% 0 0 0;
     background-color: #1C1F24;
 }
 
@@ -202,7 +189,7 @@ html, body {
     width: 100%; /* Çerçeveyi tamamen kaplar */
     height: 100%; /* Çerçeveyi tamamen kaplar */
     background-size: cover;
-    //object-fit: cover; /* Görsel oranını koruyarak çerçeveye sığar */
+    /* object-fit: cover; */
 }
 
 .events .background {
@@ -223,9 +210,10 @@ html, body {
 .frame-wrapper {
     background-color: #1C1F24;
     width: 100%;
+    padding: 0;
     display: flex;
     justify-content: center;
-    flex-shrink: 0;
+    position: relative;
     z-index: 1;
 }
 
@@ -250,7 +238,7 @@ html, body {
 }
 
 .frame img {
-    //cursor: pointer;
+    /* cursor: pointer; */
     width: 100%;
     height: auto;
     border-radius: 65%; /* Yuvarlak çerçeve */
@@ -271,7 +259,7 @@ html, body {
 }
 
 .counter {
-  font-size: 10px;
+    font-size: 10px;
 }
 
 .boost-button {
@@ -283,22 +271,6 @@ html, body {
     border-radius: 5px;
     text-align: center;
     z-index: 5; /* Sayaç ve diğer öğelerin üstünde */
-}
-
-/* Footer ayarları */
-/* Footer Content */
-
-footer {
-    height: 15%; /* Footer yüksekliği, ekranın %15'i */
-    background-color: #272A2F;
-    z-index: 10; /* Üstte görünmesi için öncelik */
-}
-
-.footer-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 /* 6. Sıra: Wrapper */
@@ -367,36 +339,39 @@ footer {
     width: 100%;
     height: auto;
     display: block;
-}"
+}
 
 /* Responsive Tasarım */
 @media screen and (max-width: 768px) {
     .top-section {
         flex-direction: column;
-        align-items: center;
+        padding: 10px 0;
+    }
+
+    .top-section .wallet, .top-section .logo {
+        width: 50%;
+        margin-bottom: 10px;
     }
 
     .level-section {
         flex-direction: column;
-        align-items: center;
     }
 
-    .menu {
-        flex-wrap: wrap;
+    .points, .level {
+        width: 80%;
     }
 
-    .menu-item {
+    .menu-item, .bottom-menu-item {
         width: 45%;
-        margin-bottom: 2%;
+        margin-bottom: 20px;
     }
 
-    .bottom-menu {
+    .menu, .bottom-menu {
         flex-wrap: wrap;
+        justify-content: center;
     }
 
-    .bottom-menu-item {
-        width: 30%;
-        margin-bottom: 2%;
+    .frame {
+        width: 80%;
     }
 }
-
