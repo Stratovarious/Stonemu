@@ -31,11 +31,17 @@ document.addEventListener('DOMContentLoaded', function () {
         // Taşmaları gizlemek için body'ye overflow ayarı
         body.style.overflow = 'hidden';
 
-        // Scrollbar oluşumunu engellemek için body boyutunu ayarla
-        body.style.width = contentWidth * scale + 'px';
-        body.style.height = contentHeight * scale + 'px';
-    }
+        // Ölçeklendirilmiş içeriğin ortalanması için wrapper'a margin ayarı
+        const scaledWidth = contentWidth * scale;
+        const scaledHeight = contentHeight * scale;
 
+        const leftOffset = (windowWidth - scaledWidth) / 2;
+        const topOffset = (windowHeight - scaledHeight) / 2;
+
+        wrapper.style.position = 'absolute';
+        wrapper.style.left = `${leftOffset}px`;
+        wrapper.style.top = `${topOffset}px`;
+    }
     // Pencere yeniden boyutlandığında ölçeği ayarla
     window.addEventListener('resize', adjustScale);
 
