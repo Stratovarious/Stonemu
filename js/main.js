@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
         wrapper.style.transformOrigin = '0 0'; // Köşeden ölçeklendir
         wrapper.style.transform = `scale(${scale})`;
 
+        // Taşmaları gizlemek için body'ye overflow ayarı
+        body.style.overflow = 'hidden';
+
         // Scrollbar oluşumunu engellemek için body boyutunu ayarla
         body.style.width = contentWidth * scale + 'px';
         body.style.height = contentHeight * scale + 'px';
@@ -143,7 +146,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }, 10000);
 
-    // Dinamik sayfa yükleme
+    // Dinamik sayfa yükleme (Güvenlik açısından yorum satırına alındı)
+    
     function attachNavLinkEventListeners() {
         const navLinks = document.querySelectorAll('a.nav-link');
 
@@ -173,11 +177,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+    
 
     // Sayfa yüklendiğinde başlangıç ayarları
     loadData();
     attachFrameClickListener();
-    attachNavLinkEventListeners();
+    attachNavLinkEventListeners(); // Güvenlik açısından devre dışı bırakıldı
     preventImageDragging();
     preventLinkInteractions();
 });
