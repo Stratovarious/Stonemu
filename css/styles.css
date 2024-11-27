@@ -1,23 +1,21 @@
-/* Tarayıcı Varsayılan Stillere Karşı Reset */
+/* Genel Stil Ayarları */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    user-select: none; /* Seçimi devre dışı bırakır */
+    user-select: none;
 }
 
-/* Resimlerin sürüklenmesini ve seçilmesini engelle */
 img {
     user-select: none;
     pointer-events: auto;
-    -webkit-user-drag: none; /* WebKit tarayıcılar için sürükleme engeli */
+    -webkit-user-drag: none;
 }
 
-/* Linklere tıklama engeli görünürlük ve etkileşim açısından */
 a {
-    pointer-events: none; /* Linklere fare ile tıklanamaz */
-    text-decoration: none; /* Alt çizgi kaldırılır */
-    color: inherit; /* Yazı rengi korunur */
+    pointer-events: none;
+    text-decoration: none;
+    color: inherit;
 }
 
 html, body {
@@ -27,32 +25,29 @@ html, body {
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
-    overflow: hidden; /* Taşmaları gizler */
+    overflow: hidden;
+    height: 100%;
 }
 
 /* 'wrapper' CSS */
 #wrapper {
     position: relative;
     width: 375px; /* Tasarımınızın orijinal genişliği */
-    height: 667px; /* Tasarımınızın orijinal yüksekliği */
-    overflow: hidden;
+    /* height: 667px;  Yüksekliği kaldırıyoruz */
+    margin: 0 auto;
 }
 
 /* Container */
 .container {
-    padding: 0;
-    margin: 0; /*auto*/
     width: 100%;
-    height: calc(100% - 100px); /* Footer yüksekliğini hesaba kat */
+    /* height: calc(100% - 100px);  Yüksekliği otomatik yapıyoruz */
     position: relative;
 }
 
 /* Footer */
 footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    height: 100px; /* Footer yüksekliği */
+    /* height: 100px; */
 }
 
 /* Wallet ve Logo Bölgesi */
@@ -349,6 +344,10 @@ footer {
     width: 100%;
     height: auto;
     display: block;
+}
+
+#wrapper {
+    height: auto;
 }
 
 /* Responsive Tasarım */
