@@ -34,22 +34,22 @@ html, body {
 #wrapper {
     position: relative;
     width: 375px; /* Orijinal tasarım genişliği */
-    height: 667px; /* Orijinal tasarım yüksekliği */
+    /* height: 667px; */ /* Sabit yükseklik kaldırıldı */
     margin: 0 auto;
     transform-origin: 0 0;
 }
 
 .container {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */ /* Sabit yükseklik kaldırıldı */
     position: relative;
 }
 
 /* Footer */
 footer {
     width: 100%;
-    position: absolute;
-    bottom: 0;
+    /* position: absolute;
+    bottom: 0; */ /* Absolute pozisyon kaldırıldı */
 }
 
 /* Top Section */
@@ -168,7 +168,8 @@ footer {
 }
 
 .menu-item {
-    width: 25%;
+    flex: 1 1 auto; /* Esnek genişlik */
+    max-width: 25%; /* Maksimum genişlik */
     position: relative;
     padding-top: 33%;
     background-color: transparent;
@@ -207,7 +208,6 @@ footer {
 .leaderboard .background {
     background-image: url('../img/4/leaderboard_icon.png');
 }
-
 
 /* Game Section */
 .frame-wrapper {
@@ -295,7 +295,8 @@ footer {
 }
 
 .bottom-menu-item {
-    width: 18%;
+    flex: 1 1 auto; /* Esnek genişlik */
+    max-width: 18%; /* Maksimum genişlik */
     position: relative;
     overflow: hidden;
 }
@@ -319,18 +320,17 @@ footer {
     position: relative;
 }
 
-
 .exchange .background {
-	background-image: url('../img/6/exchange_icon.png');
+    background-image: url('../img/6/exchange_icon.png');
 }
 .missions .background {
-	background-image: url('../img/6/missions_icon.png');
+    background-image: url('../img/6/missions_icon.png');
 }
 .playground .background {
-	background-image: url('../img/6/playground_icon.png');
+    background-image: url('../img/6/playground_icon.png');
 }
 .friends .background {
-	background-image: url('../img/6/friends_icon.png');
+    background-image: url('../img/6/friends_icon.png');
 }
 .store .background {
     background-image: url('../img/6/store_icon.png');
