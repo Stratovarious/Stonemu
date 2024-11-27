@@ -17,19 +17,30 @@ document.addEventListener('DOMContentLoaded', function () {
         const contentWidth = wrapper.offsetWidth;
         const contentHeight = wrapper.offsetHeight;
 
-        // Ölçek faktörlerini hesapla
-        const scaleX = windowWidth / contentWidth;
-        const scaleY = windowHeight / contentHeight;
+        // En-boy oranlarını hesapla
+        const contentAspectRatio = contentWidth / contentHeight;
+        const windowAspectRatio = windowWidth / windowHeight;
 
-        // Oranı korumak için en küçük ölçeği kullan
-        const scale = Math.min(scaleX, scaleY);
+        let scale;
+
+        if (windowAspectRatio > contentAspectRatio) {
+            // Pencere içeriğe göre daha geniş, yüksekliğe göre ölçekle
+            scale = windowHeight / contentHeight;
+        } else {
+            // Pencere içeriğe göre daha dar, genişliğe göre ölçekle
+            scale = windowWidth / contentWidth;
+        }
+
+        // Minimum ölçek değeri belirle
+        const minScale = 0.5; // Gerekirse ayarlayabilirsiniz
+        scale = Math.max(scale, minScale);
 
         // Transform ölçeğini uygula
         wrapper.style.transformOrigin = '0 0'; // Köşeden ölçeklendir
         wrapper.style.transform = `scale(${scale})`;
 
-        // Taşmaları gizlemek için body'ye overflow ayarı
-        body.style.overflow = 'hidden';
+        // Kaydırma çubuklarını etkinleştir
+        body.style.overflow = 'auto';
 
         // Ölçeklendirilmiş içeriğin ortalanması için wrapper'a margin ayarı
         const scaledWidth = contentWidth * scale;
@@ -153,8 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }, 10000);
 
-    
-    // Dinamik sayfa yükleme (Güvenlik açısından yorum satırına alındı)
+    // Dinamik sayfa yükleme
     function attachNavLinkEventListeners() {
         const navLinks = document.querySelectorAll('a.nav-link');
 
@@ -184,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-
 
     // Sayfa yüklendiğinde başlangıç ayarları
     loadData();
