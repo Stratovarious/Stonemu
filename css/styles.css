@@ -138,6 +138,7 @@ footer {
 
 .bottom-divider img {
     width: 100%;
+    transform: translateY(-3%);
     height: auto;
     display: block;
 }
