@@ -182,11 +182,13 @@ footer {
 }
 
 .top-section .wallet {
-    width: 15%;
+    height: 100%;
+    width: auto;
 }
 
 .top-section .logo {
-    width: 15%;
+    height: 100%;
+    width: auto;
 }
 
 .top-section img {
