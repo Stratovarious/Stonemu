@@ -276,7 +276,7 @@ footer {
     width: 100%;
     height: auto;
     background: linear-gradient(to bottom, black 50%, #1C1F24 50%);
-    z-index: 0;
+    z-index: -1;
 }
 
 .divider img {
