@@ -183,12 +183,12 @@ footer {
 }
 
 .top-section .wallet {
-    height: 100%;
+    height: 90%;
     width: auto;
 }
 
 .top-section .logo {
-    height: 100%;
+    height: 90%;
     width: auto;
 }
 
@@ -297,7 +297,7 @@ footer {
     flex: 1 1 auto;
     max-width: 25%;
     position: relative;
-    padding-top: 33%;
+    padding-top: 35%;
     background-color: transparent;
     overflow: hidden;
 }
