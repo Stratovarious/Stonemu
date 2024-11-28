@@ -317,8 +317,9 @@ footer {
 .menu-item img {
     z-index: 2;
     position: absolute;
-    margin-top: -5%;
+    top: 0;
     left: 0;
+    transform: translateY(-10%);
     width: 100%;
     height: 100%;
     background-size: cover;
