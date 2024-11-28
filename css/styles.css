@@ -299,7 +299,6 @@ footer {
     max-width: 25%;
     position: relative;
     padding-top: 35%;
-    margin-top: -3%;
     background-color: transparent;
     overflow: hidden;
 }
@@ -318,6 +317,7 @@ footer {
 .menu-item img {
     z-index: 2;
     position: absolute;
+    margin-top: -3%;
     top: 0;
     left: 0;
     width: 100%;
