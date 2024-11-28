@@ -63,7 +63,7 @@ footer {
 /* Bottom Menu Wrapper */
 .bottom-menu-wrapper {
     background-color: #272A2F;
-    padding: 5px 0;
+    padding: 1% 0;
     width: 100%;
     height: 100%;
     position: relative;
@@ -81,7 +81,7 @@ footer {
 
 .bottom-menu-item {
     flex: 1;
-    max-width: 15%;
+    max-width: 18%;
     height: auto;
     position: relative;
     overflow: hidden;
@@ -129,7 +129,7 @@ footer {
 /* Bottom Divider */
 .bottom-divider {
     position: absolute;
-    bottom: -3%;
+    top: -3%;
     left: 0;
     width: 100%;
     height: 5%; /* Divider yüksekliği */
@@ -299,7 +299,7 @@ footer {
     max-width: 25%;
     position: relative;
     padding-top: 35%;
-    bottom: -5%;
+    top: -3%;
     background-color: transparent;
     overflow: hidden;
 }
