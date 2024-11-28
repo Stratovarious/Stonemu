@@ -130,9 +130,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Sağ tık menüsünü engelle
-        document.addEventListener('contextmenu', function (e) {
+        /*document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
-        });
+        });*/
 
         // Metin seçimini engelle
         document.addEventListener('selectstart', function (e) {
