@@ -43,7 +43,7 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 85%; /* %85 Alan */
+    height: 90%; /* %85 Alan */
     position: relative;
 }
 
@@ -52,7 +52,7 @@ footer {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 15%; /* %15 Alan */
+    height: 10%; /* %15 Alan */
     position: relative;
 }
 
