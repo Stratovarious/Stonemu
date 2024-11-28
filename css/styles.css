@@ -91,8 +91,8 @@ footer {
     position: absolute;
     top: 4%;
     left: 4%;
-    width: 92%;
-    height: 92%;
+    width: 90%;
+    height: 90%;
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -104,7 +104,6 @@ footer {
     height: auto;
     z-index: 2;
     position: relative;
-    overflow: hidden;
 }
 
 .exchange .background {
