@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Dinamik içerik yüklenecek container
-    const container = document.getElementById('container');
+    const container = document.getElementById('.container');
 
     // Sayfa yüklendiğinde home.html'i yükle
     loadPage('home.html');
