@@ -382,7 +382,7 @@ footer {
 
 .game-info {
     position: absolute;
-    bottom: 3%;
+    bottom: 2%;
     left: 1%;
     right: 0%;
     display: flex;
@@ -399,7 +399,9 @@ footer {
 .boost-button {
     background-color: #333;
     color: white;
-    padding: 8px 20px;
+    right: 1%;
+    bottom: 2%;
+    //padding: 8px 20px;
     font-size: 10px;
     font-weight: bold;
     border-radius: 5px;
