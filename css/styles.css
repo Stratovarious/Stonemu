@@ -298,6 +298,7 @@ footer {
     max-width: 25%;
     position: relative;
     padding-top: 35%;
+    bottom: 3%;
     background-color: transparent;
     overflow: hidden;
 }
