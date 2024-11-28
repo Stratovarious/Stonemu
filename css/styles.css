@@ -128,7 +128,7 @@ footer {
 /* Bottom Divider */
 .bottom-divider {
     position: absolute;
-    bottom: 0;
+    bottom: 2%;
     left: 0;
     width: 100%;
     height: 20px; /* Divider yüksekliği */
@@ -143,6 +143,8 @@ footer {
 
 /* Dinamik İçerik İçin Temel Stil */
 .dynamic-content {
+    margin: 0;
+    padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -151,6 +153,8 @@ footer {
 
 /* İçeriklerin Taşmasını Engellemek İçin */
 .dynamic-content * {
+    margin: 0;
+    padding: 0;
     max-width: 100%;
     max-height: 100%;
     overflow: hidden;
@@ -158,6 +162,8 @@ footer {
 
 /* home.html ve Diğer Sayfalar İçin Stil */
 .home-container {
+    margin: 0;
+    padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -172,6 +178,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 15px 5%;
+    height: 15%;
 }
 
 .top-section .wallet {
@@ -194,6 +201,7 @@ footer {
     align-items: flex-start;
     width: 100%;
     padding-bottom: 15px;
+    height: 15%;
 }
 
 .left-column {
@@ -254,7 +262,7 @@ footer {
 .divider {
     flex: 0 0 auto;
     width: 100%;
-    height: auto;
+    height: 5%;
     background: linear-gradient(to bottom, black 50%, #1C1F24 50%);
 }
 
@@ -271,6 +279,7 @@ footer {
     align-items: flex-start;
     flex-wrap: nowrap;
     background-color: #1C1F24;
+    height: 15%;
 }
 
 .menu-item {
@@ -324,6 +333,7 @@ footer {
     justify-content: center;
     position: relative;
     z-index: 1;
+    height: 50%;
 }
 
 .frame {
