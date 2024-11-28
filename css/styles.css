@@ -39,7 +39,7 @@ html, body {
 }
 
 /* Container (%85 yükseklik) */
-.container {
+#container {
     flex: 0 0 85%;
     position: relative;
     overflow: hidden;
