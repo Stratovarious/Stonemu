@@ -301,7 +301,7 @@ footer {
     position: relative;
     padding-top: 35%;
     background-color: transparent;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .menu-item .background {
