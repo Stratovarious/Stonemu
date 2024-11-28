@@ -276,6 +276,7 @@ footer {
     width: 100%;
     height: auto;
     background: linear-gradient(to bottom, black 50%, #1C1F24 50%);
+    z-index: 0;
 }
 
 .divider img {
@@ -319,7 +320,7 @@ footer {
     position: absolute;
     top: 0;
     left: 0;
-    transform: translateY(-10%);
+    transform: translateY(-5%);
     width: 100%;
     height: 100%;
     background-size: cover;
