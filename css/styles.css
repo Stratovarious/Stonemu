@@ -290,7 +290,7 @@ footer {
     align-items: flex-start;
     flex-wrap: nowrap;
     background-color: #1C1F24;
-    height: 20%;
+    height: 25%;
 }
 
 .menu-item {
@@ -298,7 +298,7 @@ footer {
     max-width: 25%;
     position: relative;
     padding-top: 35%;
-    bottom: 3%;
+    bottom: 5%;
     background-color: transparent;
     overflow: hidden;
 }
