@@ -325,6 +325,10 @@ footer {
     background-size: cover;
 }
 
+.menu-item .events, .menu-item .tournaments, .menu-item .leaderboard {
+    margin-top: -5%;
+}
+
 .events .background {
     background-image: url('../img/4/events_icon.png');
 }
