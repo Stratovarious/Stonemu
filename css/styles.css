@@ -32,8 +32,8 @@ html, body {
 #wrapper {
     margin: 0;
     padding: 0;
-    width: 400px; /* Tasarım genişliği */
-    height: 700px; /* Tasarım yüksekliği */
+    width: 405px; /* Tasarım genişliği */
+    height: 720px; /* Tasarım yüksekliği */
     position: relative;
     transform-origin: 0 0;
 }
