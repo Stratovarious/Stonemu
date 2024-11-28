@@ -403,9 +403,9 @@ footer {
     right: 1%;
     bottom: 2%;
     //padding: 8px 20px;
-    font-size: 10px;
+    font-size: 8px;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 2px;
     text-align: center;
     z-index: 5;
 }
