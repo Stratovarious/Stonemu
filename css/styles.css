@@ -177,16 +177,16 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 5%;
+    padding: 5px 3%;
     height: 15%;
 }
 
 .top-section .wallet {
-    width: 30%;
+    width: 25%;
 }
 
 .top-section .logo {
-    width: 35%;
+    width: 25%;
 }
 
 .top-section img {
