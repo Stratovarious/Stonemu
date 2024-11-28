@@ -74,7 +74,7 @@ footer {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: calc(100%); /* Divider için yer bırakıldı - 20px*/
+    height: calc(95%); /* Divider için yer bırakıldı - 20px*/
     position: relative;
     overflow: hidden;
 }
@@ -128,10 +128,10 @@ footer {
 /* Bottom Divider */
 .bottom-divider {
     position: absolute;
-    bottom: 5%;
+    bottom: -3%;
     left: 0;
     width: 100%;
-    height: auto; /* Divider yüksekliği */
+    height: 5%; /* Divider yüksekliği */
     z-index: 0;
 }
 
@@ -298,7 +298,7 @@ footer {
     max-width: 25%;
     position: relative;
     padding-top: 35%;
-    bottom: 5%;
+    bottom: -5%;
     background-color: transparent;
     overflow: hidden;
 }
