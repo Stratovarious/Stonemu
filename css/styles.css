@@ -353,6 +353,7 @@ footer {
     position: relative;
     width: 80%;
     height: auto;
+    padding-bottom: 2%;
     overflow: hidden;
     z-index: 2;
 }
