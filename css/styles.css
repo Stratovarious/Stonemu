@@ -20,31 +20,33 @@ a {
 html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    height: 100%;
     width: 100%;
+    height: 100%;
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
 }
 
+/* Wrapper */
 #wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
-
-.container {
-    flex: 0 0 85%;
+    width: 375px; /* Tasarım genişliği */
+    height: 667px; /* Tasarım yüksekliği */
     position: relative;
-    overflow: hidden;
+    transform-origin: 0 0;
 }
 
+/* Container (Üst Bölüm) */
+.container {
+    width: 100%;
+    height: 85%; /* %85 Alan */
+    position: relative;
+}
+
+/* Footer (Alt Bölüm) */
 footer {
-    flex: 0 0 15%;
+    width: 100%;
+    height: 15%; /* %15 Alan */
     position: relative;
 }
 
