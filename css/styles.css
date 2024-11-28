@@ -428,8 +428,8 @@ footer {
     position: absolute;
     top: 2%;
     left: 2%;
-    width: 25%;
-    height: 25%;
+    width: 10%;
+    height: 15%;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
@@ -438,6 +438,6 @@ footer {
 }
 
 .back-button img {
-    width: 50%; 
+    width: 100%; 
     height: auto;
 }
