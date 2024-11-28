@@ -264,6 +264,7 @@ footer {
 /* Divider */
 .divider {
     flex: 0 0 auto;
+    padding: 0;
     width: 100%;
     height: 5%;
     background: linear-gradient(to bottom, black 50%, #1C1F24 50%);
