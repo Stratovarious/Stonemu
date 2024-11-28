@@ -81,7 +81,8 @@ footer {
 
 .bottom-menu-item {
     flex: 1;
-    max-width: 18%;
+    max-width: 15%;
+    height: auto;
     position: relative;
     overflow: hidden;
 }
