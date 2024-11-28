@@ -205,6 +205,7 @@ footer {
     width: 100%;
     padding-bottom: 0;
     margin-bottom: 0;
+    flex-wrap: nowrap;
     height: 15%;
 }
 
@@ -268,6 +269,7 @@ footer {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
+    flex-wrap: nowrap;
     padding-top: 0;
     margin-top: 0;
     width: 100%;
