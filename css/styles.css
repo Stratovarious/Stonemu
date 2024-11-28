@@ -178,17 +178,17 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 0;
-    margin: 1.5% 7%;
+    margin: 1% 8%;
     height: 15%;
 }
 
 .top-section .wallet {
-    height: 85%;
+    height: 100%;
     width: auto;
 }
 
 .top-section .logo {
-    height: 90%;
+    height: 100%;
     width: auto;
 }
 
