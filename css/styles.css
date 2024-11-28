@@ -1,82 +1,287 @@
-/* Genel Stil Ayarları */
+/* Tarayıcı Varsayılan Stillere Karşı Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    user-select: none;
+    user-select: none; /* Seçimi devre dışı bırakır */
 }
 
+/* Resimlerin sürüklenmesini ve seçilmesini engelle */
 img {
     user-select: none;
     pointer-events: auto;
-    -webkit-user-drag: none;
+    -webkit-user-drag: none; /* WebKit tarayıcılar için sürükleme engeli */
 }
 
+/* Linklere tıklama engeli kaldırıldı */
 a {
-    text-decoration: none;
-    color: inherit;
+    /* pointer-events: none; */ /* Bu satırı kaldırıyoruz */
+    text-decoration: none; /* Alt çizgi kaldırılır */
+    color: inherit; /* Yazı rengi korunur */
 }
 
-/* Sayfa ve Wrapper Ayarları */
 html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
     background-color: black;
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
 }
 
-#wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+.container {
+    padding: 0;
+    margin: 0; /* auto */
     width: 100%;
-    overflow: hidden;
-}
-
-/* Container (%85 yükseklik) */
-#container {
-    flex: 0 0 85%;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Footer (%15 yükseklik) */
-footer {
-    flex: 0 0 15%;
-    position: relative;
-}
-
-.footer-content {
     height: 100%;
+    position: relative;
+}
+
+/* Wallet ve Logo Bölgesi */
+.top-section {
+    display: flex;
+    justify-content: space-between; /* Sağ ve sol hizalama */
+    align-items: center;
+    padding: 15px 5%; /* Üst boşluk */
+}
+
+.top-section .wallet {
+    width: 30%;
+}
+
+.top-section .logo {
+    width: 35%;
+}
+
+.top-section img {
+    width: 100%;
+    height: auto;
+}
+
+/* Level ve Points Bölgesi */
+.level-section {
+    display: flex;
+    flex-wrap: nowrap; /* Alt alta kaymayı önler */
+    justify-content: space-between;
+    align-items: flex-start; /* Elemanları dikeyde hizala */
+    width: 100%; /* Tam genişlik */
+    margin: 0; /* Tüm dış boşluklar kaldırıldı */
+    padding-bottom: 15px; /* Divider ile arada az boşluk bırakıldı */
+}
+
+/* Sol sütun: Level ve Level-Bar */
+.left-column {
+    width: 50%; /* Sol sütun genişliği */
+    display: flex;
+    flex-direction: column; /* Alt alta düzenleme */
+}
+
+.level {
+    width: 35%; /* Level genişliği */
+    margin-left: 7%; /* Sola hizalama */
+    margin-bottom: 0; /* Alt boşluk kaldırıldı */
+}
+
+.level img {
+    width: 100%;
+    height: auto;
+}
+
+.level-bar {
+    width: 90%; /* Level-Bar genişliği */
+    margin: 0 auto;
+    padding: 0;
+}
+
+.level-bar img {
+    width: 100%;
+    height: auto;
+}
+
+/* Sağ sütun: Points */
+.right-column {
+    width: 50%; /* Sağ sütun genişliği */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.points {
+    width: 95%; /* Points çerçevesi genişliği */
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.points img {
+    width: 100%;
+    height: auto;
+}
+
+.points-value {
+    position: absolute;
+    bottom: 55%;
+    left: 45%;
+    color: white; /* Yazı rengi görünür */
+    transform: translate(50%, 50%);
+    font-size: 80%; /* Daha büyük görünür */
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000; /* Kontrast için gölge */
+}
+
+/* Divider */
+.divider {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background: linear-gradient(to bottom, black 50%, #1C1F24 50%);
+}
+
+.divider img {
+    width: 100%;
+    height: auto;
+}
+
+/* Menu Section */
+.menu {
+    display: flex;
+    justify-content: space-around; /* Eşit boşluklarla hizalama */
+    align-items: flex-start; /* Elemanları üst hizala */
+    padding: 0; /* Üst ve alt boşluk */
+    margin: -2% 0 0 0;
+    background-color: #1C1F24;
+}
+
+.menu-item {
+    width: 25%; /* Genişlik yüzde bazlı */
+    position: relative; /* İç görselleri konumlandırmak için */
+    padding-top: 33%; /* Yüksekliği genişliğin %33'ü olacak */
+    background-color: transparent; /* Arka plan yok */
+    overflow: hidden; /* Taşan içerikleri gizle */
+}
+
+.menu-item .background {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    height: 70%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+.menu-item img {
+    z-index: 2;
+    position: absolute; /* Çerçeve boyutuna göre konumlanır */
+    top: 0;
+    left: 0;
+    width: 100%; /* Çerçeveyi tamamen kaplar */
+    height: 100%; /* Çerçeveyi tamamen kaplar */
+    background-size: cover;
+}
+
+.events .background {
+    background-image: url('../img/4/events_icon.png');
+}
+
+.tournaments .background {
+    background-image: url('../img/4/tournaments_icon.png');
+}
+
+.leaderboard .background {
+    background-image: url('../img/4/leaderboard_icon.png');
+}
+
+/* Game Section */
+.frame-wrapper {
+    background-color: #1C1F24;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.frame {
+    user-select: none;
+    position: relative;
+    width: 85%;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.frame .background {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: 60%;
+    background-image: url('../img/5/game-content.png');
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+
+.frame img {
+    width: 100%;
+    height: auto;
+    border-radius: 65%; /* Yuvarlak çerçeve */
+    pointer-events: auto;
+    z-index: 3; /* Resim en üstte */
+}
+
+.game-info {
+    position: absolute;
+    bottom: 5%; /* Çerçevenin altına yerleştir */
+    left: 1%;
+    right: 0%;
+    display: flex;
+    justify-content: space-between; /* Yatayda simetrik hizalar */
+    align-items: center;
+    color: #fff;
+    z-index: 4; /* Resmin üst katmanında */
+}
+
+.counter {
+    font-size: 10px;
+}
+
+.boost-button {
+    background-color: #333;
+    color: white;
+    padding: 8px 20px;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 5; /* Sayaç ve diğer öğelerin üstünde */
 }
 
 /* Bottom Menu Wrapper */
 .bottom-menu-wrapper {
-    background-color: #272A2F;
-    padding: 5px 0;
+    background-color: #272A2F; /* Beyaz arka plan */
+    padding: 5px 0; /* Üst ve alt boşluk */
     width: 100%;
-    height: 100%;
     position: relative;
-    color: black;
+    color: black; /* Metin rengi siyah */
 }
 
+/* Bottom Menu */
 .bottom-menu {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: calc(100% - 20px); /* Divider için yer bırakıldı */
+    margin: 10px 0;
     position: relative;
     overflow: hidden;
 }
 
 .bottom-menu-item {
-    flex: 1;
-    max-width: 18%;
+    width: 18%;
     position: relative;
     overflow: hidden;
 }
@@ -103,15 +308,19 @@ footer {
 .exchange .background {
     background-image: url('../img/6/exchange_icon.png');
 }
+
 .missions .background {
     background-image: url('../img/6/missions_icon.png');
 }
+
 .playground .background {
     background-image: url('../img/6/playground_icon.png');
 }
+
 .friends .background {
     background-image: url('../img/6/friends_icon.png');
 }
+
 .store .background {
     background-image: url('../img/6/store_icon.png');
 }
@@ -119,10 +328,10 @@ footer {
 /* Bottom Divider */
 .bottom-divider {
     position: absolute;
-    bottom: 0;
+    bottom: -1%; /* Görselin yarısı yukarı çıkacak şekilde */
     left: 0;
     width: 100%;
-    height: 20px; /* Divider yüksekliği */
+    height: auto;
     z-index: 0;
 }
 
@@ -132,17 +341,37 @@ footer {
     display: block;
 }
 
-/* Dinamik İçerik İçin Temel Stil */
-.dynamic-content {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-}
+/* Responsive Tasarım */
+@media screen and (max-width: 768px) {
+    .top-section {
+        flex-direction: column;
+        padding: 10px 0;
+    }
 
-/* İçeriklerin Taşmasını Engellemek İçin */
-.dynamic-content * {
-    max-width: 100%;
-    max-height: 100%;
-    overflow: hidden;
+    .top-section .wallet, .top-section .logo {
+        width: 50%;
+        margin-bottom: 10px;
+    }
+
+    .level-section {
+        flex-direction: column;
+    }
+
+    .points, .level {
+        width: 80%;
+    }
+
+    .menu-item, .bottom-menu-item {
+        width: 45%;
+        margin-bottom: 20px;
+    }
+
+    .menu, .bottom-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .frame {
+        width: 80%;
+    }
 }
