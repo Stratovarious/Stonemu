@@ -264,9 +264,13 @@ footer {
 /* Divider */
 .divider {
     flex: 0 0 auto;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 0;
+    margin-top: 0;
     width: 100%;
+    height: 15%;
     background: linear-gradient(to bottom, black 50%, #1C1F24 50%);
 }
 
