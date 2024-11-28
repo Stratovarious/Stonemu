@@ -147,35 +147,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Sayfanın ölçeklenmesini sağlayan fonksiyon
     function adjustScale() {
-        const wrapper = document.getElementById('wrapper');
-    
-        // Pencere boyutlarını al
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-    
-        // Wrapper boyutlarını al
-        const wrapperWidth = wrapper.offsetWidth;
-        const wrapperHeight = wrapper.offsetHeight;
-    
-        // Ölçek faktörlerini hesapla
-        const scaleX = windowWidth / wrapperWidth;
-        const scaleY = windowHeight / wrapperHeight;
-    
-        // Oranı korumak için en küçük ölçeği kullan
-        const scale = Math.min(scaleX, scaleY);
-    
-        // Transform ölçeğini uygula
-        wrapper.style.transformOrigin = '0 0'; // Üst sol köşeden ölçeklendir
-        wrapper.style.transform = `scale(${scale})`;
-    
-        // Wrapper'ı ortalamak için
-        const scaledWidth = wrapperWidth * scale;
-        const scaledHeight = wrapperHeight * scale;
-    
-        wrapper.style.position = 'absolute';
-        wrapper.style.left = `${(windowWidth - scaledWidth) / 2}px`;
-        wrapper.style.top = `${(windowHeight - scaledHeight) / 2}px`;
-    }
+    const wrapper = document.getElementById('wrapper');
+
+    // Pencere boyutlarını al
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // Wrapper boyutlarını al
+    const wrapperWidth = wrapper.offsetWidth;
+    const wrapperHeight = wrapper.offsetHeight;
+
+    // Ölçek faktörlerini hesapla
+    const scaleX = windowWidth / wrapperWidth;
+    const scaleY = windowHeight / wrapperHeight;
+
+    // Oranı korumak için en küçük ölçeği kullan
+    const scale = Math.min(scaleX, scaleY);
+
+    // Ölçeklendirme uygula
+    wrapper.style.transformOrigin = '0 0'; // Üst sol köşeden ölçeklendir
+    wrapper.style.transform = `scale(${scale})`;
+
+    // Wrapper'ı ortalamak için (her boyutta çalışacak şekilde)
+    const scaledWidth = wrapperWidth * scale;
+    const scaledHeight = wrapperHeight * scale;
+
+    wrapper.style.position = 'absolute';
+    wrapper.style.left = `${(windowWidth - scaledWidth) / 2}px`;
+    wrapper.style.top = `${(windowHeight - scaledHeight) / 2}px`;
+}
+
 
     // Pencere boyutlandığında ve sayfa yüklendiğinde ölçeklendirme yap
     window.addEventListener('resize', adjustScale);
