@@ -466,6 +466,7 @@ footer {
         .left-panel {
             width: 60%;
             background: url('../img/events_img/events-1-left-column.png') no-repeat center center;
+            background-color: white;
             background-size: cover;
             position: relative;
             display: flex;
