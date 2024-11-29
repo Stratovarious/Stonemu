@@ -476,7 +476,7 @@ footer {
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 20%; /* Sağdan ve soldan yüzde 20 boşluk */
+            padding: 0 15%; /* Sağdan ve soldan yüzde 20 boşluk */
         }
         .dynamic-text-events {
             font-size: 20px;
@@ -511,6 +511,7 @@ footer {
             position: absolute;
             color: black;
             top: -40px;
+            z-index: 1000;
         }
         .events-slider-events {
             flex-grow: 1;
