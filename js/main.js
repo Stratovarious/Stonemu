@@ -34,19 +34,61 @@ document.addEventListener('DOMContentLoaded', function () {
                 container.innerHTML = html;
                 // Dinamik olarak yüklenen sayfadaki eventleri yeniden bağla
                 attachNavLinkEventListeners();
-                attachDynamicEventListeners();
+                if (page === 'home.html') {
+                    attachHomeEventListeners();
+                } else if (page === 'events.html') {
+                    attachEventsEventListeners();
+                }
+                // Diğer sayfalar için benzer kontroller ekleyin
             })
             .catch((error) => {
                 console.error('Hata:', error);
             });
     }
 
-    // Dinamik olarak yüklenen içerikteki eventleri bağla
-    function attachDynamicEventListeners() {
-        //home.html içerik script
-        //home.html içerik script
-        //home.html içerik script
-        // Tıklama oyunu kodları
+    // İlk başta link eventlerini bağla
+    attachNavLinkEventListeners();
+
+    // Sayfanın ölçeklenmesini sağlayan fonksiyon
+    function adjustScale() {
+        const wrapper = document.getElementById('wrapper');
+
+        // Pencere boyutlarını al
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        // Wrapper boyutlarını al
+        const wrapperWidth = wrapper.offsetWidth;
+        const wrapperHeight = wrapper.offsetHeight;
+
+        // Ölçek faktörlerini hesapla
+        const scaleX = windowWidth / wrapperWidth;
+        const scaleY = windowHeight / wrapperHeight;
+
+        // Oranı korumak için en küçük ölçeği kullan
+        const scale = Math.min(scaleX, scaleY);
+
+        // Ölçeklendirme uygula
+        wrapper.style.transformOrigin = '0 0'; // Üst sol köşeden ölçeklendir
+        wrapper.style.transform = `scale(${scale})`;
+
+        // Wrapper'ı ortalamak için (her boyutta çalışacak şekilde)
+        const scaledWidth = wrapperWidth * scale;
+        const scaledHeight = wrapperHeight * scale;
+
+        wrapper.style.position = 'absolute';
+        wrapper.style.left = `${(windowWidth - scaledWidth) / 2}px`;
+        wrapper.style.top = `${(windowHeight - scaledHeight) / 2}px`;
+    }
+
+    // Pencere boyutlandığında ve sayfa yüklendiğinde ölçeklendirme yap
+    window.addEventListener('resize', adjustScale);
+
+    // Sayfa yüklendiğinde ölçeklendirme yap
+    adjustScale();
+
+    // Home sayfası için eventleri bağlayan fonksiyon
+    function attachHomeEventListeners() {
         // Başlangıç değerleri
         let a = 5000; // Sayaç başlangıç değeri
         const b = 5000; // Sayaç maksimum değeri
@@ -132,6 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
+        preventImageDragging();
+
         // Sağ tık menüsünü engelle
         document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
@@ -141,12 +185,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('selectstart', function (e) {
             e.preventDefault();
         });
+    }
 
-        preventImageDragging();
-
-        //Events sayfası için script
-        //Events sayfası için script
-        //Events sayfası için script
+    // Events sayfası için eventleri bağlayan fonksiyon
+    function attachEventsEventListeners() {
         const eventDetails = {
             "Event 1": {
                 shortDescription: "Stonemu App is live now. Play for our airdrop...",
@@ -173,8 +215,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const nextButton = document.getElementById('next-btn');
         const dynamicText = document.getElementById('dynamic-text');
         const centerContent = document.getElementById('center-content');
-        const scrollUp = document.getElementById('scroll-up');
-        const scrollDown = document.getElementById('scroll-down');
+
+        // Öğelerin varlığını kontrol edin
+        if (!(overlay && playButton && backButton && slides.length > 0 && prevButton && nextButton && dynamicText && centerContent)) {
+            return; // Öğeler bulunamazsa fonksiyondan çık
+        }
 
         let currentSlide = 0;
         let slideInterval;
@@ -185,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
             slides.forEach((slide, i) => {
                 slide.style.display = i === index ? 'block' : 'none';
             });
-            const currentEvent = slides[index].textContent;
+            const currentEvent = slides[index].textContent.trim();
             dynamicText.textContent = eventDetails[currentEvent].shortDescription;
         }
 
@@ -220,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Play düğmesine tıklandığında ikinci sayfayı dinamik olarak güncelle
         playButton.addEventListener('click', () => {
-            const currentEvent = slides[currentSlide].textContent;
+            const currentEvent = slides[currentSlide].textContent.trim();
             const eventInfo = eventDetails[currentEvent];
 
             centerContent.innerHTML = `
@@ -242,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
             pauseSlideshowFor20Seconds();
         });
 
+        //Ok tuşlarının çalışması sırasında slaytın bekletilmesi.
         prevButton.addEventListener('click', () => {
             prevSlide();
             pauseSlideshowFor20Seconds();
@@ -251,47 +297,4 @@ document.addEventListener('DOMContentLoaded', function () {
         showSlide(currentSlide);
         startSlideshow();
     }
-
-    // İlk başta link eventlerini bağla
-    attachNavLinkEventListeners();
-
-    // Sayfanın ölçeklenmesini sağlayan fonksiyon
-    function adjustScale() {
-    const wrapper = document.getElementById('wrapper');
-
-    // Pencere boyutlarını al
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-
-    // Wrapper boyutlarını al
-    const wrapperWidth = wrapper.offsetWidth;
-    const wrapperHeight = wrapper.offsetHeight;
-
-    // Ölçek faktörlerini hesapla
-    const scaleX = windowWidth / wrapperWidth;
-    const scaleY = windowHeight / wrapperHeight;
-
-    // Oranı korumak için en küçük ölçeği kullan
-    const scale = Math.min(scaleX, scaleY);
-
-    // Ölçeklendirme uygula
-    wrapper.style.transformOrigin = '0 0'; // Üst sol köşeden ölçeklendir
-    wrapper.style.transform = `scale(${scale})`;
-
-    // Wrapper'ı ortalamak için (her boyutta çalışacak şekilde)
-    const scaledWidth = wrapperWidth * scale;
-    const scaledHeight = wrapperHeight * scale;
-
-    wrapper.style.position = 'absolute';
-    wrapper.style.left = `${(windowWidth - scaledWidth) / 2}px`;
-    wrapper.style.top = `${(windowHeight - scaledHeight) / 2}px`;
-}
-
-
-    // Pencere boyutlandığında ve sayfa yüklendiğinde ölçeklendirme yap
-    window.addEventListener('resize', adjustScale);
-    document.addEventListener('DOMContentLoaded', adjustScale);
-
-    // Sayfa yüklendiğinde ölçeklendirme yap
-    adjustScale();
 });
