@@ -149,9 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
         //Events sayfası için script
         const eventDetails = {
             "Event 1": {
-                shortDescription: "Event 1 is the first event with exciting details.",
-                title: "Event 1 Title",
-                description: "Detailed information about Event 1. It includes various subtopics and insights.",
+                shortDescription: "Stonemu App is live now. Play for our airdrop...",
+                title: "Stonemu Live!",
+                description: "Stonemu App is live now. Play for our airdrop... Contribute will be done and it will be fair",
             },
             "Event 2": {
                 shortDescription: "Event 2 brings more engaging topics.",
