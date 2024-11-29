@@ -556,7 +556,7 @@ footer {
             flex-direction: column;
             transition: top 0.5s ease-in-out;
         }
-        .overlay.open-events {
+        .overlay-events.open {
             top: 0;
         }
         .back-btn-events {
