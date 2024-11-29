@@ -534,15 +534,15 @@ footer {
             height: 30px;
             cursor: pointer;
         }
-        #prev-btn-events {
+        #prev-btn {
             background-image: url('../img/events_img/events-1-left-arrow.png');
         }
-        #play-btn-events {
+        #play-btn {
             width: 60px;
             height: 70px;
             background-image: url('../img/events_img/events-1-play.png');
         }
-        #next-btn-events {
+        #next-btn {
             background-image: url('../img/events_img/events-1-right-arrow.png');
         }
         .overlay-events {
