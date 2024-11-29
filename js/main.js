@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Dinamik olarak yüklenen içerikteki eventleri bağla
     function attachDynamicEventListeners() {
+        //home.html içerik script
+        //home.html içerik script
+        //home.html içerik script
         // Tıklama oyunu kodları
         // Başlangıç değerleri
         let a = 5000; // Sayaç başlangıç değeri
@@ -140,6 +143,113 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         preventImageDragging();
+
+        //Events sayfası için script
+        //Events sayfası için script
+        //Events sayfası için script
+        const eventDetails = {
+            "Event 1": {
+                shortDescription: "Event 1 is the first event with exciting details.",
+                title: "Event 1 Title",
+                description: "Detailed information about Event 1. It includes various subtopics and insights.",
+            },
+            "Event 2": {
+                shortDescription: "Event 2 brings more engaging topics.",
+                title: "Event 2 Title",
+                description: "Detailed information about Event 2. Explore deeper insights and data here.",
+            },
+            "Event 3": {
+                shortDescription: "Event 3 is the final event of the series.",
+                title: "Event 3 Title",
+                description: "Detailed information about Event 3. A summary of key discussions and topics.",
+            }
+        };
+
+        const overlay = document.getElementById('overlay');
+        const playButton = document.getElementById('play-btn');
+        const backButton = document.getElementById('back-btn');
+        const slides = document.querySelectorAll('.slide');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const dynamicText = document.getElementById('dynamic-text');
+        const centerContent = document.getElementById('center-content');
+        const scrollUp = document.getElementById('scroll-up');
+        const scrollDown = document.getElementById('scroll-down');
+
+        let currentSlide = 0;
+        let slideInterval;
+        let timeoutHandle;
+
+        // Etkinlik slaytlarını göster ve açıklamayı güncelle
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? 'block' : 'none';
+            });
+            const currentEvent = slides[index].textContent;
+            dynamicText.textContent = eventDetails[currentEvent].shortDescription;
+        }
+
+        // Bir sonraki slayta geçiş
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Bir önceki slayta geçiş
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Slayt gösterisini başlat
+        function startSlideshow() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        // Slayt gösterisini durdur
+        function stopSlideshow() {
+            clearInterval(slideInterval);
+        }
+
+        // Sağa veya sola ok tuşlarına basıldığında geçici olarak slayt gösterisini durdur
+        function pauseSlideshowFor20Seconds() {
+            stopSlideshow(); // Slayt geçişini durdur
+            clearTimeout(timeoutHandle); // Önceki zamanlayıcıyı temizle
+            timeoutHandle = setTimeout(startSlideshow, 20000); // 20 saniye sonra yeniden başlat
+        }
+
+        // Play düğmesine tıklandığında ikinci sayfayı dinamik olarak güncelle
+        playButton.addEventListener('click', () => {
+            const currentEvent = slides[currentSlide].textContent;
+            const eventInfo = eventDetails[currentEvent];
+
+            centerContent.innerHTML = `
+                <h2>${eventInfo.title}</h2>
+                <p>${eventInfo.description}</p>
+            `;
+
+            overlay.classList.add('open'); // İkinci sayfayı aç
+        });
+
+        // Geri düğmesine tıklandığında ikinci sayfayı kapat
+        backButton.addEventListener('click', () => {
+            overlay.classList.remove('open');
+        });
+
+        // Sağ ve sol ok tuşlarına işlev ekle
+        nextButton.addEventListener('click', () => {
+            nextSlide();
+            pauseSlideshowFor20Seconds();
+        });
+
+        prevButton.addEventListener('click', () => {
+            prevSlide();
+            pauseSlideshowFor20Seconds();
+        });
+
+        // İlk slaytı göster ve slayt gösterisini başlat
+        showSlide(currentSlide);
+        startSlideshow();
     }
 
     // İlk başta link eventlerini bağla
