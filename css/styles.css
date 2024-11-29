@@ -463,6 +463,7 @@ footer {
 .events-mainpage {
             display: flex;
             flex-direction: row;
+            color: black;
             width: 100%;
             height: 100%;
         }
@@ -510,8 +511,7 @@ footer {
             font-weight: bold;
             position: absolute;
             color: black;
-            top: -40px;
-            z-index: 1000;
+            top: 100px;
         }
         .events-slider-events {
             flex-grow: 1;
