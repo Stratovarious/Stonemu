@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const overlay = document.getElementById('overlay');
         const playButton = document.getElementById('play-btn');
         const backButton = document.getElementById('back-btn');
-        const slides = document.querySelectorAll('.slide');
+        const slides = document.querySelectorAll('.slide-events');
         const prevButton = document.getElementById('prev-btn');
         const nextButton = document.getElementById('next-btn');
         const dynamicText = document.getElementById('dynamic-text');
