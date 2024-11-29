@@ -509,6 +509,7 @@ footer {
             font-size: 24px;
             font-weight: bold;
             position: absolute;
+            color: black;
             top: -40px;
         }
         .events-slider-events {
