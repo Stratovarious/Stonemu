@@ -161,7 +161,9 @@ footer {
     overflow: hidden;
 }
 
-/* home.html ve Diğer Sayfalar İçin Stil */
+/* home.html İçin Stil */
+/* home.html İçin Stil */
+/* home.html İçin Stil */
 .home-container {
     margin: 0;
     padding: 0;
@@ -463,7 +465,7 @@ footer {
             width: 100%;
             height: 100%;
         }
-        .left-panel {
+        .left-panel-events {
             width: 60%;
             background: url('../img/events_img/events-1-left-column.png') no-repeat center center;
             background-color: white;
@@ -475,13 +477,13 @@ footer {
             text-align: center;
             padding: 0 20%; /* Sağdan ve soldan yüzde 20 boşluk */
         }
-        .dynamic-text {
+        .dynamic-text-events {
             font-size: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             color: black;
             line-height: 1.5;
         }
-        .right-panel {
+        .right-panel-events {
             width: 40%;
             background-color: white;
             color: black;
@@ -490,7 +492,7 @@ footer {
             align-items: center;
             position: relative;
         }
-        .events-box {
+        .events-box-events {
             width: 95%;
             height: 85%;
             background: url('../img/events_img/events-1-right-frame.png') no-repeat center center;
@@ -502,13 +504,13 @@ footer {
             justify-content: space-between;
             overflow: hidden;
         }
-        .events-title {
+        .events-title-events {
             font-size: 24px;
             font-weight: bold;
             position: absolute;
             top: -40px;
         }
-        .events-slider {
+        .events-slider-events {
             flex-grow: 1;
             display: flex;
             align-items: center;
@@ -517,14 +519,14 @@ footer {
             overflow: hidden;
             font-size: 16px;
         }
-        .controls {
+        .controls-events {
             display: flex;
             justify-content: space-around;
             width: 100%;
             position: absolute;
             bottom: 150px;
         }
-        .control-btn {
+        .control-btn-events {
             border: none;
             background-size: contain;
             background-repeat: no-repeat;
@@ -532,18 +534,18 @@ footer {
             height: 30px;
             cursor: pointer;
         }
-        #prev-btn {
+        #prev-btn-events {
             background-image: url('../img/events_img/events-1-left-arrow.png');
         }
-        #play-btn {
+        #play-btn-events {
             width: 60px;
             height: 70px;
             background-image: url('../img/events_img/events-1-play.png');
         }
-        #next-btn {
+        #next-btn-events {
             background-image: url('../img/events_img/events-1-right-arrow.png');
         }
-        .overlay {
+        .overlay-events {
             position: absolute;
             top: 100%;
             left: 0;
@@ -554,10 +556,10 @@ footer {
             flex-direction: column;
             transition: top 0.5s ease-in-out;
         }
-        .overlay.open {
+        .overlay.open-events {
             top: 0;
         }
-        .back-btn {
+        .back-btn-events {
             position: absolute;
             top: 10px;
             left: calc(4% + 20px); /* Sarı boşluk ile eşit oranda ortalanır */
@@ -567,34 +569,34 @@ footer {
             width: 40px;
             height: 40px;
         }
-        .middle-panel {
+        .middle-panel-events {
             display: flex;
             flex-direction: row;
             width: 100%;
             height: 100%;
         }
-        .side-column {
+        .side-column-events {
             width: 4%;
             background-color: yellow;
         }
-        .main-column {
+        .main-column-events {
             width: 92%;
             display: flex;
             flex-direction: row;
         }
-        .left-column {
+        .left-column-events {
             width: 20%;
             background: url('../img/events_img/events-2-left-column.png') no-repeat center center;
             background-size: cover;
         }
-        .center-column {
+        .center-column-events {
             width: 52%;
             background: url('../img/events_img/events-2-center-column.png') no-repeat center center;
             background-size: cover;
             position: relative;
             overflow: hidden;
         }
-        .center-column-content {
+        .center-column-content-events {
             padding: 20px;
             border-radius: 10px;
             position: absolute;
@@ -604,12 +606,12 @@ footer {
             bottom: 0;
             overflow: hidden;
         }
-        .right-column {
+        .right-column-events {
             width: 20%;
             background: url('../img/events_img/events-2-right-column.png') no-repeat center center;
             background-size: cover;
         }
-        .scroll-btn {
+        .scroll-btn-events {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
@@ -619,12 +621,12 @@ footer {
             background-repeat: no-repeat;
             cursor: pointer;
         }
-        .scroll-btn.up {
+        .scroll-btn.up-events {
             top: 10px;
             background-image: url('up-arrow.png');
             display: none;
         }
-        .scroll-btn.down {
+        .scroll-btn.down-events {
             bottom: 10px;
             background-image: url('down-arrow.png');
         }
