@@ -563,7 +563,7 @@ footer {
         .back-btn-events {
             position: absolute;
             top: 10px;
-            left: calc(4% + 20px); /* Sarı boşluk ile eşit oranda ortalanır */
+            left: calc(3% + 10px); /* Sarı boşluk ile eşit oranda ortalanır */
             cursor: pointer;
             background: url('../img/events_img/back-arrow.png') no-repeat center center;
             background-size: contain;
