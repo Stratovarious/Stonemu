@@ -1,0 +1,315 @@
+<div class="
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+        }
+        .left-panel {
+            width: 60%;
+            background: url('events-1-left-column.png') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20%; /* Sağdan ve soldan yüzde 20 boşluk */
+        }
+        .dynamic-text {
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            color: white;
+            line-height: 1.5;
+        }
+        .right-panel {
+            width: 40%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .events-box {
+            width: 95%;
+            height: 85%;
+            background: url('events-1-right-frame.png') no-repeat center center;
+            background-size: contain;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .events-title {
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            top: -40px;
+        }
+        .events-slider {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            font-size: 16px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            position: absolute;
+            bottom: 150px;
+        }
+        .control-btn {
+            border: none;
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 50px;
+            height: 30px;
+            cursor: pointer;
+        }
+        #prev-btn {
+            background-image: url('events-1-left-arrow.png');
+        }
+        #play-btn {
+            width: 60px;
+            height: 70px;
+            background-image: url('events-1-play.png');
+        }
+        #next-btn {
+            background-image: url('events-1-right-arrow.png');
+        }
+        .overlay {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: yellow;
+            display: flex;
+            flex-direction: column;
+            transition: top 0.5s ease-in-out;
+        }
+        .overlay.open {
+            top: 0;
+        }
+        .back-btn {
+            position: absolute;
+            top: 10px;
+            left: calc(4% + 20px); /* Sarı boşluk ile eşit oranda ortalanır */
+            cursor: pointer;
+            background: url('back-arrow.png') no-repeat center center;
+            background-size: contain;
+            width: 40px;
+            height: 40px;
+        }
+        .middle-panel {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+        }
+        .side-column {
+            width: 4%;
+            background-color: yellow;
+        }
+        .main-column {
+            width: 92%;
+            display: flex;
+            flex-direction: row;
+        }
+        .left-column {
+            width: 20%;
+            background: url('events-2-left-column.png') no-repeat center center;
+            background-size: cover;
+        }
+        .center-column {
+            width: 52%;
+            background: url('events-2-center-column.png') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+        .center-column-content {
+            padding: 20px;
+            border-radius: 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+        .right-column {
+            width: 20%;
+            background: url('events-2-right-column.png') no-repeat center center;
+            background-size: cover;
+        }
+        .scroll-btn {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: pointer;
+        }
+        .scroll-btn.up {
+            top: 10px;
+            background-image: url('up-arrow.png');
+            display: none;
+        }
+        .scroll-btn.down {
+            bottom: 10px;
+            background-image: url('down-arrow.png');
+        }">
+    <div class="container">
+        <div class="left-panel">
+            <div class="dynamic-text" id="dynamic-text">Short description of Event 1...</div>
+        </div>
+        <div class="right-panel">
+            <div class="events-box">
+                <div class="events-title">EVENTS</div>
+                <div class="events-slider">
+                    <div class="slide">Event 1</div>
+                    <div class="slide">Event 2</div>
+                    <div class="slide">Event 3</div>
+                </div>
+                <div class="controls">
+                    <button class="control-btn" id="prev-btn"></button>
+                    <button class="control-btn" id="play-btn"></button>
+                    <button class="control-btn" id="next-btn"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="back-btn" id="back-btn"></div>
+        <div class="middle-panel">
+            <div class="side-column"></div>
+            <div class="main-column">
+                <div class="left-column"></div>
+                <div class="center-column">
+                    <div class="center-column-content" id="center-content">
+                        <!-- İçerik dinamik olarak buraya eklenecek -->
+                    </div>
+                    <div class="scroll-btn up" id="scroll-up"></div>
+                    <div class="scroll-btn down" id="scroll-down"></div>
+                </div>
+                <div class="right-column"></div>
+            </div>
+            <div class="side-column"></div>
+        </div>
+    </div>
+    <script>
+      const eventDetails = {
+            "Event 1": {
+                shortDescription: "Event 1 is the first event with exciting details.",
+                title: "Event 1 Title",
+                description: "Detailed information about Event 1. It includes various subtopics and insights.",
+            },
+            "Event 2": {
+                shortDescription: "Event 2 brings more engaging topics.",
+                title: "Event 2 Title",
+                description: "Detailed information about Event 2. Explore deeper insights and data here.",
+            },
+            "Event 3": {
+                shortDescription: "Event 3 is the final event of the series.",
+                title: "Event 3 Title",
+                description: "Detailed information about Event 3. A summary of key discussions and topics.",
+            }
+        };
+
+        const overlay = document.getElementById('overlay');
+        const playButton = document.getElementById('play-btn');
+        const backButton = document.getElementById('back-btn');
+        const slides = document.querySelectorAll('.slide');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const dynamicText = document.getElementById('dynamic-text');
+        const centerContent = document.getElementById('center-content');
+        const scrollUp = document.getElementById('scroll-up');
+        const scrollDown = document.getElementById('scroll-down');
+
+        let currentSlide = 0;
+        let slideInterval;
+        let timeoutHandle;
+
+        // Etkinlik slaytlarını göster ve açıklamayı güncelle
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? 'block' : 'none';
+            });
+            const currentEvent = slides[index].textContent;
+            dynamicText.textContent = eventDetails[currentEvent].shortDescription;
+        }
+
+        // Bir sonraki slayta geçiş
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Bir önceki slayta geçiş
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Slayt gösterisini başlat
+        function startSlideshow() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        // Slayt gösterisini durdur
+        function stopSlideshow() {
+            clearInterval(slideInterval);
+        }
+
+        // Sağa veya sola ok tuşlarına basıldığında geçici olarak slayt gösterisini durdur
+        function pauseSlideshowFor20Seconds() {
+            stopSlideshow(); // Slayt geçişini durdur
+            clearTimeout(timeoutHandle); // Önceki zamanlayıcıyı temizle
+            timeoutHandle = setTimeout(startSlideshow, 20000); // 20 saniye sonra yeniden başlat
+        }
+
+        // Play düğmesine tıklandığında ikinci sayfayı dinamik olarak güncelle
+        playButton.addEventListener('click', () => {
+            const currentEvent = slides[currentSlide].textContent;
+            const eventInfo = eventDetails[currentEvent];
+
+            centerContent.innerHTML = `
+                <h2>${eventInfo.title}</h2>
+                <p>${eventInfo.description}</p>
+            `;
+
+            overlay.classList.add('open'); // İkinci sayfayı aç
+        });
+
+        // Geri düğmesine tıklandığında ikinci sayfayı kapat
+        backButton.addEventListener('click', () => {
+            overlay.classList.remove('open');
+        });
+
+        // Sağ ve sol ok tuşlarına işlev ekle
+        nextButton.addEventListener('click', () => {
+            nextSlide();
+            pauseSlideshowFor20Seconds();
+        });
+
+        prevButton.addEventListener('click', () => {
+            prevSlide();
+            pauseSlideshowFor20Seconds();
+        });
+
+        // İlk slaytı göster ve slayt gösterisini başlat
+        showSlide(currentSlide);
+        startSlideshow();
+    </script>
+</div>
