@@ -560,6 +560,7 @@ footer {
         }
         .overlay-events.open {
             top: 0;
+            overflow-y: auto;
         }
         .back-btn-events {
             position: absolute;
