@@ -215,9 +215,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const nextButton = document.getElementById('next-btn');
         const dynamicText = document.getElementById('dynamic-text');
         const centerContent = document.getElementById('center-content');
+        const events_scrollUp = document.getElementById('scroll-up');
+        const events_scrollDown = document.getElementById('scroll-down');
 
         // Öğelerin varlığını kontrol edin
-        if (!(overlay && playButton && backButton && slides.length > 0 && prevButton && nextButton && dynamicText && centerContent)) {
+        if (!(overlay && playButton && backButton && slides.length > 0 && prevButton && nextButton && dynamicText && centerContent && events_scrollUp && events_scrollDown)) {
             return; // Öğeler bulunamazsa fonksiyondan çık
         }
 
@@ -292,6 +294,34 @@ document.addEventListener('DOMContentLoaded', function () {
             prevSlide();
             pauseSlideshowFor20Seconds();
         });
+
+        // Scroll butonlarını yönet
+        function handleScrollButtons() {
+            if (centerContent.scrollTop > 0) {
+                events_scrollUp.style.display = 'block';
+            } else {
+                events_scrollUp.style.display = 'none';
+            }
+
+            if (centerContent.scrollHeight - centerContent.scrollTop > centerContent.offsetHeight) {
+                events_scrollDown.style.display = 'block';
+            } else {
+                events_scrollDown.style.display = 'none';
+            }
+        }
+
+        events_scrollUp.addEventListener('click', () => {
+            centerContent.scrollTop -= 50;
+            handleScrollButtons();
+        });
+
+        events_scrollDown.addEventListener('click', () => {
+            centerContent.scrollTop += 50;
+            handleScrollButtons();
+        });
+
+        centerContent.addEventListener('scroll', handleScrollButtons);
+
 
         // İlk slaytı göster ve slayt gösterisini başlat
         showSlide(currentSlide);
