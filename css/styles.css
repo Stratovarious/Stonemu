@@ -494,10 +494,10 @@ footer {
             position: relative;
         }
         .events-box-events {
-            width: 95%;
-            height: 85%;
+            width: 100%;
+            height: 100%;
             background: url('../img/events_img/events-1-right-frame.png') no-repeat center center;
-            background-size: contain;
+            background-size: 100% 70%;
             position: absolute;
             display: flex;
             flex-direction: column;
