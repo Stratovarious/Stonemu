@@ -190,20 +190,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Events sayfası için eventleri bağlayan fonksiyon
     function attachEventsEventListeners() {
         const eventDetails = {
-            "Event 1": {
+            "Stonemu Live": {
                 shortDescription: "Stonemu App is live now. Play for our airdrop...",
                 title: "Stonemu Live!",
                 description: "Stonemu App is live now. Play for our airdrop... Contribute will be done and it will be fair",
             },
-            "Event 2": {
-                shortDescription: "Event 2 brings more engaging topics.",
-                title: "Event 2 Title",
-                description: "Detailed information about Event 2. Explore deeper insights and data here.",
+            "Play For Airdrop": {
+                shortDescription: "Contribution is all, Followers will win!",
+                title: "Play For Airdrop",
+                description: "We care our users and we would like to see you to play our games.",
             },
-            "Event 3": {
-                shortDescription: "Event 3 is the final event of the series.",
-                title: "Event 3 Title",
-                description: "Detailed information about Event 3. A summary of key discussions and topics.",
+            "Everything For Decentralization": {
+                shortDescription: "Decentralization is our first goal!",
+                title: "Everything For Decentralization",
+                description: "We would like to reduce the costs for swap and others.",
             }
         };
 
