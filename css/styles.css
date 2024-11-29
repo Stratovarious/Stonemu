@@ -443,6 +443,9 @@ footer {
 }
 
 /*Events.html Container*/
+/*Events.html Container*/
+/*Events.html Container*/
+/*Events.html Container*/
 .container-events {
             display: flex;
             flex-direction: row;
@@ -451,7 +454,7 @@ footer {
         }
         .left-panel {
             width: 60%;
-            background: url('events-1-left-column.png') no-repeat center center;
+            background: url('../img/events_img/events-1-left-column.png') no-repeat center center;
             background-size: cover;
             position: relative;
             display: flex;
@@ -477,7 +480,7 @@ footer {
         .events-box {
             width: 95%;
             height: 85%;
-            background: url('events-1-right-frame.png') no-repeat center center;
+            background: url('../img/events_img/events-1-right-frame.png') no-repeat center center;
             background-size: contain;
             position: absolute;
             display: flex;
@@ -517,15 +520,15 @@ footer {
             cursor: pointer;
         }
         #prev-btn {
-            background-image: url('events-1-left-arrow.png');
+            background-image: url('../img/events_img/events-1-left-arrow.png');
         }
         #play-btn {
             width: 60px;
             height: 70px;
-            background-image: url('events-1-play.png');
+            background-image: url('../img/events_img/events-1-play.png');
         }
         #next-btn {
-            background-image: url('events-1-right-arrow.png');
+            background-image: url('../img/events_img/events-1-right-arrow.png');
         }
         .overlay {
             position: absolute;
@@ -546,7 +549,7 @@ footer {
             top: 10px;
             left: calc(4% + 20px); /* Sarı boşluk ile eşit oranda ortalanır */
             cursor: pointer;
-            background: url('back-arrow.png') no-repeat center center;
+            background: url('../img/events_img/back-arrow.png') no-repeat center center;
             background-size: contain;
             width: 40px;
             height: 40px;
@@ -568,12 +571,12 @@ footer {
         }
         .left-column {
             width: 20%;
-            background: url('events-2-left-column.png') no-repeat center center;
+            background: url('../img/events_img/events-2-left-column.png') no-repeat center center;
             background-size: cover;
         }
         .center-column {
             width: 52%;
-            background: url('events-2-center-column.png') no-repeat center center;
+            background: url('../img/events_img/events-2-center-column.png') no-repeat center center;
             background-size: cover;
             position: relative;
             overflow: hidden;
@@ -590,7 +593,7 @@ footer {
         }
         .right-column {
             width: 20%;
-            background: url('events-2-right-column.png') no-repeat center center;
+            background: url('../img/events_img/events-2-right-column.png') no-repeat center center;
             background-size: cover;
         }
         .scroll-btn {
