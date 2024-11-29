@@ -526,22 +526,22 @@ footer {
             justify-content: space-around;
             width: 100%;
             position: absolute;
-            bottom: 150px;
+            bottom: 160px;
         }
         .control-btn-events {
             border: none;
             background-size: contain;
             background-repeat: no-repeat;
-            width: 50px;
-            height: 30px;
+            width: 40px;
+            height: 24px;
             cursor: pointer;
         }
         #prev-btn {
             background-image: url('../img/events_img/events-1-left-arrow.png');
         }
         #play-btn {
-            width: 60px;
-            height: 70px;
+            width: 54px;
+            height: 63px;
             background-image: url('../img/events_img/events-1-play.png');
         }
         #next-btn {
