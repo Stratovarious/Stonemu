@@ -757,11 +757,10 @@ footer {
         .friends-frame {
             flex: 1;
             padding: 20px;
-            background: white;
-            border-radius: 10px;
             text-align: center;
-            border: 2px solid #ccc;
             position: relative;
+            border: 2px solid #ccc;
+            border-radius: 10px;
             background-size: cover;
             background-position: center;
         }
@@ -773,9 +772,11 @@ footer {
         }
         #friends-share-link-frame {
             background-image: url('../img/friends_img/friends_link_frame.png');
+            background-color: white; /* Beyaz arka plan */
         }
         #friends-copy-link-frame {
             background-image: url('../img/friends_img/friends_link_frame.png');
+            background-color: white; /* Beyaz arka plan */
         }
         .friends-table {
             position: absolute;
