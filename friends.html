@@ -1,10 +1,45 @@
 <div class="dynamic-content friends-container">
-        <img src="img/friends_img/friends_title.png" alt="Title" class="friends-title">
-        <img src="img/friends_img/friends_link_frame.png" alt="Frame" class="friends-frame">
-        <img src="img/friends_img/friends_1.png" alt="Icon 1" class="friends-icon friends-icon-1">
-        <img src="img/friends_img/friends_2.png" alt="Icon 2" class="friends-icon friends-icon-2">
-        <img src="img/friends_img/friends_3.png" alt="Icon 3" class="friends-icon friends-icon-3">
-        <img src="img/friends_img/friends_share_link.png" alt="Share Link" class="friends-share-link">
-        <img src="img/friends_img/friends_copy_link.png" alt="Copy Link" class="friends-copy-link">
-        <div class="friends-input-frame">A</div>
+        <!-- Başlık -->
+        <img src="../img/friends_img/friends_title.png" alt="Title" class="friends-title">
+        
+        <!-- Sıralar -->
+        <div class="friends-row">
+            <img src="../img/friends_img/friends_1.png" alt="Icon 1" class="friends-icon">
+            <div class="friends-frame transparent" id="friends-invite-code-frame">
+                <p>Invite Code:</p>
+                <p>DSADJAFG</p>
+            </div>
+        </div>
+        <div class="friends-row">
+            <img src="../img/friends_img/friends_2.png" alt="Icon 2" class="friends-icon">
+            <div class="friends-frame" id="friends-share-link-frame">
+                <p>t.me/stonemu/DSADJAFG_share</p>
+                <img src="../img/friends_img/friends_share_link.png" alt="Share Link" style="width: 10%;">
+            </div>
+        </div>
+        <div class="friends-row">
+            <img src="../img/friends_img/friends_3.png" alt="Icon 3" class="friends-icon">
+            <div class="friends-frame" id="friends-copy-link-frame">
+                <p>t.me/stonemu/DSADJAFG_copy</p>
+                <img src="../img/friends_img/friends_copy_link.png" alt="Copy Link" style="width: 10%;">
+            </div>
+        </div>
+
+        <!-- Tablo -->
+        <div class="friends-table" id="friends-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="4">Friends List</th>
+                    </tr>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Level</th>
+                        <th>Point</th>
+                        <th>Claim</th>
+                    </tr>
+                </thead>
+                <tbody id="friends-table-body"></tbody>
+            </table>
+        </div>
 </div>
