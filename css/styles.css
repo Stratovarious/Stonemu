@@ -634,3 +634,75 @@ footer {
             bottom: 10px;
             background-image: url('down-arrow.png');
         }
+
+/*playground.html Container*/
+/*playground.html Container*/
+/*playground.html Container*/
+
+.playground-container {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            color: black;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+    }
+
+.pyground-background {
+    background: url('pyground_background.png') no-repeat center center;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.pyground-title {
+    position:absolute
+    width: 300px; /* Playground yazısının boyutunu düzenleyin */
+    margin-bottom: 50px;
+}
+
+.pyground-button-container {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 1;
+}
+
+.pyground-button {
+    position: absolute;
+    display: block;
+    background-color: rgba(255, 255, 255, 0); /* Görünmez, tıklanabilir alan */
+    border: none;
+    cursor: pointer;
+}
+
+/* Her bir tıklanabilir alanın boyut ve konumlarını ayarlayın */
+#backgammon {
+    top: 700px; /* Çerçevenin tam konumuna göre ayarla */
+    left: 150px;
+    width: 200px; /* Çerçevenin genişliği */
+    height: 200px; /* Çerçevenin yüksekliği */
+}
+
+#cards {
+    top: 700px;
+    left: 400px;
+    width: 200px;
+    height: 200px;
+}
+
+#chess {
+    top: 700px;
+    left: 650px;
+    width: 200px;
+    height: 200px;
+}
