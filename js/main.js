@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     attachHomeEventListeners();
                 } else if (page === 'events.html') {
                     attachEventsEventListeners();
+                } else if (page === 'friends.html') {
+                    attachFriendsEventListeners();
                 }
                 // Diğer sayfalar için benzer kontroller ekleyin
             })
@@ -326,5 +328,45 @@ document.addEventListener('DOMContentLoaded', function () {
         // İlk slaytı göster ve slayt gösterisini başlat
         showSlide(currentSlide);
         startSlideshow();
+    }
+    function attachEventsEventListeners() {
+         // Çerçeve içeriklerini dinamik olarak ekle
+        document.getElementById('friends-invite-code-frame').innerHTML = `
+            <p>Invite Code:</p>
+            <p>DSADJAFG</p>
+        `;
+        document.getElementById('friends-share-link-frame').innerHTML = `
+            <p>t.me/stonemu/DSADJAFG_share</p>
+            <img src="../img/friends_img/friends_share_link.png" alt="Share Link" style="width: 10%;">
+        `;
+        document.getElementById('friends-copy-link-frame').innerHTML = `
+            <p>t.me/stonemu/DSADJAFG_copy</p>
+            <img src="../img/friends_img/friends_copy_link.png" alt="Copy Link" style="width: 10%;">
+        `;
+
+        // Tabloya dinamik içerik ekle
+        const friendsTableBody = document.getElementById('friends-table-body');
+        const friendsData = [
+            { username: 'User1', level: 10, point: 120, claim: 'Claim' },
+            { username: 'User2', level: 15, point: 200, claim: 'Claim' },
+            { username: 'User3', level: 7, point: 80, claim: 'Claim' },
+            { username: 'User4', level: 20, point: 300, claim: 'Claim' },
+            { username: 'User5', level: 12, point: 150, claim: 'Claim' },
+        ];
+        friendsData.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.username}</td>
+                <td>${user.level}</td>
+                <td>${user.point}</td>
+                <td><button class="friends-claim-button">${user.claim}</button></td>
+            `;
+            friendsTableBody.appendChild(row);
+        });
+
+        // Tabloyu görünür yap
+        if (friendsData.length > 0) {
+            document.getElementById('friends-table').style.display = 'block';
+        }
     }
 });
