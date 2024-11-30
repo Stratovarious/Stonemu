@@ -733,6 +733,8 @@ footer {
         position: relative;
         display: flex;
         flex-direction: column;
+        color: black;
+        font-family: Arial, sans-serif;
         background: url('../img/friends_img/friends_background.png') no-repeat center center;
         background-size: 100% 100%;
     }
@@ -742,51 +744,72 @@ footer {
             left: 50%;
             transform: translateX(-50%);
             width: 20%;
-        z-index: 1000;
-    }
-    .friends-frame {
-        position: absolute;
-        top: 25%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 40%;
-    }
-    .friends-icon {
-        position: absolute;
-        width: 8%;
-    }
-    .friends-icon-1 {
-        top: 32%;
-        left: 27%;
-    }
-    .friends-icon-2 {
-        top: 45%;
-        left: 27%;
-    }
-    .friends-icon-3 {
-        top: 58%;
-        left: 27%;
-    }
-    .friends-share-link {
-        position: absolute;
-        top: 45%;
-        left: 38%;
-        width: 25%;
-    }
-    .friends-copy-link {
-        position: absolute;
-        top: 58%;
-        left: 38%;
-        width: 25%;
-    }
-    .friends-input-frame {
-        position: absolute;
-        top: 35%;
-        left: 38%;
-        width: 25%;
-        height: 5%;
-        text-align: center;
-        font-size: 20px;
-        font-family: Arial, sans-serif;
-        color: black;
-    }
+        }
+        .friends-row {
+            display: flex;
+            align-items: center;
+            margin: 2% 10%;
+        }
+        .friends-icon {
+            width: 8%;
+            margin-right: 2%;
+        }
+        .friends-frame {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ccc;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        .friends-frame.transparent {
+            background: transparent;
+        }
+        #friends-invite-code-frame {
+            background-image: url('../img/friends_img/friends_link_frame.png');
+        }
+        #friends-share-link-frame {
+            background-image: url('../img/friends_img/friends_link_frame.png');
+        }
+        #friends-copy-link-frame {
+            background-image: url('../img/friends_img/friends_link_frame.png');
+        }
+        .friends-table {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 40%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            overflow-y: auto;
+            display: none; /* Tablo boşken gizli */
+        }
+        .friends-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .friends-table thead {
+            background: #f1f1f1;
+            font-weight: bold;
+        }
+        .friends-table th, .friends-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+        .friends-claim-button {
+            padding: 5px 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .friends-claim-button:hover {
+            background: #45a049;
+        }
