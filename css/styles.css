@@ -665,8 +665,8 @@ footer {
 .pyground-title {
     position: relative;
     align-items: center;
-    width: 200px; /* Playground yazısının boyutunu düzenleyin */
-    margin-bottom: 50px;
+    width: 130px; /* Playground yazısının boyutunu düzenleyin */
+    margin-bottom: 20px;
     z-index: 1000;
 }
 
