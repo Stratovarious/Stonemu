@@ -691,6 +691,7 @@ footer {
     left: 150px;
     width: 200px; /* Çerçevenin genişliği */
     height: 200px; /* Çerçevenin yüksekliği */
+    background-image: url('../img/playground_img/button_backgammon.png');
 }
 
 #cards {
@@ -698,6 +699,7 @@ footer {
     left: 400px;
     width: 200px;
     height: 200px;
+    background-image: url('../img/playground_img/button_hearts.png');
 }
 
 #chess {
@@ -705,4 +707,5 @@ footer {
     left: 650px;
     width: 200px;
     height: 200px;
+    background-image: url('../img/playground_img/button_chess.png');
 }
