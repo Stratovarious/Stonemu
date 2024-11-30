@@ -332,16 +332,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //Friends sayfası için js kodları
     function attachFriendsEventListeners() {
-         // Çerçeve içeriklerini dinamik olarak ekle
+        // Dinamik çerçeve içerikleri ekleme
         document.getElementById('friends-invite-code-frame').innerHTML = `
             <p>Invite Code:</p>
             <p>DSADJAFG</p>
         `;
         document.getElementById('friends-share-link-frame').innerHTML = `
             <p>t.me/stonemu/DSADJAFG_share</p>
+            <img src="../img/friends_img/friends_share_link.png" alt="Share Link">
         `;
         document.getElementById('friends-copy-link-frame').innerHTML = `
             <p>t.me/stonemu/DSADJAFG_copy</p>
+            <img src="../img/friends_img/friends_copy_link.png" alt="Copy Link">
         `;
 
         // Tabloya dinamik içerik ekle
@@ -363,10 +365,5 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             friendsTableBody.appendChild(row);
         });
-
-        // Tabloyu görünür yap
-        if (friendsData.length > 0) {
-            document.getElementById('friends-table').style.display = 'block';
-        }
     }
 });
