@@ -719,3 +719,56 @@ footer {
     background-image: url('../img/playground_img/button_chess.png');
     background-size: 100% 100%;
 }
+
+/*friends.html Container*/
+/*friends.html Container*/
+/*friends.html Container*/
+.friends-container {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        color: black;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: url('../img/playground_img/friends_background.png') no-repeat center center;
+        background-size: 100% 100%;
+    }
+    .friends-title {
+        position: absolute;
+        top: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20%;
+    }
+    .friends-frame {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40%;
+    }
+    .friends-icon {
+        position: absolute;
+        width: 10%;
+    }
+    .friends-share-icon {
+        top: 45%;
+        left: 35%;
+    }
+    .friends-copy-icon {
+        top: 45%;
+        right: 35%;
+    }
+    .friends-input-frame {
+        position: absolute;
+        width: 40%;
+        top: 65%;
+        left: 30%;
+        text-align: center;
+        font-size: 24px;
+        color: black;
+        font-family: Arial, sans-serif;
+    }
