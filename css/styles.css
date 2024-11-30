@@ -666,7 +666,7 @@ footer {
     position: relative;
     align-items: center;
     width: 130px; /* Playground yazısının boyutunu düzenleyin */
-    padding-bottom: 30%;
+    top: 50%;
     z-index: 1000;
 }
 
@@ -685,12 +685,13 @@ footer {
     background-color: rgba(255, 255, 255, 0); /* Görünmez, tıklanabilir alan */
     border: none;
     cursor: pointer;
+    overflow-y: auto;
 }
 
 
 /* Her bir tıklanabilir alanın boyut ve konumlarını ayarlayın */
 #backgammon {
-    top: 2px; /* Çerçevenin tam konumuna göre ayarla */
+    top: -5px; /* Çerçevenin tam konumuna göre ayarla */
     left: 20px;
     width: 170px; /* Çerçevenin genişliği */
     height: 170px; /* Çerçevenin yüksekliği */
@@ -699,7 +700,7 @@ footer {
 }
 
 #cards {
-    top: 2px;
+    top: -5px;
     right: 20px;
     width: 170px;
     height: 170px;
@@ -708,7 +709,7 @@ footer {
 }
 
 #chess {
-    top: 176px;
+    top: 168px;
     left: 20px;
     width: 170px;
     height: 170px;
