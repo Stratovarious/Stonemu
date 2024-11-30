@@ -329,7 +329,9 @@ document.addEventListener('DOMContentLoaded', function () {
         showSlide(currentSlide);
         startSlideshow();
     }
-    function attachEventsEventListeners() {
+
+    //Friends sayfası için js kodları
+    function attachFriendsEventListeners() {
          // Çerçeve içeriklerini dinamik olarak ekle
         document.getElementById('friends-invite-code-frame').innerHTML = `
             <p>Invite Code:</p>
@@ -337,11 +339,9 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
         document.getElementById('friends-share-link-frame').innerHTML = `
             <p>t.me/stonemu/DSADJAFG_share</p>
-            <img src="../img/friends_img/friends_share_link.png" alt="Share Link" style="width: 10%;">
         `;
         document.getElementById('friends-copy-link-frame').innerHTML = `
             <p>t.me/stonemu/DSADJAFG_copy</p>
-            <img src="../img/friends_img/friends_copy_link.png" alt="Copy Link" style="width: 10%;">
         `;
 
         // Tabloya dinamik içerik ekle
