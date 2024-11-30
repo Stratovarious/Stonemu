@@ -666,7 +666,7 @@ footer {
     position: relative;
     align-items: center;
     width: 130px; /* Playground yazısının boyutunu düzenleyin */
-    margin-bottom: 10px;
+    padding-bottom: 30%;
     z-index: 1000;
 }
 
@@ -690,8 +690,8 @@ footer {
 
 /* Her bir tıklanabilir alanın boyut ve konumlarını ayarlayın */
 #backgammon {
-    top: 3px; /* Çerçevenin tam konumuna göre ayarla */
-    left: 7px;
+    top: 2px; /* Çerçevenin tam konumuna göre ayarla */
+    left: 20px;
     width: 170px; /* Çerçevenin genişliği */
     height: 170px; /* Çerçevenin yüksekliği */
     background-image: url('../img/playground_img/button_backgammon.png');
@@ -699,8 +699,8 @@ footer {
 }
 
 #cards {
-    top: 3px;
-    left: 180px;
+    top: 2px;
+    right: 20px;
     width: 170px;
     height: 170px;
     background-image: url('../img/playground_img/button_hearts.png');
@@ -708,8 +708,8 @@ footer {
 }
 
 #chess {
-    top: 180px;
-    left: 7px;
+    top: 176px;
+    left: 20px;
     width: 170px;
     height: 170px;
     background-image: url('../img/playground_img/button_chess.png');
