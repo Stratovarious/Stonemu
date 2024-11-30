@@ -667,13 +667,14 @@ footer {
     position: absolute;
     align-items: center;
     width: 130px; /* Playground yazısının boyutunu düzenleyin */
-    top: 50%;
+    top: 5%;
+    left: 25%;
     z-index: 1000;
 }
 
 .pyground-button-container {
     position: absolute;
-    top: 48%;
+    top: 49%;
     left: 0;
     width: 100%;
     height: 50%;
@@ -687,7 +688,7 @@ footer {
     background-color: rgba(255, 255, 255, 0); /* Görünmez, tıklanabilir alan */
     border: none;
     cursor: pointer;
-    overflow-y: auto;
+    /*overflow-y: auto; Eğer gerekirse kullan*/
 }
 
 
@@ -695,8 +696,8 @@ footer {
 #backgammon {
     top: 0px; /* Çerçevenin tam konumuna göre ayarla */
     left: 20px;
-    width: 170px; /* Çerçevenin genişliği */
-    height: 170px; /* Çerçevenin yüksekliği */
+    width: 165px; /* Çerçevenin genişliği */
+    height: 165px; /* Çerçevenin yüksekliği */
     background-image: url('../img/playground_img/button_backgammon.png');
     background-size: 100% 100%;
 }
@@ -704,17 +705,17 @@ footer {
 #cards {
     top: 0px;
     right: 20px;
-    width: 170px;
-    height: 170px;
+    width: 165px;
+    height: 165px;
     background-image: url('../img/playground_img/button_hearts.png');
     background-size: 100% 100%;
 }
 
 #chess {
-    top: 173px;
+    top: 168px;
     left: 20px;
-    width: 170px;
-    height: 170px;
+    width: 165px;
+    height: 165px;
     background-image: url('../img/playground_img/button_chess.png');
     background-size: 100% 100%;
 }
