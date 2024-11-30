@@ -651,6 +651,7 @@ footer {
             flex-direction: column;
             background: url('../img/playground_img/pyground_background.png') no-repeat center center;
             background-size: 100% 100%;
+            overflow-y: auto;
     }
 
 .pyground-background {    
@@ -660,7 +661,6 @@ footer {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    overflow-y: auto;
 }
 
 .pyground-title {
@@ -678,6 +678,7 @@ footer {
     width: 100%;
     height: 50%;
     z-index: 1;
+    overflow-y: auto;
 }
 
 .pyground-button {
