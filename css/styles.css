@@ -687,27 +687,31 @@ footer {
     cursor: pointer;
 }
 
+
 /* Her bir tıklanabilir alanın boyut ve konumlarını ayarlayın */
 #backgammon {
-    top: 5px; /* Çerçevenin tam konumuna göre ayarla */
+    top: 3px; /* Çerçevenin tam konumuna göre ayarla */
     left: 5px;
-    width: 200px; /* Çerçevenin genişliği */
-    height: 200px; /* Çerçevenin yüksekliği */
+    width: 150px; /* Çerçevenin genişliği */
+    height: 150px; /* Çerçevenin yüksekliği */
     background-image: url('../img/playground_img/button_backgammon.png');
+    background-size: 100% 100%;
 }
 
 #cards {
     top: 5px;
-    left: 300px;
-    width: 200px;
-    height: 200px;
+    left: 10px;
+    width: 150px;
+    height: 150px;
     background-image: url('../img/playground_img/button_hearts.png');
+    background-size: 100% 100%;
 }
 
 #chess {
-    top: 300px;
+    top: 10px;
     left: 5px;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     background-image: url('../img/playground_img/button_chess.png');
+    background-size: 100% 100%;
 }
