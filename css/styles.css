@@ -737,11 +737,11 @@ footer {
         background-size: 100% 100%;
     }
     .friends-title {
-        position: absolute;
-        top: 5%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 20%;
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20%;
     }
     .friends-frame {
         position: absolute;
@@ -752,23 +752,40 @@ footer {
     }
     .friends-icon {
         position: absolute;
-        width: 10%;
+        width: 8%;
     }
-    .friends-share-icon {
-        top: 45%;
-        left: 35%;
+    .friends-icon-1 {
+        top: 32%;
+        left: 27%;
     }
-    .friends-copy-icon {
+    .friends-icon-2 {
         top: 45%;
-        right: 35%;
+        left: 27%;
+    }
+    .friends-icon-3 {
+        top: 58%;
+        left: 27%;
+    }
+    .friends-share-link {
+        position: absolute;
+        top: 45%;
+        left: 38%;
+        width: 25%;
+    }
+    .friends-copy-link {
+        position: absolute;
+        top: 58%;
+        left: 38%;
+        width: 25%;
     }
     .friends-input-frame {
         position: absolute;
-        width: 40%;
-        top: 65%;
-        left: 30%;
+        top: 35%;
+        left: 38%;
+        width: 25%;
+        height: 5%;
         text-align: center;
-        font-size: 24px;
-        color: black;
+        font-size: 20px;
         font-family: Arial, sans-serif;
+        color: black;
     }
