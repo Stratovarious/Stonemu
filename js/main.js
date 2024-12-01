@@ -443,6 +443,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
         
+        // İlk tablo sıralamasını yap
         renderTable();
     }
 });
