@@ -742,13 +742,14 @@ footer {
     height: 58%;
     display: flex;
     flex-direction: column;
-    align-items: left;
-    justify-content: flex-start;
-    /*gap: 10px;
-    margin-top: 20px;*/
+    align-items: flex-start; /* Sola yaslama */
+    justify-content: flex-start; /* Üstten başlaması için */
+    padding-left: 3%; /* Soldan boşluk ekledim */
+    padding-top: 2%; /* Yukarıdan boşluk ekledim */
     }
-
+    
     .friends-upper-container {
+        position: absolute; /* Konumlandırma için absolute kullanıldı */
         top: 100px;
         left: 30%;
         width: 50%;
@@ -756,30 +757,39 @@ footer {
     }
     
     .friends-title-img {
-        width: 40%;
+        width: 40%; /* Başlık resminin genişliği */
         padding: 0;
         margin: 0;
+        align-self: flex-start; /* Sola yaslama */
     }
     
     .friends-row {
-        left: 3%;
         display: flex;
-        /*align-items: center;*/
-        gap: 5px;
+        gap: 10px; /* Elemanlar arasına boşluk eklemek için */
+        align-items: center; /* Dikey hizalama */
+        justify-content: flex-start; /* Sola yaslama */
+        margin-top: 10px; /* Satırların arasına boşluk ekler */
+        width: 100%; /* Satırların genişliği */
     }
     
     .friends-image {
-        width: 10%;
+        width: 10%; /* Görsellerin genişliği */
+        height: auto;
+        flex-shrink: 0; /* Görsellerin boyutunun küçülmesini önler */
     }
     
     .friends-invite-code {
         position: relative;
-        width: 80%;
+        width: auto; /* İçeriğe göre genişlik ayarlandı */
         height: 100%;
+        display: flex; /* Çocuk elemanların hizalanması için */
+        align-items: center; /* Dikey hizalama */
+        justify-content: flex-start; /* Sola yaslama */
     }
+    
     .friends-invite-code img {
-        width: 80%;
-        height: 100%;
+        width: 100%; /* Çerçevenin genişliği */
+        height: auto;
     }
     
     .friends-invite-frame {
@@ -801,11 +811,14 @@ footer {
         background: none;
         border: none;
         cursor: pointer;
+        margin-left: 5px; /* Tuşları biraz sola yaslar */
     }
     
     .friends-action-btn img {
-        max-width: 100px;
+        max-width: 50px; /* Görsellerin boyutu */
+        height: auto;
     }
+
     
     .friends-lower-section {
         height: 42%;
