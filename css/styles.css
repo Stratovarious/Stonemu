@@ -742,64 +742,56 @@ footer {
     height: 58%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Sola yaslama */
-    justify-content: flex-start; /* Üstten başlaması için */
-    padding-left: 3%; /* Soldan boşluk ekledim */
-    padding-top: 2%; /* Yukarıdan boşluk ekledim */
+    justify-content: flex-start; /* Elemanları üstten başlat */
+    align-items: flex-start; /* Elemanları sola yasla */
+    padding-left: 2%; /* Sol boşluk */
+    padding-top: 2%; /* Üst boşluk */
     }
     
     .friends-upper-container {
-        position: absolute; /* Konumlandırma için absolute kullanıldı */
-        top: 100px;
-        left: 30%;
-        width: 50%;
-        height: 50%;
+        width: 100%; /* Konteynerin tam genişlik kaplaması */
+        display: flex;
+        flex-direction: column; /* Elemanları dikeyde hizala */
     }
     
     .friends-title-img {
-        width: 40%; /* Başlık resminin genişliği */
-        padding: 0;
-        margin: 0;
-        align-self: flex-start; /* Sola yaslama */
+        width: 40%; /* Friends yazılı resmin genişliği */
+        margin: 0; /* Varsayılan margin sıfırlanır */
+        padding: 0; /* Varsayılan padding sıfırlanır */
+        align-self: flex-start; /* Resmi tamamen sola yasla */
     }
     
     .friends-row {
-        display: flex;
-        gap: 10px; /* Elemanlar arasına boşluk eklemek için */
+        display: flex; /* Satır düzenlemesi için */
         align-items: center; /* Dikey hizalama */
-        justify-content: flex-start; /* Sola yaslama */
-        margin-top: 10px; /* Satırların arasına boşluk ekler */
-        width: 100%; /* Satırların genişliği */
+        gap: 10px; /* Elemanlar arasında boşluk */
+        margin-top: 10px; /* Satırlar arasında boşluk */
+        margin-left: 2%; /* Soldan kayma */
+        width: 96%; /* Satırların genişliği */
     }
     
     .friends-image {
-        width: 10%; /* Görsellerin genişliği */
+        width: 10%; /* Görsel boyutu */
         height: auto;
-        flex-shrink: 0; /* Görsellerin boyutunun küçülmesini önler */
     }
     
     .friends-invite-code {
-        position: relative;
-        width: auto; /* İçeriğe göre genişlik ayarlandı */
-        height: 100%;
-        display: flex; /* Çocuk elemanların hizalanması için */
+        position: relative; /* Çerçeve içinde metin yerleştirme */
+        width: 80%; /* Genişlik */
+        height: 100%; /* Yükseklik */
+        display: flex; /* İçeriği hizalamak için */
         align-items: center; /* Dikey hizalama */
         justify-content: flex-start; /* Sola yaslama */
     }
     
     .friends-invite-code img {
-        width: 100%; /* Çerçevenin genişliği */
-        height: auto;
-    }
-    
-    .friends-invite-frame {
-        max-width: 250px;
-        display: block;
+        width: 100%; /* Görsel genişliği */
+        height: auto; /* Yükseklik otomatik */
     }
     
     .friends-invite-text {
         position: absolute;
-        top: 30%;
+        top: 30%; /* Çerçeve içindeki metin konumu */
         left: 15%;
         color: black;
         font-size: 10px;
@@ -811,14 +803,13 @@ footer {
         background: none;
         border: none;
         cursor: pointer;
-        margin-left: 5px; /* Tuşları biraz sola yaslar */
+        margin-left: 5px; /* Butonları sola kaydır */
     }
     
     .friends-action-btn img {
-        max-width: 50px; /* Görsellerin boyutu */
-        height: auto;
+        max-width: 50px; /* Görsel genişliği */
+        height: auto; /* Yükseklik otomatik */
     }
-
     
     .friends-lower-section {
         height: 42%;
