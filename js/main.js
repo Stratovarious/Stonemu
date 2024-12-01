@@ -381,7 +381,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const claimData = friendsData.filter((friend) => !friend.claimed);
             const claimedData = friendsData.filter((friend) => friend.claimed);
         
-            // Claim ve Claimed olanları ayrı ayrı sırala
             const sortedClaimData = claimData.sort((a, b) => {
                 if (typeof a[sortKey] === "string") {
                     return sortAsc
@@ -402,7 +401,6 @@ document.addEventListener('DOMContentLoaded', function () {
         
             const sortedData = [...sortedClaimData, ...sortedClaimedData];
         
-            // Tabloya sıralanmış veriyi ekle
             sortedData.forEach((friend, index) => {
                 const row = document.createElement("tr");
         
@@ -438,7 +436,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 sortAsc = !sortAsc;
                 renderTable(key, sortAsc);
         
-                // Ok simgelerini güncelle
                 document
                     .querySelectorAll(".sortable .sort-icon")
                     .forEach((icon) => (icon.textContent = ""));
@@ -446,7 +443,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
         
-        // İlk tablo sıralamasını yap
         renderTable();
     }
 });
