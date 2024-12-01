@@ -758,7 +758,7 @@ footer {
     }
     
     .friends-title-img {
-        width: 60%; /* Friends yazılı resmin genişliği */
+        width: 50%; /* Friends yazılı resmin genişliği */
         margin: 0; /* Varsayılan margin sıfırlanır */
         padding: 0; /* Varsayılan padding sıfırlanır */
         align-self: flex-start; /* Resmi tamamen sola yasla */
@@ -767,14 +767,14 @@ footer {
     .friends-row {
         display: flex; /* Satır düzenlemesi için */
         align-items: center; /* Dikey hizalama */
-        gap: 10px; /* Elemanlar arasında boşluk */
+        gap: 5px; /* Elemanlar arasında boşluk */
         margin-top: 10px; /* Satırlar arasında boşluk */
         margin-left: 2%; /* Soldan kayma */
         width: 96%; /* Satırların genişliği */
     }
     
     .friends-image {
-        width: 30%; /* Görsel boyutu */
+        width: 25%; /* Görsel boyutu */
         height: auto;
     }
     
@@ -813,7 +813,7 @@ footer {
     
     .friends-action-btn img {
         /*max-width: 50px; /* Görsel genişliği */
-        width: 70%;
+        width: 80%;
         height: auto; /* Yükseklik otomatik */
     }
         
