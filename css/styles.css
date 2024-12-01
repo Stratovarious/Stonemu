@@ -738,93 +738,67 @@ footer {
         background: url('../img/friends_img/friends_background.png') no-repeat center center;
         background-size: 100% 100%;
     }
-    .friends-title {
-        position: absolute;
-        top: 10%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 20%;
+    .friends-upper-section {
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
     }
+    
+    .friends-title-img {
+        max-width: 80%;
+    }
+    
     .friends-row {
         display: flex;
         align-items: center;
-        margin: 2% 10%;
+        gap: 10px;
     }
-    .friends-icon {
-        width: 8%;
-        margin-right: 2%;
+    
+    .friends-image {
+        max-width: 150px;
     }
-    .friends-frame {
-        flex: 1;
+    
+    .friends-invite-code {
+        background: rgba(255, 255, 255, 0.8);
         padding: 10px;
-        text-align: center;
-        position: relative;
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        background-size: cover;
-        background-position: center;
-        overflow: hidden;
-    }
-    #friends-invite-code-frame {
-        background-image: url('../img/friends_img/friends_invite_code_inactive.png');
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    #friends-share-link-frame,
-    #friends-copy-link-frame {
-        background-image: url('../img/friends_img/friends_link_frame.png');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-color: white; /* Beyaz zemin sadece çerçeve içinde */
-    }
-    .friends-frame p {
-        margin: 0;
-        padding: 10px;
-        background: white;
-        box-sizing: border-box;
         border-radius: 5px;
-        display: inline-block;
-        max-width: 90%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
-    .friends-frame img {
-        margin-top: 10px;
-        width: 10%;
+    
+    .friends-action-btn img {
+        max-width: 100px;
     }
-    .friends-table {
-        position: absolute;
-        top: 70%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        border-radius: 10px;
+    
+    .friends-lower-section {
+        height: 50%;
         overflow-y: auto;
-        display: block;
-        background: transparent; /* Şeffaf arka plan */
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.8);
     }
-    .friends-table table {
+    
+    .friends-table {
         width: 100%;
         border-collapse: collapse;
     }
-    .friends-table thead {
-        background: rgba(255, 255, 255, 0.8);
-        font-weight: bold;
-    }
+    
     .friends-table th, .friends-table td {
+        border: 1px solid #ccc;
         padding: 10px;
         text-align: center;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-    }
-    .friends-claim-button {
-        padding: 5px 10px;
-        background: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
         cursor: pointer;
     }
-    .friends-claim-button:hover {
-        background: #45a049;
+    
+    .friends-claim-btn {
+        padding: 5px 10px;
+        background-color: green;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .friends-claim-btn.claimed {
+        background-color: grey;
+        cursor: not-allowed;
     }
