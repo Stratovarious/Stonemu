@@ -332,9 +332,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //Friends sayfası için js kodları
     function attachFriendsEventListeners() {
-        // Davet linkini dinamik olarak ekle
+        // Davet linki dinamik olarak oluşturuluyor
         const inviteLink = "t.me/DSADJAFG";
-        document.getElementById("friends_invite_link").innerText = inviteLink;
+        
+        // Davet linkini uygun alana ekle
+        document.getElementById("friends_invite_code").innerHTML = `
+            <p>Invite Link:</p>
+            <p>${inviteLink}</p>
+        `;
         
         // Copy link button functionality
         document.getElementById("friends_copy_link_btn").addEventListener("click", function() {
@@ -360,83 +365,68 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Tablo verileri
         const friendsData = [
-            { userName: "John", level: 5, point: 300 },
-            { userName: "Emma", level: 3, point: 150 },
-            { userName: "Noah", level: 8, point: 500 },
-            { userName: "Ava", level: 2, point: 100 },
-            { userName: "Liam", level: 6, point: 400 }
+            { userName: "John", level: 5, point: 300, claimed: false },
+            { userName: "Emma", level: 3, point: 150, claimed: false },
+            { userName: "Noah", level: 8, point: 500, claimed: false },
+            { userName: "Ava", level: 2, point: 100, claimed: false },
+            { userName: "Liam", level: 6, point: 400, claimed: false }
         ];
         
-        // Tabloya veri ekleme
+        // Tabloyu render etme
         const tableBody = document.querySelector("#friends_table tbody");
         
-        function renderTable() {
-            tableBody.innerHTML = ""; // Mevcut içeriği temizle
-            friendsData.forEach((friend, index) => {
+        function renderTable(sortKey = "userName", sortAsc = true) {
+            tableBody.innerHTML = "";
+            const sortedData = [...friendsData].sort((a, b) => {
+                if (typeof a[sortKey] === "string") {
+                    return sortAsc
+                        ? a[sortKey].localeCompare(b[sortKey])
+                        : b[sortKey].localeCompare(a[sortKey]);
+                }
+                return sortAsc ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey];
+            });
+        
+            sortedData.forEach((friend, index) => {
                 const row = document.createElement("tr");
         
-                // Sıra numarası
-                const nrCell = document.createElement("td");
-                nrCell.textContent = index + 1;
-                row.appendChild(nrCell);
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${friend.userName}</td>
+                    <td>${friend.level}</td>
+                    <td>${friend.point}</td>
+                    <td>
+                        <button class="friends-claim-btn ${
+                            friend.claimed ? "claimed" : ""
+                        }" ${friend.claimed ? "disabled" : ""}>
+                            ${friend.claimed ? "Claimed" : "Claim"}
+                        </button>
+                    </td>
+                `;
         
-                // Kullanıcı adı
-                const userNameCell = document.createElement("td");
-                userNameCell.textContent = friend.userName;
-                row.appendChild(userNameCell);
-        
-                // Seviye
-                const levelCell = document.createElement("td");
-                levelCell.textContent = friend.level;
-                row.appendChild(levelCell);
-        
-                // Puan
-                const pointCell = document.createElement("td");
-                pointCell.textContent = friend.point;
-                row.appendChild(pointCell);
-        
-                // Claim butonu
-                const claimCell = document.createElement("td");
-                const claimButton = document.createElement("button");
-                claimButton.classList.add("friends-claim-btn");
-                claimButton.textContent = friend.claimed ? "Claimed" : "Claim";
-                claimButton.disabled = friend.claimed; // Eğer claimed ise butonu devre dışı bırak
-                if (friend.claimed) {
-                    claimButton.classList.add("claimed");
-                }
-                claimButton.addEventListener("click", function () {
-                    if (!friend.claimed) {
-                        friend.claimed = true; // Claimed durumunu güncelle
-                        claimButton.textContent = "Claimed";
-                        claimButton.classList.add("claimed");
-                        claimButton.disabled = true; // Kullanıcı müdahalesini engelle
-                        friendsData.push(friendsData.splice(index, 1)[0]); // Claimed satırı aşağı taşı
-                        renderTable(); // Tabloyu yeniden çiz
-                    }
+                const claimBtn = row.querySelector(".friends-claim-btn");
+                claimBtn.addEventListener("click", () => {
+                    friend.claimed = true;
+                    renderTable(sortKey, sortAsc);
                 });
-                claimCell.appendChild(claimButton);
-                row.appendChild(claimCell);
         
                 tableBody.appendChild(row);
             });
         }
         
-        renderTable();
-        
-        // Sıralama özellikleri
-        document.querySelectorAll("#friends_table th").forEach((header, index) => {
+        // Sıralama başlıklarına tıklama
+        document.querySelectorAll(".sortable").forEach((header) => {
+            let sortAsc = true;
             header.addEventListener("click", () => {
-                if (index === 0) return; // Nr. sütunu sıralanamaz
-                const key = ["userName", "level", "point"][index - 1]; // Sütun anahtarları
-                friendsData.sort((a, b) => {
-                    if (typeof a[key] === "string") {
-                        return a[key].localeCompare(b[key]);
-                    }
-                    return a[key] - b[key];
-                });
-                renderTable(); // Tabloyu yeniden çiz
+                const key = header.dataset.key;
+                sortAsc = !sortAsc;
+                renderTable(key, sortAsc);
+                document
+                    .querySelectorAll(".sortable")
+                    .forEach((h) => (h.textContent = h.textContent.replace(" ▲", "").replace(" ▼", "")));
+                header.textContent += sortAsc ? " ▲" : " ▼";
             });
         });
-
+        
+        renderTable();
     }
 });
