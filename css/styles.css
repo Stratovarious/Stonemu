@@ -794,8 +794,8 @@ footer {
     
     .friends-invite-text {
         position: absolute;
-        top: 30%; /* Çerçeve içindeki metin konumu */
-        left: 15%;
+        top: 28%; /* Çerçeve içindeki metin konumu */
+        left: 18%;
         color: black;
         font-size: 10px;
         text-align: center;
