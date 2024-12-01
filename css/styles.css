@@ -739,7 +739,7 @@ footer {
         background-size: 100% 100%;
     }
     .friends-upper-section {
-    height: 50%;
+    height: 58%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -762,9 +762,28 @@ footer {
     }
     
     .friends-invite-code {
-        background: rgba(255, 255, 255, 0.8);
-        padding: 10px;
-        border-radius: 5px;
+        position: relative;
+    }
+    
+    .friends-invite-frame {
+        max-width: 250px;
+        display: block;
+    }
+    
+    .friends-invite-text {
+        position: absolute;
+        top: 30%;
+        left: 15%;
+        color: black;
+        font-size: 14px;
+        text-align: center;
+        background: transparent;
+    }
+    
+    .friends-action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
     }
     
     .friends-action-btn img {
@@ -772,21 +791,25 @@ footer {
     }
     
     .friends-lower-section {
-        height: 50%;
+        height: 42%;
         overflow-y: auto;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.8);
+        padding: 0 8%;
+        background: transparent;
     }
     
     .friends-table {
         width: 100%;
         border-collapse: collapse;
+        background: transparent;
     }
     
     .friends-table th, .friends-table td {
         border: 1px solid #ccc;
         padding: 10px;
         text-align: center;
+    }
+    
+    .friends-table th.sortable {
         cursor: pointer;
     }
     
@@ -800,5 +823,5 @@ footer {
     
     .friends-claim-btn.claimed {
         background-color: grey;
-        cursor: not-allowed;
+        cursor: default;
     }
