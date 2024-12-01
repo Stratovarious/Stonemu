@@ -792,7 +792,6 @@ footer {
     
     .friends-lower-section {
         height: 42%;
-        padding: 0;
         overflow: hidden;
         background: transparent;
         width: 100%;
@@ -802,27 +801,20 @@ footer {
         width: 100%;
         border-collapse: collapse;
         background: transparent;
-        table-layout: auto;
+        table-layout: fixed;
     }
     
-    .friends-table thead {
-        background: transparent;
-        position: sticky;
-        top: 0;
-        z-index: 2;
+    .friends-table thead,
+    .friends-table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed; /* Sütun genişliği eşitlenir */
     }
     
     .friends-table tbody {
         display: block;
         max-height: 100%;
-        overflow-y: auto;
-        width: 100%;
-    }
-    
-    .friends-table tbody tr {
-        display: table;
-        table-layout: fixed;
-        width: 100%;
+        overflow-y: auto; /* Sadece veri satırları kaydırılabilir */
     }
     
     .friends-table th, .friends-table td {
@@ -830,6 +822,13 @@ footer {
         padding: 10px;
         text-align: center;
         white-space: nowrap;
+    }
+    
+    .friends-table th {
+        background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
     
     .friends-table th.sortable {
