@@ -750,7 +750,7 @@ footer {
     }
     
     .friends-upper-container {
-        width: 60%; /* Konteynerin tam genişlik kaplaması */
+        width: 50%; /* Konteynerin tam genişlik kaplaması */
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
         margin-left: 27%; /* Sol boşluk */
@@ -767,7 +767,7 @@ footer {
     .friends-row {
         display: flex; /* Satır düzenlemesi için */
         align-items: center; /* Dikey hizalama */
-        gap: 5px; /* Elemanlar arasında boşluk */
+        gap: 2px; /* Elemanlar arasında boşluk */
         margin-top: 10px; /* Satırlar arasında boşluk */
         margin-left: 2%; /* Soldan kayma */
         width: 96%; /* Satırların genişliği */
@@ -786,7 +786,7 @@ footer {
         align-items: center; /* Dikey hizalama */
         justify-content: flex-start; /* Sola yaslama */
     }
-    friends-invite-frame
+    .friends-invite-frame
     .friends-invite-code img{
         width: 100%; /* Görsel genişliği */
         height: auto; /* Yükseklik otomatik */
