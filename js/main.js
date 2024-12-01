@@ -377,10 +377,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
         function renderTable(sortKey = "userName", sortAsc = true) {
             tableBody.innerHTML = "";
-            const sortedData = [...friendsData].sort((a, b) => {
-                if (sortKey === "claimed") {
-                    return sortAsc ? a.claimed - b.claimed : b.claimed - a.claimed;
-                }
+        
+            const claimData = friendsData.filter((friend) => !friend.claimed);
+            const claimedData = friendsData.filter((friend) => friend.claimed);
+        
+            // Claim ve Claimed olanları ayrı ayrı sırala
+            const sortedClaimData = claimData.sort((a, b) => {
                 if (typeof a[sortKey] === "string") {
                     return sortAsc
                         ? a[sortKey].localeCompare(b[sortKey])
@@ -389,6 +391,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 return sortAsc ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey];
             });
         
+            const sortedClaimedData = claimedData.sort((a, b) => {
+                if (typeof a[sortKey] === "string") {
+                    return sortAsc
+                        ? a[sortKey].localeCompare(b[sortKey])
+                        : b[sortKey].localeCompare(a[sortKey]);
+                }
+                return sortAsc ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey];
+            });
+        
+            const sortedData = [...sortedClaimData, ...sortedClaimedData];
+        
+            // Tabloya sıralanmış veriyi ekle
             sortedData.forEach((friend, index) => {
                 const row = document.createElement("tr");
         
@@ -423,6 +437,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const key = header.dataset.key;
                 sortAsc = !sortAsc;
                 renderTable(key, sortAsc);
+        
+                // Ok simgelerini güncelle
                 document
                     .querySelectorAll(".sortable .sort-icon")
                     .forEach((icon) => (icon.textContent = ""));
@@ -430,6 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
         
+        // İlk tablo sıralamasını yap
         renderTable();
     }
 });
