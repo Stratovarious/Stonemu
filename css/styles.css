@@ -801,6 +801,7 @@ footer {
         width: 100%;
         border-collapse: collapse;
         background: transparent;
+        table-layout: auto; /* Sütun genişliği içeriğe göre ayarlanır */
     }
     
     .friends-table th, .friends-table td {
@@ -811,6 +812,13 @@ footer {
     
     .friends-table th.sortable {
         cursor: pointer;
+        white-space: nowrap; /* Başlık metnini tek satırda tutar */
+    }
+    
+    .sort-icon {
+        font-size: 12px;
+        margin-left: 5px;
+        vertical-align: middle; /* İkon başlık metniyle hizalanır */
     }
     
     .friends-claim-btn {
