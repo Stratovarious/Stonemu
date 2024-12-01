@@ -822,39 +822,39 @@ footer {
         
     .friends-lower-section {
     height: 42%;
-    overflow: hidden; /* Sadece tbody kaydırılabilir olacak */
+    overflow: hidden; /* Sadece veri kaydırılabilir */
     background: transparent;
-    width: 100%; /* Tüm genişliği kaplar */
+    width: 100%; /* Tam genişlik */
     }
     
     .friends-table {
-        width: 100%;
-        border-collapse: collapse;
-        background: transparent;
-        table-layout: fixed; /* Sütun genişlikleri eşitlenir */
+        width: 100%; /* Tablo genişliği */
+        border-collapse: collapse; /* Kenarlıkları birleştir */
+        background: transparent; /* Transparan arka plan */
+        table-layout: fixed; /* Sütun genişliklerini sabitler */
     }
     
     .friends-table thead {
-        display: table; /* Başlıklar normal tablo davranışı */
+        display: table; /* Normal tablo davranışı */
         width: 100%; /* Tüm genişlik */
-        table-layout: fixed; /* Sütun genişlikleri başlıkla eşleşir */
+        table-layout: fixed; /* Sütun genişlikleri */
         position: sticky; /* Başlık sabit kalır */
         top: 0;
-        z-index: 2; /* Başlık üstte görünür */
+        z-index: 2; /* Üstte görünür */
         background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
     }
     
     .friends-table tbody {
         display: block; /* Sadece veri satırları kaydırılabilir */
-        max-height: calc(42% - 50px); /* 42%'lik yükseklikten başlık yüksekliğini çıkar */
-        overflow-y: auto; /* Dikey kaydırma */
-        width: 100%; /* Genişlik başlıkla eşleşir */
+        max-height: calc(42% - 50px); /* Başlık alanını çıkar */
+        overflow-y: auto; /* Yalnızca dikey kaydırma */
+        width: 100%; /* Genişlik eşleşir */
     }
     
     .friends-table tbody tr {
-        display: table; /* Veri satırlarını tablo davranışı */
+        display: table; /* Normal tablo satırı davranışı */
         width: 100%; /* Satır genişliği */
-        table-layout: fixed; /* Sütun genişlikleri sabit */
+        table-layout: fixed; /* Sütun genişlikleri */
     }
     
     .friends-table th, .friends-table td {
@@ -867,7 +867,8 @@ footer {
     .friends-table th {
         position: sticky; /* Sabit başlık */
         top: 0; /* Başlık pozisyonu */
-        z-index: 2; /* Üstte görünür */
+        z-index: 2; /* Üstte kalır */
+        background: rgba(255, 255, 255, 0.8); /* Hafif transparan arka plan */
     }
     
     .friends-table th.sortable {
