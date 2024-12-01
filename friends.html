@@ -1,33 +1,49 @@
 <div class="dynamic-content friends-container">
-        <!-- Başlık -->
-        <img src="../img/friends_img/friends_title.png" alt="Title" class="friends-title">
-        
-        <!-- Sıralar -->
-        <div class="friends-row">
-            <img src="../img/friends_img/friends_1.png" alt="Icon 1" class="friends-icon">
-            <div class="friends-frame" id="friends-invite-code-frame"></div>
-        </div>
-        <div class="friends-row">
-            <img src="../img/friends_img/friends_2.png" alt="Icon 2" class="friends-icon">
-            <div class="friends-frame" id="friends-share-link-frame"></div>
-        </div>
-        <div class="friends-row">
-            <img src="../img/friends_img/friends_3.png" alt="Icon 3" class="friends-icon">
-            <div class="friends-frame" id="friends-copy-link-frame"></div>
+        <!-- Upper Section -->
+        <div class="friends-upper-section">
+            <img src="img/friends_img/friends_title.png" alt="Friends Title" class="friends-title-img">
+            
+            <div class="friends-row">
+                <img src="img/friends_img/friends_1.png" alt="Friends 1" class="friends-image">
+                <div class="friends-invite-code">
+                    <p>Invite Link:</p>
+                    <p id="friends_invite_link"></p>
+                </div>
+            </div>
+            
+            <div class="friends-row">
+                <img src="img/friends_img/friends_2.png" alt="Friends 2" class="friends-image">
+                <button id="friends_copy_link_btn" class="friends-action-btn">
+                    <img src="img/friends_img/friends_copy_link.png" alt="Copy Link">
+                </button>
+            </div>
+            
+            <div class="friends-row">
+                <img src="img/friends_img/friends_3.png" alt="Friends 3" class="friends-image">
+                <button id="friends_share_link_btn" class="friends-action-btn">
+                    <img src="img/friends_img/friends_share_link.png" alt="Share Link">
+                </button>
+            </div>
         </div>
 
-        <!-- Tablo -->
-        <div class="friends-table" id="friends-table">
-            <table>
+        <!-- Lower Section -->
+        <div class="friends-lower-section">
+            <table id="friends_table" class="friends-table">
                 <thead>
                     <tr>
+                        <th colspan="5">Friends List</th>
+                    </tr>
+                    <tr>
+                        <th>Nr.</th>
                         <th>User Name</th>
                         <th>Level</th>
                         <th>Point</th>
                         <th>Claim</th>
                     </tr>
                 </thead>
-                <tbody id="friends-table-body"></tbody>
+                <tbody>
+                    <!-- Rows will be added dynamically via JavaScript -->
+                </tbody>
             </table>
         </div>
 </div>
