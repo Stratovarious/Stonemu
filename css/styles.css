@@ -742,28 +742,29 @@ footer {
     height: 58%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
     justify-content: flex-start;
-    //gap: 10px;
-    //margin-top: 20px;
+    /*gap: 10px;
+    margin-top: 20px;*/
     }
 
     .friends-upper-container {
-        bottom: -70px;
-        left: 25%;
+        top: 100px;
+        left: 30%;
         width: 50%;
         height: 50%;
-        align-items: left;
     }
     
     .friends-title-img {
         width: 40%;
+        padding: 0;
+        margin: 0;
     }
     
     .friends-row {
         left: 3%;
         display: flex;
-        align-items: center;
+        /*align-items: center;*/
         gap: 5px;
     }
     
@@ -841,7 +842,7 @@ footer {
     }
     
     .friends-table th {
-        //background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
+        /*background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
         position: sticky;
         top: 0;
         z-index: 2;
