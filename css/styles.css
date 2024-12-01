@@ -753,12 +753,12 @@ footer {
         width: 60%; /* Konteynerin tam genişlik kaplaması */
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
-        margin-left: 30%; /* Sol boşluk */
-        margin-top: 30%; /* Üst boşluk */
+        margin-left: 27%; /* Sol boşluk */
+        margin-top: 35%; /* Üst boşluk */
     }
     
     .friends-title-img {
-        width: 70%; /* Friends yazılı resmin genişliği */
+        width: 60%; /* Friends yazılı resmin genişliği */
         margin: 0; /* Varsayılan margin sıfırlanır */
         padding: 0; /* Varsayılan padding sıfırlanır */
         align-self: flex-start; /* Resmi tamamen sola yasla */
@@ -774,7 +774,7 @@ footer {
     }
     
     .friends-image {
-        width: 10%; /* Görsel boyutu */
+        width: 30%; /* Görsel boyutu */
         height: auto;
     }
     
@@ -786,8 +786,8 @@ footer {
         align-items: center; /* Dikey hizalama */
         justify-content: flex-start; /* Sola yaslama */
     }
-    
-    .friends-invite-code img {
+    friends-invite-frame
+    .friends-invite-code img{
         width: 100%; /* Görsel genişliği */
         height: auto; /* Yükseklik otomatik */
     }
@@ -807,13 +807,16 @@ footer {
         border: none;
         cursor: pointer;
         margin-left: 5px; /* Butonları sola kaydır */
-    }
-    
-    .friends-action-btn img {
-        max-width: 50px; /* Görsel genişliği */
+        width: 100%; /* Görsel genişliği */
         height: auto; /* Yükseklik otomatik */
     }
     
+    .friends-action-btn img {
+        /*max-width: 50px; /* Görsel genişliği */
+        width: 70%;
+        height: auto; /* Yükseklik otomatik */
+    }
+        
     .friends-lower-section {
         height: 42%;
         overflow: hidden;
