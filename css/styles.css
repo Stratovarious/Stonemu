@@ -751,6 +751,7 @@ footer {
     
     .friends-upper-container {
         width: 48%; /* Konteynerin tam genişlik kaplaması */
+        heigth: 50%;
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
         margin-left: 28%; /* Sol boşluk */
@@ -789,7 +790,7 @@ footer {
     .friends-invite-frame
     .friends-invite-code img{
         width: 100%; /* Görsel genişliği */
-        height: 40%; /* Yükseklik otomatik */
+        height: 100%; /* Yükseklik otomatik */
     }
     
     .friends-invite-text {
@@ -821,67 +822,73 @@ footer {
         
     .friends-lower-section {
     height: 42%;
-    overflow: hidden; /* Sadece tbody kaydırılabilir */
+    overflow: hidden; /* Sadece tbody kaydırılabilir olacak */
     background: transparent;
-    width: 100%;
+    width: 100%; /* Tüm genişliği kaplar */
     }
     
     .friends-table {
         width: 100%;
         border-collapse: collapse;
         background: transparent;
-        table-layout: fixed;
+        table-layout: fixed; /* Sütun genişlikleri eşitlenir */
     }
     
     .friends-table thead {
-        display: table; /* Başlıklar için normal tablo görünümü */
-        width: 100%; /* Başlıklar genişliği */
-        table-layout: fixed; /* Sütun genişlikleri eşit */
-        position: sticky; /* Kaydırmada sabit kalır */
+        display: table; /* Başlıklar normal tablo davranışı */
+        width: 100%; /* Tüm genişlik */
+        table-layout: fixed; /* Sütun genişlikleri başlıkla eşleşir */
+        position: sticky; /* Başlık sabit kalır */
         top: 0;
         z-index: 2; /* Başlık üstte görünür */
         background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
     }
     
     .friends-table tbody {
-        display: block; /* Veri satırlarını kaydırılabilir yapmak için */
-        max-height: calc(42% - 40px); /* Yükseklik ayarlanır (başlık yüksekliği çıkarıldı) */
-        overflow-y: auto; /* Sadece veri satırları kaydırılır */
-        width: 100%; /* Veri genişliği başlıklarla eşitlenir */
+        display: block; /* Sadece veri satırları kaydırılabilir */
+        max-height: calc(42% - 50px); /* 42%'lik yükseklikten başlık yüksekliğini çıkar */
+        overflow-y: auto; /* Dikey kaydırma */
+        width: 100%; /* Genişlik başlıkla eşleşir */
     }
     
     .friends-table tbody tr {
-        display: table; /* Satırlar tabloda düzenlenir */
-        width: 100%; /* Satır genişliği başlıklarla eşit */
-        table-layout: fixed; /* Sütun genişlikleri eşit */
+        display: table; /* Veri satırlarını tablo davranışı */
+        width: 100%; /* Satır genişliği */
+        table-layout: fixed; /* Sütun genişlikleri sabit */
     }
     
     .friends-table th, .friends-table td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        text-align: center;
+        border: 1px solid #ccc; /* Kenarlık */
+        padding: 10px; /* İç boşluk */
+        text-align: center; /* Ortalanmış metin */
         white-space: nowrap; /* Taşmayı önler */
     }
     
+    .friends-table th {
+        position: sticky; /* Sabit başlık */
+        top: 0; /* Başlık pozisyonu */
+        z-index: 2; /* Üstte görünür */
+    }
+    
     .friends-table th.sortable {
-        cursor: pointer;
+        cursor: pointer; /* Tıklanabilir başlık */
     }
     
     .sort-icon {
         font-size: 12px;
         margin-left: 5px;
-        vertical-align: middle;
+        vertical-align: middle; /* Başlıkla aynı hizada */
     }
     
     .friends-claim-btn {
-        padding: 5px 10px;
-        background-color: green;
+        padding: 5px 10px; /* Buton boyutu */
+        background-color: green; /* Buton rengi */
         color: white;
         border: none;
         cursor: pointer;
     }
     
     .friends-claim-btn.claimed {
-        background-color: grey;
-        cursor: default;
+        background-color: grey; /* Claimed butonu rengi */
+        cursor: default; /* Claimed butonu tıklanamaz */
     }
