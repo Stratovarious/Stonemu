@@ -333,17 +333,18 @@ document.addEventListener('DOMContentLoaded', function () {
     //Friends sayfası için js kodları
     function attachFriendsEventListeners() {
         // Davet linki dinamik olarak oluşturuluyor
-        const inviteLink = "t.me/DSADJAFG";
+        const inviteLink = "t.me/";
+        const inviteCode ="1234567891012";
         
         // Davet linkini uygun alana ekle
         document.getElementById("friends_invite_code").innerHTML = `
-            <p>Invite Link:</p>
-            <p>${inviteLink}</p>
+            <p>Invite Code:</p>
+            <p>${inviteCode}</p>
         `;
         
         // Copy link button functionality
         document.getElementById("friends_copy_link_btn").addEventListener("click", function() {
-            navigator.clipboard.writeText(inviteLink).then(() => {
+            navigator.clipboard.writeText(inviteLink+inviteCode).then(() => {
                 alert("Copied!");
             });
         });
@@ -354,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 navigator.share({
                     title: 'Invite Link',
                     text: 'Join me using this link:',
-                    url: inviteLink
+                    url: inviteLink+inviteCode
                 }).then(() => {
                     alert("Shared!");
                 }).catch(console.error);
