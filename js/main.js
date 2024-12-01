@@ -367,8 +367,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const friendsData = [
             { userName: "John", level: 5, point: 300, claimed: false },
             { userName: "Emma", level: 3, point: 150, claimed: false },
-            { userName: "Noah", level: 8, point: 500, claimed: false },
-            { userName: "Ava", level: 2, point: 100, claimed: false },
+            { userName: "Noah", level: 8, point: 500, claimed: true },
+            { userName: "Ava", level: 2, point: 100, claimed: true },
             { userName: "Liam", level: 6, point: 400, claimed: false }
         ];
         
@@ -378,6 +378,9 @@ document.addEventListener('DOMContentLoaded', function () {
         function renderTable(sortKey = "userName", sortAsc = true) {
             tableBody.innerHTML = "";
             const sortedData = [...friendsData].sort((a, b) => {
+                if (sortKey === "claimed") {
+                    return sortAsc ? a.claimed - b.claimed : b.claimed - a.claimed;
+                }
                 if (typeof a[sortKey] === "string") {
                     return sortAsc
                         ? a[sortKey].localeCompare(b[sortKey])
@@ -421,9 +424,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 sortAsc = !sortAsc;
                 renderTable(key, sortAsc);
                 document
-                    .querySelectorAll(".sortable")
-                    .forEach((h) => (h.textContent = h.textContent.replace(" ▲", "").replace(" ▼", "")));
-                header.textContent += sortAsc ? " ▲" : " ▼";
+                    .querySelectorAll(".sortable .sort-icon")
+                    .forEach((icon) => (icon.textContent = ""));
+                header.querySelector(".sort-icon").textContent = sortAsc ? "▲" : "▼";
             });
         });
         
