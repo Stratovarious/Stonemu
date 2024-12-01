@@ -792,7 +792,7 @@ footer {
     
     .friends-lower-section {
         height: 42%;
-        overflow-y: auto;
+        overflow: hidden; /* Kaydırmayı sadece tablo gövdesine sınırlamak için */
         padding: 0 8%;
         background: transparent;
     }
@@ -801,24 +801,43 @@ footer {
         width: 100%;
         border-collapse: collapse;
         background: transparent;
-        table-layout: auto; /* Sütun genişliği içeriğe göre ayarlanır */
+    }
+    
+    .friends-table thead {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 2;
+    }
+    
+    .friends-table tbody {
+        display: block;
+        max-height: 100%;
+        overflow-y: auto; /* Sadece veri satırları kaydırılabilir */
+        width: 100%;
+    }
+    
+    .friends-table tbody tr {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
     }
     
     .friends-table th, .friends-table td {
         border: 1px solid #ccc;
         padding: 10px;
         text-align: center;
+        white-space: nowrap; /* Satırların kaymasını engellemek için */
     }
     
     .friends-table th.sortable {
         cursor: pointer;
-        white-space: nowrap; /* Başlık metnini tek satırda tutar */
     }
     
     .sort-icon {
         font-size: 12px;
         margin-left: 5px;
-        vertical-align: middle; /* İkon başlık metniyle hizalanır */
+        vertical-align: middle;
     }
     
     .friends-claim-btn {
