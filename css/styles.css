@@ -750,7 +750,7 @@ footer {
     }
     
     .friends-upper-container {
-        width: 50%; /* Konteynerin tam genişlik kaplaması */
+        width: 48%; /* Konteynerin tam genişlik kaplaması */
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
         margin-left: 28%; /* Sol boşluk */
@@ -789,7 +789,7 @@ footer {
     .friends-invite-frame
     .friends-invite-code img{
         width: 100%; /* Görsel genişliği */
-        height: auto; /* Yükseklik otomatik */
+        height: 40%; /* Yükseklik otomatik */
     }
     
     .friends-invite-text {
