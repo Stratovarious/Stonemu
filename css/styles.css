@@ -741,17 +741,19 @@ footer {
     .friends-upper-section {
     height: 58%;
     display: flex;
+    padding: 0;
+    margin: 0;
     flex-direction: column;
     justify-content: flex-start; /* Elemanları üstten başlat */
     align-items: flex-start; /* Elemanları sola yasla */
-    padding-left: 2%; /* Sol boşluk */
-    padding-top: 2%; /* Üst boşluk */
     }
     
     .friends-upper-container {
-        width: 100%; /* Konteynerin tam genişlik kaplaması */
+        width: 60%; /* Konteynerin tam genişlik kaplaması */
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
+        padding-left: 30%; /* Sol boşluk */
+        padding-top: 30%; /* Üst boşluk */
     }
     
     .friends-title-img {
