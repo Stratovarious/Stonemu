@@ -748,21 +748,27 @@ footer {
     }
     
     .friends-title-img {
-        max-width: 80%;
+        top: 50%;
+        left: 20%;
+        max-width: 30%;
     }
     
     .friends-row {
+        top: 1%;
+        left: 23%;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 5px;
     }
     
     .friends-image {
-        max-width: 150px;
+        max-width: 30px;
     }
     
     .friends-invite-code {
         position: relative;
+        width: 40%;
+        height: 100%;
     }
     
     .friends-invite-frame {
