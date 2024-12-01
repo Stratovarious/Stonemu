@@ -774,7 +774,7 @@ footer {
     }
     
     .friends-image {
-        width: 22%; /* Görsel boyutu */
+        width: 20%; /* Görsel boyutu */
         height: auto;
     }
     
@@ -794,12 +794,14 @@ footer {
     
     .friends-invite-text {
         position: absolute;
-        top: 28%; /* Çerçeve içindeki metin konumu */
-        left: 18%;
+        top: 26%; /* Çerçeve içindeki metin konumu */
+        left: 20%;
         color: black;
         font-size: 10px;
-        text-align: center;
+        text-align: left;
         background: transparent;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px #000;
     }
     
     .friends-action-btn {
