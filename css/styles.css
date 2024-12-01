@@ -820,10 +820,10 @@ footer {
     }
         
     .friends-lower-section {
-        height: 42%;
-        overflow: hidden;
-        background: transparent;
-        width: 100%;
+    height: 42%;
+    overflow: hidden; /* Sadece tbody kaydırılabilir */
+    background: transparent;
+    width: 100%;
     }
     
     .friends-table {
@@ -833,31 +833,34 @@ footer {
         table-layout: fixed;
     }
     
-    .friends-table thead,
-    .friends-table tbody tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed; /* Sütun genişliği eşitlenir */
+    .friends-table thead {
+        display: table; /* Başlıklar için normal tablo görünümü */
+        width: 100%; /* Başlıklar genişliği */
+        table-layout: fixed; /* Sütun genişlikleri eşit */
+        position: sticky; /* Kaydırmada sabit kalır */
+        top: 0;
+        z-index: 2; /* Başlık üstte görünür */
+        background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
     }
     
     .friends-table tbody {
-        display: block;
-        max-height: 100%;
-        overflow-y: auto; /* Sadece veri satırları kaydırılabilir */
+        display: block; /* Veri satırlarını kaydırılabilir yapmak için */
+        max-height: calc(42% - 40px); /* Yükseklik ayarlanır (başlık yüksekliği çıkarıldı) */
+        overflow-y: auto; /* Sadece veri satırları kaydırılır */
+        width: 100%; /* Veri genişliği başlıklarla eşitlenir */
+    }
+    
+    .friends-table tbody tr {
+        display: table; /* Satırlar tabloda düzenlenir */
+        width: 100%; /* Satır genişliği başlıklarla eşit */
+        table-layout: fixed; /* Sütun genişlikleri eşit */
     }
     
     .friends-table th, .friends-table td {
         border: 1px solid #ccc;
         padding: 10px;
         text-align: center;
-        white-space: nowrap;
-    }
-    
-    .friends-table th {
-        /*background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
-        position: sticky;
-        top: 0;
-        z-index: 2;
+        white-space: nowrap; /* Taşmayı önler */
     }
     
     .friends-table th.sortable {
