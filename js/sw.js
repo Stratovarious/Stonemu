@@ -1,4 +1,4 @@
-const CACHE_NAME = "stonemu-cache-v1";
+const CACHE_NAME = "stonemu-cache-v2";
 const urlsToCache = [
     // Slideshow resimleri
     "img/ploading_img/loading1a.webp",
@@ -14,18 +14,37 @@ const urlsToCache = [
     "css/styles.css",
     "js/main.js",
     // Ekstra görseller
-    "img/friends_icon.webp",
-    "img/events_icon.webp",
-    "img/playground_icon.webp",
-    "img/underconstruction_icon.webp"
+    //"img/friends_icon.webp",
+    //"img/events_icon.webp",
+    //"img/playground_icon.webp",
+    //"img/underconstruction_icon.webp"
 ];
 
-// Install event: Önbelleği oluştur ve kaynakları ekle
+// Install event
 self.addEventListener("install", (event) => {
+    console.log("Service Worker installing...");
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log("Cache opened");
+            console.log("Opened cache");
             return cache.addAll(urlsToCache);
+        })
+    );
+});
+
+// Activate event: Eski önbelleği temizle
+self.addEventListener("activate", (event) => {
+    console.log("Service Worker activating...");
+    const cacheWhitelist = [CACHE_NAME];
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                        console.log(`Deleting cache: ${cacheName}`);
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
         })
     );
 });
@@ -39,18 +58,3 @@ self.addEventListener("fetch", (event) => {
     );
 });
 
-// Activate event: Eski önbellekleri temizle
-self.addEventListener("activate", (event) => {
-    const cacheWhitelist = [CACHE_NAME];
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (!cacheWhitelist.includes(cacheName)) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-});
