@@ -1,4 +1,4 @@
-const CACHE_NAME = "stonemu-cache-v3";
+const CACHE_NAME = "stonemu-cache-v1";
 const urlsToCache = [
     // Slideshow resimleri
     "img/ploading_img/loading1a.webp",
