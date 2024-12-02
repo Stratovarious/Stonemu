@@ -756,7 +756,7 @@ footer {
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
         left: 28%; /* Sol boşluk */
-        top: 39%; /* Üst boşluk */
+        top: 29%; /* Üst boşluk */
     }
     
     .friends-title-img {
