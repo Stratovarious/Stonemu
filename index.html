@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stonemu App Loading</title>
     <style>
+        /* Stil ayarları */
         * {
             margin: 0;
             padding: 0;
@@ -55,18 +56,10 @@
             width: 0;
             height: 100%;
             background-color: #b8860b;
-            animation: loading 5s linear forwards;
-        }
-
-        @keyframes loading {
-            from {
-                width: 0;
-            }
-            to {
-                width: 100%;
-            }
+            transition: width 0.2s ease-out;
         }
     </style>
+    <!-- Slayt resimlerini preload -->
     <link rel="preload" href="img/ploading_img/loading1a.webp" as="image">
     <link rel="preload" href="img/ploading_img/loading2a.webp" as="image">
     <link rel="preload" href="img/ploading_img/loading3a.webp" as="image">
@@ -82,9 +75,26 @@
     </div>
 
     <script>
+        // Service Worker kaydı ve güncelleme bildirimi
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("js/sw.js").then(() => {
+            navigator.serviceWorker.register("js/sw.js").then((registration) => {
                 console.log("Service Worker registered.");
+
+                // Servis çalışanı güncelleme kontrolü
+                registration.addEventListener("updatefound", () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener("statechange", () => {
+                        if (newWorker.state === "installed") {
+                            if (navigator.serviceWorker.controller) {
+                                // Yeni güncelleme mevcut
+                                const shouldUpdate = confirm("Yeni bir güncelleme mevcut. Sayfayı yenilemek ister misiniz?");
+                                if (shouldUpdate) {
+                                    window.location.reload();
+                                }
+                            }
+                        }
+                    });
+                });
             }).catch((error) => {
                 console.error("Service Worker Registration Failed:", error);
             });
@@ -94,19 +104,106 @@
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
 
-            const preloadImages = async () => {
-                const promises = [];
-                slides.forEach((slide) => {
-                    const imageUrl = slide.style.backgroundImage.slice(5, -2);
-                    promises.push(
-                        new Promise((resolve) => {
-                            const img = new Image();
-                            img.src = imageUrl;
-                            img.onload = resolve;
-                            img.onerror = resolve;
-                        })
-                    );
+            // Yüklenecek tüm kaynaklar
+            const resources = [
+                // Resimler
+                "img/ploading_img/loading1a.webp",
+                "img/ploading_img/loading2a.webp",
+                "img/ploading_img/loading3a.webp",
+                // Sayfalar
+                "mainpage.html",
+                "friends.html",
+                "events.html",
+                "playground.html",
+                "underconstruction.html",
+                // CSS ve JS dosyaları
+                "css/styles.css",
+                "js/main.js"
+                // Diğer kaynaklarınızı buraya ekleyin
+            ];
+
+            const totalResources = resources.length;
+            let loadedResources = 0;
+
+            // Yükleme çubuğunu güncelleme fonksiyonu
+            const updateLoadingBar = () => {
+                const progress = (loadedResources / totalResources) * 100;
+                loadingBar.style.width = `${progress}%`;
+            };
+
+            // Kaynakları preload eden fonksiyon
+            const preloadResources = async () => {
+                const promises = resources.map((resource) => {
+                    return new Promise((resolve) => {
+                        let element;
+                        if (resource.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
+                            element = new Image();
+                            element.src = resource;
+                            element.onload = () => {
+                                loadedResources++;
+                                updateLoadingBar();
+                                resolve();
+                            };
+                            element.onerror = () => {
+                                console.error(`Error loading ${resource}`);
+                                loadedResources++;
+                                updateLoadingBar();
+                                resolve();
+                            };
+                        } else if (resource.endsWith(".css")) {
+                            element = document.createElement("link");
+                            element.rel = "stylesheet";
+                            element.href = resource;
+                            element.onload = () => {
+                                loadedResources++;
+                                updateLoadingBar();
+                                resolve();
+                            };
+                            element.onerror = () => {
+                                console.error(`Error loading ${resource}`);
+                                loadedResources++;
+                                updateLoadingBar();
+                                resolve();
+                            };
+                            document.head.appendChild(element);
+                        } else if (resource.endsWith(".js")) {
+                            element = document.createElement("script");
+                            element.src = resource;
+                            element.onload = () => {
+                                loadedResources++;
+                                updateLoadingBar();
+                                resolve();
+                            };
+                            element.onerror = () => {
+                                console.error(`Error loading ${resource}`);
+                                loadedResources++;
+                                updateLoadingBar();
+                                resolve();
+                            };
+                            document.head.appendChild(element);
+                        } else {
+                            // Diğer kaynaklar için (HTML dosyaları)
+                            fetch(resource, { cache: "reload" }).then((response) => {
+                                if (response.ok) {
+                                    loadedResources++;
+                                    updateLoadingBar();
+                                    resolve();
+                                } else {
+                                    console.error(`Failed to load ${resource}`);
+                                    loadedResources++;
+                                    updateLoadingBar();
+                                    resolve();
+                                }
+                            }).catch((error) => {
+                                console.error(`Error loading ${resource}:`, error);
+                                loadedResources++;
+                                updateLoadingBar();
+                                resolve();
+                            });
+                        }
+                    });
                 });
+
                 await Promise.all(promises);
             };
 
@@ -123,17 +220,15 @@
                 setInterval(() => {
                     currentIndex = (currentIndex + 1) % slides.length;
                     showSlide(currentIndex);
-                }, 5000); // Daha kısa slayt süresi
+                }, 2000);
             };
 
-            // Resimleri yükle ve slayt gösterisini başlat
-            await preloadImages();
+            // Kaynakları preload et ve slayt gösterisini başlat
             startSlideshow();
+            await preloadResources();
 
-            // Yükleme çubuğu bitince yönlendirme yap
-            setTimeout(() => {
-                window.location.href = "mainpage.html";
-            }, 5000); // Maksimum 5 saniye
+            // Tüm kaynaklar yüklendiğinde yönlendirme yap
+            window.location.href = "mainpage.html";
         });
     </script>
 </body>
