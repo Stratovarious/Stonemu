@@ -16,7 +16,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #1c1c1c; /* Koyu arka plan */
+            background-color: #1c1c1c;
         }
 
         /* Slideshow */
@@ -41,7 +41,7 @@
             opacity: 1;
         }
 
-        /* Loading çubuğu */
+        /* Loading bar */
         .loading-bar-container {
             position: absolute;
             bottom: 10%;
@@ -57,7 +57,7 @@
         .loading-bar {
             width: 0;
             height: 100%;
-            background-color: #b8860b; /* Koyu altın rengi */
+            background-color: #b8860b;
             transition: width 0.2s ease-out;
         }
     </style>
@@ -75,31 +75,40 @@
     <script>
         // Service Worker kaydı
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("js/sw.js")
-                .then(() => console.log("Service Worker Registered"))
-                .catch((error) => console.error("Service Worker Registration Failed:", error));
+            navigator.serviceWorker.register("js/sw.js").then((registration) => {
+                console.log("Service Worker registered:", registration);
+
+                // Güncelleme kontrolü
+                registration.addEventListener("updatefound", () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener("statechange", () => {
+                        if (newWorker.state === "installed") {
+                            if (navigator.serviceWorker.controller) {
+                                // Kullanıcıya güncelleme bildirimi
+                                const shouldUpdate = confirm(
+                                    "Yeni bir güncelleme mevcut. Sayfayı yenilemek ister misiniz?"
+                                );
+                                if (shouldUpdate) {
+                                    window.location.reload();
+                                }
+                            } else {
+                                console.log("İçerik offline kullanım için hazır.");
+                            }
+                        }
+                    });
+                });
+            }).catch((error) => {
+                console.error("Service Worker Registration Failed:", error);
+            });
         }
 
+        // Slideshow ve Loading Bar
         document.addEventListener("DOMContentLoaded", () => {
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
 
-            // Slayt gösterimi
-            const showSlide = (index) => {
-                slides.forEach((slide, i) => {
-                    slide.classList.toggle("active", i === index);
-                });
-            };
-
-            let currentIndex = 0;
-            const nextSlide = () => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                showSlide(currentIndex);
-            };
-
-            // Kaynakların yüklendiğine bağlı olarak loading çubuğu
             const preloadAllResources = async () => {
-                const totalResources = slides.length + 1; // +1 mainpage
+                const totalResources = slides.length;
                 let loadedCount = 0;
 
                 for (const slide of slides) {
@@ -111,20 +120,25 @@
                     };
                 }
 
-                await new Promise((resolve) =>
-                    setTimeout(() => {
-                        loadingBar.style.width = "100%";
-                        resolve();
-                    }, 5000)
-                );
+                await new Promise((resolve) => setTimeout(resolve, 5000)); // En fazla 5 saniye bekle
+                loadingBar.style.width = "100%";
             };
 
-            preloadAllResources().then(() => {
-                // Slayt gösterisini başlat
-                showSlide(currentIndex);
-                const interval = setInterval(nextSlide, 5000);
+            const showSlide = (index) => {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle("active", i === index);
+                });
+            };
 
-                // Sonunda yönlendirme
+            let currentIndex = 0;
+
+            preloadAllResources().then(() => {
+                showSlide(currentIndex);
+                const interval = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    showSlide(currentIndex);
+                }, 5000);
+
                 setTimeout(() => {
                     clearInterval(interval);
                     window.location.href = "mainpage.html";
