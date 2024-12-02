@@ -24,6 +24,7 @@ const urlsToCache = [
 self.addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
+            console.log("[Service Worker] Caching all resources");
             return cache.addAll(urlsToCache);
         })
     );
@@ -37,6 +38,7 @@ self.addEventListener("activate", (event) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
                     if (!cacheWhitelist.includes(cacheName)) {
+                        console.log(`[Service Worker] Deleting old cache: ${cacheName}`);
                         return caches.delete(cacheName);
                     }
                 })
@@ -49,7 +51,12 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
     event.respondWith(
         caches.match(event.request).then((response) => {
-            return response || fetch(event.request);
+            if (response) {
+                console.log(`[Service Worker] Serving from cache: ${event.request.url}`);
+                return response;
+            }
+            console.log(`[Service Worker] Fetching from network: ${event.request.url}`);
+            return fetch(event.request);
         })
     );
 });
