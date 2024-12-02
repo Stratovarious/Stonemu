@@ -772,6 +772,7 @@ footer {
         margin-top: 10px; /* Satırlar arasında boşluk */
         margin-left: 2%; /* Soldan kayma */
         width: 96%; /* Satırların genişliği */
+        heigth: 33%;
     }
     
     .friends-image {
