@@ -751,7 +751,7 @@ footer {
     
     .friends-upper-container {
         width: 48%; /* Konteynerin tam genişlik kaplaması */
-        heigth: 150px;
+        heigth: 100%;
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
         margin-left: 28%; /* Sol boşluk */
@@ -773,6 +773,9 @@ footer {
         margin-left: 2%; /* Soldan kayma */
         width: 96%; /* Satırların genişliği */
         heigth: 33%;
+    }
+    .friends-row img{
+        height: 34%;
     }
     
     .friends-image {
