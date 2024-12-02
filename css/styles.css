@@ -772,15 +772,12 @@ footer {
         gap: 2px; /* Elemanlar arasında boşluk */
         margin-top: 10px; /* Satırlar arasında boşluk */
         margin-left: 2%; /* Soldan kayma */
-        width: 96%; /* Satırların genişliği */
-        heigth: 33%;
-    }
-    .friends-row img{
-        height: 34%;
+        width: 200px; /* Satırların genişliği */
+        heigth: 100px;
     }
     
     .friends-image {
-        width: 20%; /* Görsel boyutu */
+        width: 15%; /* Görsel boyutu */
         height: auto;
     }
     
