@@ -1,4 +1,4 @@
-const CACHE_NAME = "stonemu-cache-v2";
+const CACHE_NAME = "stonemu-cache-v3";
 const urlsToCache = [
     // Slideshow resimleri
     "img/ploading_img/loading1a.webp",
@@ -20,12 +20,10 @@ const urlsToCache = [
     //"img/underconstruction_icon.webp"
 ];
 
-// Install event
+// Install event: Önbelleğe kaynakları al
 self.addEventListener("install", (event) => {
-    console.log("Service Worker installing...");
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log("Opened cache");
             return cache.addAll(urlsToCache);
         })
     );
@@ -33,14 +31,12 @@ self.addEventListener("install", (event) => {
 
 // Activate event: Eski önbelleği temizle
 self.addEventListener("activate", (event) => {
-    console.log("Service Worker activating...");
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
                     if (!cacheWhitelist.includes(cacheName)) {
-                        console.log(`Deleting cache: ${cacheName}`);
                         return caches.delete(cacheName);
                     }
                 })
@@ -49,7 +45,7 @@ self.addEventListener("activate", (event) => {
     );
 });
 
-// Fetch event: Talepleri önbellekten karşıla veya ağdan indir
+// Fetch event: Talepleri önbellekten karşıla veya ağdan al
 self.addEventListener("fetch", (event) => {
     event.respondWith(
         caches.match(event.request).then((response) => {
@@ -57,4 +53,3 @@ self.addEventListener("fetch", (event) => {
         })
     );
 });
-
