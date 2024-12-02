@@ -422,7 +422,7 @@ footer {
     position: relative;
     display: flex;
     flex-direction: column;
-    background: url('../img/uc_img/uc.png') no-repeat center center;
+    background: url('../img/uc_img/uc.webp') no-repeat center center;
     background-size: cover;
 }
 
