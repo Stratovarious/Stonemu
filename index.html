@@ -16,11 +16,10 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #1c1c1c; /* Arka plan koyu */
-            color: #fff;
+            background-color: #1c1c1c; /* Koyu arka plan */
         }
 
-        /* Slideshow için stil */
+        /* Slideshow */
         .slideshow {
             width: 100%;
             height: 100%;
@@ -42,14 +41,14 @@
             opacity: 1;
         }
 
-        /* Tek bir loading çubuğu */
+        /* Loading çubuğu */
         .loading-bar-container {
             position: absolute;
             bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
             width: 75%;
-            height: 16px; /* Çubuğu daha kalın yaptım */
+            height: 16px;
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             overflow: hidden;
@@ -74,44 +73,18 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
+        // Service Worker kaydı
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js")
+                .then(() => console.log("Service Worker Registered"))
+                .catch((error) => console.error("Service Worker Registration Failed:", error));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
 
-            const resourcesToLoad = [
-                "img/ploading_img/loading1a.webp",
-                "img/ploading_img/loading2a.webp",
-                "img/ploading_img/loading3a.webp",
-                "mainpage.html",
-                "home.html",
-                "friends.html",
-                "events.html",
-                "css/styles.css",
-                "js/main.js"
-            ];
-
-            // Kaynakları yükleme fonksiyonu
-            const preloadResource = (url) => {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                    img.src = url;
-                });
-            };
-
-            // Tüm kaynakları yükleme
-            const preloadAllResources = async () => {
-                let loadedCount = 0;
-                for (const resource of resourcesToLoad) {
-                    await preloadResource(resource);
-                    loadedCount++;
-                    // Yükleme çubuğunu güncelle
-                    loadingBar.style.width = `${(loadedCount / resourcesToLoad.length) * 100}%`;
-                }
-            };
-
-            // Slayt gösterisini başlat
+            // Slayt gösterimi
             const showSlide = (index) => {
                 slides.forEach((slide, i) => {
                     slide.classList.toggle("active", i === index);
@@ -119,24 +92,44 @@
             };
 
             let currentIndex = 0;
-
             const nextSlide = () => {
                 currentIndex = (currentIndex + 1) % slides.length;
                 showSlide(currentIndex);
             };
 
-            // Tüm kaynaklar yüklenmeden yönlendirme yapma
-            await preloadAllResources();
+            // Kaynakların yüklendiğine bağlı olarak loading çubuğu
+            const preloadAllResources = async () => {
+                const totalResources = slides.length + 1; // +1 mainpage
+                let loadedCount = 0;
 
-            // Slayt gösterisini başlat
-            showSlide(currentIndex);
-            const interval = setInterval(nextSlide, 5000);
+                for (const slide of slides) {
+                    const img = new Image();
+                    img.src = slide.style.backgroundImage.slice(5, -2); // URL'i çıkar
+                    img.onload = () => {
+                        loadedCount++;
+                        loadingBar.style.width = `${(loadedCount / totalResources) * 100}%`;
+                    };
+                }
 
-            // Slayt bitince yönlendirme
-            setTimeout(() => {
-                clearInterval(interval);
-                window.location.href = "mainpage.html";
-            }, 5000 * slides.length);
+                await new Promise((resolve) =>
+                    setTimeout(() => {
+                        loadingBar.style.width = "100%";
+                        resolve();
+                    }, 5000)
+                );
+            };
+
+            preloadAllResources().then(() => {
+                // Slayt gösterisini başlat
+                showSlide(currentIndex);
+                const interval = setInterval(nextSlide, 5000);
+
+                // Sonunda yönlendirme
+                setTimeout(() => {
+                    clearInterval(interval);
+                    window.location.href = "mainpage.html";
+                }, 5000 * slides.length);
+            });
         });
     </script>
 </body>
