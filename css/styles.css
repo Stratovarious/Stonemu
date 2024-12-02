@@ -771,8 +771,8 @@ footer {
         align-items: center; /* Dikey hizalama */
         gap: 2px; /* Elemanlar arasında boşluk */
         margin-top: 10px; /* Satırlar arasında boşluk */
-        margin-left: 2%; /* Soldan kayma */
-        width: 200px; /* Satırların genişliği */
+        margin-left: 1%; /* Soldan kayma */
+        width: 190px; /* Satırların genişliği */
         heigth: 100px;
     }
     
@@ -797,8 +797,8 @@ footer {
     
     .friends-invite-text {
         position: absolute;
-        top: 26%; /* Çerçeve içindeki metin konumu */
-        left: 20%;
+        top: 24%; /* Çerçeve içindeki metin konumu */
+        left: 22%;
         color: black;
         font-size: 10px;
         text-align: left;
