@@ -750,6 +750,7 @@ footer {
     }
     
     .friends-upper-container {
+        position: fixed;
         width: 48%; /* Konteynerin tam genişlik kaplaması */
         heigth: 100%;
         display: flex;
