@@ -29,7 +29,8 @@
             width: 100%;
             height: 100%;
             position: absolute;
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
             opacity: 0;
             transition: opacity 1s ease-in-out;
@@ -39,24 +40,34 @@
             opacity: 1;
         }
 
-        /* Loading çubuğu */
+        /* Tek bir loading çubuğu */
         .loading-bar-container {
             position: absolute;
-            bottom: 25%;
+            bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
             width: 75%;
-            height: 4px;
+            height: 8px;
             background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
             overflow: hidden;
-            border-radius: 2px;
         }
 
         .loading-bar {
             width: 0;
             height: 100%;
             background-color: #fff;
-            transition: width 4s linear;
+            animation: loading 12s linear forwards; /* Tüm slayt süresi */
+        }
+
+        /* Animasyon */
+        @keyframes loading {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
         }
     </style>
     <!-- Preload tanımları -->
@@ -78,22 +89,12 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const slides = document.querySelectorAll(".slide");
-            const loadingBar = document.querySelector(".loading-bar");
             let currentIndex = 0;
-            let slideInterval;
 
             const showSlide = (index) => {
                 slides.forEach((slide, i) => {
                     slide.classList.toggle("active", i === index);
                 });
-
-                // Loading bar animation
-                loadingBar.style.transition = "none";
-                loadingBar.style.width = "0%";
-                setTimeout(() => {
-                    loadingBar.style.transition = "width 4s linear";
-                    loadingBar.style.width = "100%";
-                }, 10);
             };
 
             const nextSlide = () => {
@@ -101,24 +102,16 @@
                 showSlide(currentIndex);
 
                 // Eğer tüm slaytlar tamamlandıysa mainpage.html'e geçiş yap
-                if (currentIndex === slides.length - 1) {
-                    clearInterval(slideInterval); // Döngüyü durdur
+                if (currentIndex === 0) {
                     setTimeout(() => {
-                        window.location.href = "mainpage.html"; // Ana sayfaya yönlendirme
+                        window.location.href = "mainpage.html";
                     }, 4000); // Son slaytın bitiş süresini bekle
                 }
             };
 
             // Başlangıç ayarları
             showSlide(currentIndex);
-            slideInterval = setInterval(nextSlide, 4000); // Geçiş süresi burada ayarlanabilir
-
-            // Sayfa ve resimler için preload
-            const preloadImages = ['img/ploading_img/loading1a.webp', 'img/ploading_img/loading2a.webp', 'img/ploading_img/loading3a.webp'];
-            preloadImages.forEach(src => {
-                const img = new Image();
-                img.src = src;
-            });
+            setInterval(nextSlide, 4000); // Geçiş süresi
         });
     </script>
 </body>
