@@ -1,18 +1,18 @@
 const CACHE_NAME = "stonemu-cache-v2";
 const urlsToCache = [
     // Slideshow resimleri
-    "img/ploading_img/loading1a.webp",
-    "img/ploading_img/loading2a.webp",
-    "img/ploading_img/loading3a.webp",
+    "../img/ploading_img/loading1a.webp",
+    "../img/ploading_img/loading2a.webp",
+    "../img/ploading_img/loading3a.webp",
     // Sayfa dosyaları
-    "mainpage.html",
-    "friends.html",
-    "events.html",
-    "playground.html",
-    "underconstruction.html",
+    "../mainpage.html",
+    "../friends.html",
+    "../events.html",
+    "../playground.html",
+    "../underconstruction.html",
     // CSS ve JavaScript dosyaları
-    "css/styles.css",
-    "js/main.js"
+    "../css/styles.css",
+    "../js/main.js"
     // Diğer kaynaklarınızı buraya ekleyin
 ];
 
