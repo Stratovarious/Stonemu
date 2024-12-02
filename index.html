@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Başlık ve stil tanımları aynı kalıyor -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stonemu App Loading</title>
     <style>
         /* Stil ayarları */
+        /* ... (Mevcut stil kodları burada kalıyor) ... */
         * {
             margin: 0;
             padding: 0;
@@ -65,6 +67,7 @@
     <link rel="preload" href="img/ploading_img/loading3a.webp" as="image">
 </head>
 <body>
+    <!-- Slayt gösterisi ve yükleme çubuğu -->
     <div class="slideshow">
         <div class="slide" style="background-image: url('img/ploading_img/loading1a.webp');"></div>
         <div class="slide" style="background-image: url('img/ploading_img/loading2a.webp');"></div>
@@ -75,7 +78,7 @@
     </div>
 
     <script>
-         // Service Worker kaydı ve güncelleme bildirimi
+        // Service Worker kaydı ve güncelleme bildirimi
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("js/sw.js").then((registration) => {
                 console.log("Service Worker registered.");
@@ -125,10 +128,17 @@
             const totalResources = resources.length;
             let loadedResources = 0;
 
+            // Başlangıç zamanı kaydet
+            const startTime = Date.now();
+            const minDisplayTime = 6000; // 6 saniye
+
             // Yükleme çubuğunu güncelleme fonksiyonu
             const updateLoadingBar = () => {
-                const progress = (loadedResources / totalResources) * 100;
-                loadingBar.style.width = `${progress}%`;
+                const elapsedTime = Date.now() - startTime;
+                const timeProgress = Math.min(elapsedTime / minDisplayTime, 1);
+                const resourceProgress = loadedResources / totalResources;
+                const progress = Math.min(timeProgress, resourceProgress);
+                loadingBar.style.width = `${progress * 100}%`;
             };
 
             // Kaynakları preload eden fonksiyon
@@ -221,25 +231,32 @@
                 };
 
                 showSlide(currentIndex);
-                setInterval(() => {
+                const slideshowInterval = setInterval(() => {
                     currentIndex = (currentIndex + 1) % slides.length;
                     showSlide(currentIndex);
                 }, 2000);
             };
 
-            // Başlangıç zamanı kaydet
-            const startTime = Date.now();
-
-            // Slayt gösterisini başlat ve kaynakları yükle
+            // Slayt gösterisini başlat
             startSlideshow();
+
+            // Yükleme çubuğunu düzenli aralıklarla güncelle
+            const loadingInterval = setInterval(() => {
+                updateLoadingBar();
+            }, 100);
+
+            // Kaynakları yükle
             await preloadResources();
 
-            // En az 4 saniye bekle
+            // En az 6 saniye bekle
             const elapsedTime = Date.now() - startTime;
-            const minDisplayTime = 4000; // 4 saniye
             if (elapsedTime < minDisplayTime) {
                 await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
             }
+
+            // Yükleme çubuğunu son kez güncelle ve interval'i temizle
+            updateLoadingBar();
+            clearInterval(loadingInterval);
 
             // Tüm kaynaklar yüklendiğinde yönlendirme yap
             window.location.href = "mainpage.html";
