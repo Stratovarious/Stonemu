@@ -75,7 +75,7 @@
     </div>
 
     <script>
-        // Service Worker kaydı ve güncelleme bildirimi
+         // Service Worker kaydı ve güncelleme bildirimi
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("js/sw.js").then((registration) => {
                 console.log("Service Worker registered.");
@@ -132,79 +132,83 @@
             };
 
             // Kaynakları preload eden fonksiyon
-            const preloadResources = async () => {
-                const promises = resources.map((resource) => {
-                    return new Promise((resolve) => {
-                        let element;
-                        if (resource.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
-                            element = new Image();
-                            element.src = resource;
-                            element.onload = () => {
-                                loadedResources++;
-                                updateLoadingBar();
-                                resolve();
-                            };
-                            element.onerror = () => {
-                                console.error(`Error loading ${resource}`);
-                                loadedResources++;
-                                updateLoadingBar();
-                                resolve();
-                            };
-                        } else if (resource.endsWith(".css")) {
-                            element = document.createElement("link");
-                            element.rel = "stylesheet";
-                            element.href = resource;
-                            element.onload = () => {
-                                loadedResources++;
-                                updateLoadingBar();
-                                resolve();
-                            };
-                            element.onerror = () => {
-                                console.error(`Error loading ${resource}`);
-                                loadedResources++;
-                                updateLoadingBar();
-                                resolve();
-                            };
-                            document.head.appendChild(element);
-                        } else if (resource.endsWith(".js")) {
-                            element = document.createElement("script");
-                            element.src = resource;
-                            element.onload = () => {
-                                loadedResources++;
-                                updateLoadingBar();
-                                resolve();
-                            };
-                            element.onerror = () => {
-                                console.error(`Error loading ${resource}`);
-                                loadedResources++;
-                                updateLoadingBar();
-                                resolve();
-                            };
-                            document.head.appendChild(element);
-                        } else {
-                            // Diğer kaynaklar için (HTML dosyaları)
-                            fetch(resource, { cache: "reload" }).then((response) => {
-                                if (response.ok) {
+            const preloadResources = () => {
+                return new Promise((resolve) => {
+                    const promises = resources.map((resource) => {
+                        return new Promise((res) => {
+                            let element;
+                            if (resource.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
+                                element = new Image();
+                                element.src = resource;
+                                element.onload = () => {
                                     loadedResources++;
                                     updateLoadingBar();
-                                    resolve();
-                                } else {
-                                    console.error(`Failed to load ${resource}`);
+                                    res();
+                                };
+                                element.onerror = () => {
+                                    console.error(`Error loading ${resource}`);
                                     loadedResources++;
                                     updateLoadingBar();
-                                    resolve();
-                                }
-                            }).catch((error) => {
-                                console.error(`Error loading ${resource}:`, error);
-                                loadedResources++;
-                                updateLoadingBar();
-                                resolve();
-                            });
-                        }
+                                    res();
+                                };
+                            } else if (resource.endsWith(".css")) {
+                                element = document.createElement("link");
+                                element.rel = "stylesheet";
+                                element.href = resource;
+                                element.onload = () => {
+                                    loadedResources++;
+                                    updateLoadingBar();
+                                    res();
+                                };
+                                element.onerror = () => {
+                                    console.error(`Error loading ${resource}`);
+                                    loadedResources++;
+                                    updateLoadingBar();
+                                    res();
+                                };
+                                document.head.appendChild(element);
+                            } else if (resource.endsWith(".js")) {
+                                element = document.createElement("script");
+                                element.src = resource;
+                                element.onload = () => {
+                                    loadedResources++;
+                                    updateLoadingBar();
+                                    res();
+                                };
+                                element.onerror = () => {
+                                    console.error(`Error loading ${resource}`);
+                                    loadedResources++;
+                                    updateLoadingBar();
+                                    res();
+                                };
+                                document.head.appendChild(element);
+                            } else {
+                                // Diğer kaynaklar için (HTML dosyaları)
+                                fetch(resource, { cache: "reload" }).then((response) => {
+                                    if (response.ok) {
+                                        loadedResources++;
+                                        updateLoadingBar();
+                                        res();
+                                    } else {
+                                        console.error(`Failed to load ${resource}`);
+                                        loadedResources++;
+                                        updateLoadingBar();
+                                        res();
+                                    }
+                                }).catch((error) => {
+                                    console.error(`Error loading ${resource}:`, error);
+                                    loadedResources++;
+                                    updateLoadingBar();
+                                    res();
+                                });
+                            }
+                        });
+                    });
+
+                    Promise.all(promises).then(() => {
+                        resolve();
                     });
                 });
-
-                await Promise.all(promises);
             };
 
             const startSlideshow = () => {
@@ -223,9 +227,19 @@
                 }, 2000);
             };
 
-            // Kaynakları preload et ve slayt gösterisini başlat
+            // Başlangıç zamanı kaydet
+            const startTime = Date.now();
+
+            // Slayt gösterisini başlat ve kaynakları yükle
             startSlideshow();
             await preloadResources();
+
+            // En az 4 saniye bekle
+            const elapsedTime = Date.now() - startTime;
+            const minDisplayTime = 4000; // 4 saniye
+            if (elapsedTime < minDisplayTime) {
+                await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
+            }
 
             // Tüm kaynaklar yüklendiğinde yönlendirme yap
             window.location.href = "mainpage.html";
