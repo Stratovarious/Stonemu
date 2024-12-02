@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stonemu App Loading</title>
     <style>
-        /* Temel sıfırlamalar */
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +18,6 @@
             background-color: #1c1c1c;
         }
 
-        /* Slideshow */
         .slideshow {
             width: 100%;
             height: 100%;
@@ -41,7 +39,6 @@
             opacity: 1;
         }
 
-        /* Loading bar */
         .loading-bar-container {
             position: absolute;
             bottom: 10%;
@@ -58,9 +55,21 @@
             width: 0;
             height: 100%;
             background-color: #b8860b;
-            transition: width 0.2s ease-out;
+            animation: loading 5s linear forwards;
+        }
+
+        @keyframes loading {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
         }
     </style>
+    <link rel="preload" href="img/ploading_img/loading1a.webp" as="image">
+    <link rel="preload" href="img/ploading_img/loading2a.webp" as="image">
+    <link rel="preload" href="img/ploading_img/loading3a.webp" as="image">
 </head>
 <body>
     <div class="slideshow">
@@ -73,91 +82,58 @@
     </div>
 
     <script>
-        // Service Worker kaydı
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("js/sw.js").then((registration) => {
-                console.log("Service Worker registered:", registration);
-
-                // Güncelleme kontrolü
-                registration.addEventListener("updatefound", () => {
-                    const newWorker = registration.installing;
-                    newWorker.addEventListener("statechange", () => {
-                        if (newWorker.state === "installed") {
-                            if (navigator.serviceWorker.controller) {
-                                // Kullanıcıya güncelleme bildirimi
-                                const shouldUpdate = confirm(
-                                    "Yeni bir güncelleme mevcut. Sayfayı yenilemek ister misiniz?"
-                                );
-                                if (shouldUpdate) {
-                                    window.location.reload();
-                                }
-                            } else {
-                                console.log("İçerik offline kullanım için hazır.");
-                            }
-                        }
-                    });
-                });
+            navigator.serviceWorker.register("js/sw.js").then(() => {
+                console.log("Service Worker registered.");
             }).catch((error) => {
                 console.error("Service Worker Registration Failed:", error);
             });
         }
 
-        // Slideshow ve Loading Bar
         document.addEventListener("DOMContentLoaded", async () => {
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
 
-            // Resimleri yüklemek için Promise tabanlı fonksiyon
-            const loadImage = (url) => {
-                return new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.onload = resolve;
-                    img.onerror = reject;
-                    img.src = url;
-                });
-            };
-
-            const preloadAllResources = async () => {
-                const totalResources = slides.length;
-                let loadedCount = 0;
-
-                for (const slide of slides) {
-                    const imageUrl = slide.style.backgroundImage
-                        .slice(5, -2)
-                        .replace(/(^"|"$)/g, ""); // URL'i düzgün ayıkla
-
-                    await loadImage(imageUrl)
-                        .then(() => {
-                            loadedCount++;
-                            loadingBar.style.width = `${(loadedCount / totalResources) * 100}%`;
+            const preloadImages = async () => {
+                const promises = [];
+                slides.forEach((slide) => {
+                    const imageUrl = slide.style.backgroundImage.slice(5, -2);
+                    promises.push(
+                        new Promise((resolve) => {
+                            const img = new Image();
+                            img.src = imageUrl;
+                            img.onload = resolve;
+                            img.onerror = resolve;
                         })
-                        .catch((error) => console.error("Image load failed:", error));
-                }
-
-                // Yükleme tamamlandıktan sonra çubuğu %100 yap
-                loadingBar.style.width = "100%";
-            };
-
-            const showSlide = (index) => {
-                slides.forEach((slide, i) => {
-                    slide.classList.toggle("active", i === index);
+                    );
                 });
+                await Promise.all(promises);
             };
 
-            let currentIndex = 0;
+            const startSlideshow = () => {
+                let currentIndex = 0;
 
-            preloadAllResources().then(() => {
+                const showSlide = (index) => {
+                    slides.forEach((slide, i) => {
+                        slide.classList.toggle("active", i === index);
+                    });
+                };
+
                 showSlide(currentIndex);
-                const interval = setInterval(() => {
+                setInterval(() => {
                     currentIndex = (currentIndex + 1) % slides.length;
                     showSlide(currentIndex);
-                }, 5000);
+                }, 5000); // Daha kısa slayt süresi
+            };
 
-                setTimeout(() => {
-                    clearInterval(interval);
-                    window.location.href = "mainpage.html";
-                }, 5000 * slides.length);
-            });
+            // Resimleri yükle ve slayt gösterisini başlat
+            await preloadImages();
+            startSlideshow();
+
+            // Yükleme çubuğu bitince yönlendirme yap
+            setTimeout(() => {
+                window.location.href = "mainpage.html";
+            }, 5000); // Maksimum 5 saniye
         });
     </script>
 </body>
