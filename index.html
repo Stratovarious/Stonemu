@@ -103,24 +103,38 @@
         }
 
         // Slideshow ve Loading Bar
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
+
+            // Resimleri yüklemek için Promise tabanlı fonksiyon
+            const loadImage = (url) => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = url;
+                });
+            };
 
             const preloadAllResources = async () => {
                 const totalResources = slides.length;
                 let loadedCount = 0;
 
                 for (const slide of slides) {
-                    const img = new Image();
-                    img.src = slide.style.backgroundImage.slice(5, -2); // URL'i çıkar
-                    img.onload = () => {
-                        loadedCount++;
-                        loadingBar.style.width = `${(loadedCount / totalResources) * 100}%`;
-                    };
+                    const imageUrl = slide.style.backgroundImage
+                        .slice(5, -2)
+                        .replace(/(^"|"$)/g, ""); // URL'i düzgün ayıkla
+
+                    await loadImage(imageUrl)
+                        .then(() => {
+                            loadedCount++;
+                            loadingBar.style.width = `${(loadedCount / totalResources) * 100}%`;
+                        })
+                        .catch((error) => console.error("Image load failed:", error));
                 }
 
-                await new Promise((resolve) => setTimeout(resolve, 5000)); // En fazla 5 saniye bekle
+                // Yükleme tamamlandıktan sonra çubuğu %100 yap
                 loadingBar.style.width = "100%";
             };
 
