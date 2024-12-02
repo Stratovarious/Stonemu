@@ -12,16 +12,13 @@ const urlsToCache = [
     "underconstruction.html",
     // CSS ve JavaScript dosyaları
     "css/styles.css",
-    "js/main.js",
-    // Ekstra görseller
-    //"img/friends_icon.webp",
-    //"img/events_icon.webp",
-    //"img/playground_icon.webp",
-    //"img/underconstruction_icon.webp"
+    "js/main.js"
+    // Diğer kaynaklarınızı buraya ekleyin
 ];
 
-// Install event: Önbelleğe kaynakları al
+// Install event: Kaynakları önbelleğe al
 self.addEventListener("install", (event) => {
+    console.log("[Service Worker] Installing...");
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log("[Service Worker] Caching all resources");
@@ -30,8 +27,9 @@ self.addEventListener("install", (event) => {
     );
 });
 
-// Activate event: Eski önbelleği temizle
+// Activate event: Eski önbellekleri temizle
 self.addEventListener("activate", (event) => {
+    console.log("[Service Worker] Activating...");
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then((cacheNames) => {
@@ -47,7 +45,7 @@ self.addEventListener("activate", (event) => {
     );
 });
 
-// Fetch event: Talepleri önbellekten karşıla veya ağdan al
+// Fetch event: Önbellekten veya ağdan yanıt ver
 self.addEventListener("fetch", (event) => {
     event.respondWith(
         caches.match(event.request).then((response) => {
