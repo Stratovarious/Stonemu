@@ -751,7 +751,7 @@ footer {
     
     .friends-upper-container {
         position: fixed;
-        width: 48%; /* Konteynerin tam genişlik kaplaması */
+        width: 100%; /* Konteynerin tam genişlik kaplaması */
         heigth: 100%;
         display: flex;
         flex-direction: column; /* Elemanları dikeyde hizala */
@@ -760,7 +760,7 @@ footer {
     }
     
     .friends-title-img {
-        width: 50%; /* Friends yazılı resmin genişliği */
+        width: 30%; /* Friends yazılı resmin genişliği */
         margin: 0; /* Varsayılan margin sıfırlanır */
         padding: 0; /* Varsayılan padding sıfırlanır */
         align-self: flex-start; /* Resmi tamamen sola yasla */
