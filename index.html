@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stonemu App Loading</title>
+    <style>
+        /* Temel sıfırlamalar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Slideshow için stil */
+        .slideshow {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Loading çubuğu */
+        .loading-bar-container {
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .loading-bar {
+            width: 0;
+            height: 100%;
+            background-color: #fff;
+            transition: width 4s linear;
+        }
+    </style>
+    <!-- Preload tanımları -->
+    <link rel="preload" href="img/ploading_img/loading1a.webp" as="image">
+    <link rel="preload" href="img/ploading_img/loading2a.webp" as="image">
+    <link rel="preload" href="img/ploading_img/loading3a.webp" as="image">
+    <link rel="preload" href="mainpage.html" as="document">
+</head>
+<body>
+    <div class="slideshow">
+        <div class="slide" style="background-image: url('img/ploading_img/loading1a.webp');"></div>
+        <div class="slide" style="background-image: url('img/ploading_img/loading2a.webp');"></div>
+        <div class="slide" style="background-image: url('img/ploading_img/loading3a.webp');"></div>
+    </div>
+    <div class="loading-bar-container">
+        <div class="loading-bar"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const slides = document.querySelectorAll(".slide");
+            const loadingBar = document.querySelector(".loading-bar");
+            let currentIndex = 0;
+            let slideInterval;
+
+            const showSlide = (index) => {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle("active", i === index);
+                });
+
+                // Loading bar animation
+                loadingBar.style.transition = "none";
+                loadingBar.style.width = "0%";
+                setTimeout(() => {
+                    loadingBar.style.transition = "width 4s linear";
+                    loadingBar.style.width = "100%";
+                }, 10);
+            };
+
+            const nextSlide = () => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+
+                // Eğer tüm slaytlar tamamlandıysa mainpage.html'e geçiş yap
+                if (currentIndex === slides.length - 1) {
+                    clearInterval(slideInterval); // Döngüyü durdur
+                    setTimeout(() => {
+                        window.location.href = "mainpage.html"; // Ana sayfaya yönlendirme
+                    }, 4000); // Son slaytın bitiş süresini bekle
+                }
+            };
+
+            // Başlangıç ayarları
+            showSlide(currentIndex);
+            slideInterval = setInterval(nextSlide, 4000); // Geçiş süresi burada ayarlanabilir
+
+            // Sayfa ve resimler için preload
+            const preloadImages = ['img/ploading_img/loading1a.webp', 'img/ploading_img/loading2a.webp', 'img/ploading_img/loading3a.webp'];
+            preloadImages.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        });
+    </script>
+</body>
+</html>
