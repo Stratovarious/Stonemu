@@ -57,31 +57,9 @@
             width: 0;
             height: 100%;
             background-color: #fff;
-            animation: loading 12s linear forwards; /* Tüm slayt süresi */
-        }
-
-        /* Animasyon */
-        @keyframes loading {
-            from {
-                width: 0;
-            }
-            to {
-                width: 100%;
-            }
+            transition: width 0.1s linear;
         }
     </style>
-    <!-- Preload tanımları -->
-    <link rel="preload" href="img/ploading_img/loading1a.webp" as="image">
-    <link rel="preload" href="img/ploading_img/loading2a.webp" as="image">
-    <link rel="preload" href="img/ploading_img/loading3a.webp" as="image">
-    <link rel="preload" href="mainpage.html" as="document">
-    <link rel="preload" href="events.html" as="document">
-    <link rel="preload" href="friends.html" as="document">
-    <link rel="preload" href="events.html" as="document">
-    <link rel="preload" href="playground.html" as="document">
-    <link rel="preload" href="underconstruction.html" as="document">
-    <link rel="preload" href="css/styles.css" as="style">
-    <link rel="preload" href="js/main.js" as="script">
 </head>
 <body>
     <div class="slideshow">
@@ -94,31 +72,68 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
             const slides = document.querySelectorAll(".slide");
-            let currentIndex = 0;
+            const loadingBar = document.querySelector(".loading-bar");
 
+            const resourcesToLoad = [
+                "img/ploading_img/loading1a.webp",
+                "img/ploading_img/loading2a.webp",
+                "img/ploading_img/loading3a.webp",
+                "mainpage.html",
+                "friends.html",
+                "events.html",
+                "css/styles.css",
+                "js/main.js"
+            ];
+
+            // Kaynakları yükleme fonksiyonu
+            const preloadResource = (url) => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                    img.src = url;
+                });
+            };
+
+            // Tüm kaynakları yükleme
+            const preloadAllResources = async () => {
+                let loadedCount = 0;
+                for (const resource of resourcesToLoad) {
+                    await preloadResource(resource);
+                    loadedCount++;
+                    // Yükleme çubuğunu güncelle
+                    loadingBar.style.width = `${(loadedCount / resourcesToLoad.length) * 100}%`;
+                }
+            };
+
+            // Slayt gösterisini başlat
             const showSlide = (index) => {
                 slides.forEach((slide, i) => {
                     slide.classList.toggle("active", i === index);
                 });
             };
 
+            let currentIndex = 0;
+
             const nextSlide = () => {
                 currentIndex = (currentIndex + 1) % slides.length;
                 showSlide(currentIndex);
-
-                // Eğer tüm slaytlar tamamlandıysa mainpage.html'e geçiş yap
-                if (currentIndex === 0) {
-                    setTimeout(() => {
-                        window.location.href = "mainpage.html";
-                    }, 5000); // Son slaytın bitiş süresini bekle
-                }
             };
 
-            // Başlangıç ayarları
+            // Tüm kaynaklar yüklenmeden yönlendirme yapma
+            await preloadAllResources();
+
+            // Slayt gösterisini başlat
             showSlide(currentIndex);
-            setInterval(nextSlide, 5000); // Geçiş süresi
+            const interval = setInterval(nextSlide, 5000);
+
+            // Slayt bitince yönlendirme
+            setTimeout(() => {
+                clearInterval(interval);
+                window.location.href = "mainpage.html";
+            }, 5000 * slides.length);
         });
     </script>
 </body>
