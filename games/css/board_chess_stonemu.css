@@ -18,7 +18,7 @@ body, html {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  background-image: url('../chess_img/chess_background.webp'); /* Arka plan resmi */
+  background-image: url('../../img/chess_img/chess_background.png'); /* Arka plan resmi */
   background-size: cover;
 }
 
