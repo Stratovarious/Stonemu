@@ -4,7 +4,7 @@
 
 var board;
 var game = new Chess();
-var socket = io();
+var socket = io("https://stonemu-8bdeedab7930.herokuapp.com");
 var playerColor;
 var gameStarted = false;
 
@@ -12,7 +12,7 @@ function initGame() {
   var cfg = {
     draggable: true,
     position: "start",
-    pieceTheme: "chess_img/chips/{piece}.png",
+    pieceTheme: "../../img/chess_img/chips/{piece}.png",
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
