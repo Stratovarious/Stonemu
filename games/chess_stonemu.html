@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Stonemu Chess</title>
+  <link rel="stylesheet" href="./css/board_chess_stonemu.css">
+  <link rel="stylesheet" href="./css/chess_stonemu.css">
+</head>
+<body>
+  <canvas id="headerCanvas"></canvas>
+  <div id="gameContainer">
+    <div id="gameBoard" class="chessboard"></div>
+    <div id="messagePanel">
+      <input type="text" id="chatInput" placeholder="Please write your message...">
+      <button id="sendButton">Send</button>
+      <div id="chatMessages"></div>
+    </div>
+  </div>
+
+  <!-- jQuery'yi CDN üzerinden ekleyin -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Socket.io istemci kütüphanesini CDN üzerinden ekleyin -->
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+  <!-- Satranç motoru ve arayüz dosyalarınız -->
+  <script src="./js/chess_stonemu.js"></script>
+  <script src="./js/board_chess_stonemu.js"></script>
+
+  <!-- Kendi JavaScript dosyanız -->
+  <script src="./js/chess_stonemu.js"></script>
+</body>
+</html>
