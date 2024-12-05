@@ -2,9 +2,9 @@
   "name": "stonemu-chess",
   "version": "1.0.0",
   "description": "Stonemu Chess Game",
-  "main": "app.js",
+  "main": "backend/app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node backend/app.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
