@@ -10,28 +10,24 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
 // GitHub Pages URL'iniz
-const allowedOrigin = 'https://stratovarious.github.io/';
+const allowedOrigin = 'https://stratovarious.github.io/'; // Örnek
 
-// CORS ayarları
 app.use(cors({
   origin: allowedOrigin,
   methods: ['GET', 'POST'],
   credentials: true,
 }));
 
-// PostgreSQL Veritabanı Bağlantısı
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 client.connect();
 
-// Kök URL için bir route tanımlandı
 app.get('/', (req, res) => {
   res.send('Stonemu Backend Çalışıyor!');
 });
 
-// Socket.io Ayarları
 const io = new Server(server, {
   cors: {
     origin: allowedOrigin,
