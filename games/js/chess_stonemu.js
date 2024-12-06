@@ -24,8 +24,8 @@ function addMessage(msg) {
 
 function startCountdown() {
   addMessage("Eşleşme aranıyor, lütfen bekleyin...");
-  addMessage("Kalan süre: " + countdown + " sn");
   addMessage("(Burada bir spinner animasyonu olduğunu varsayın)");
+  $("#chatMessages").append('<div id="countdownLine">Kalan süre: 30 sn</div>');
 
   countdownInterval = setInterval(() => {
     countdown--;
@@ -36,7 +36,7 @@ function startCountdown() {
         botRequested = true;
       }
     } else {
-      $("#chatMessages div:last-child").text("Kalan süre: " + countdown + " sn");
+      $("#countdownLine").text("Kalan süre: " + countdown + " sn");
     }
   }, 1000);
 }
@@ -45,7 +45,7 @@ function initGame() {
   var cfg = {
     draggable: true,
     position: "start",
-    pieceTheme: "../../img/chess_img/chips/{piece}.png",
+    pieceTheme: "../img/chess_img/chips/{piece}.png",
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
@@ -88,7 +88,11 @@ function initGame() {
   });
 
   socket.on("gameOver", function(data) {
-    if (data.winner === playerColor) {
+    if (data.winner === null) {
+      // berabere
+      addMessage("Oyun berabere bitti.");
+      showGameOverScreen("Oyun berabere bitti.", false);
+    } else if (data.winner === playerColor) {
       addMessage("Oyunu kazandınız, lütfen puanınızı claim butonu ile alın.");
       showGameOverScreen("Oyunu kazandınız, lütfen puanınızı alınız", true);
     } else {
@@ -163,15 +167,26 @@ function onMouseoutSquare(square, piece) {
 
 function handleGameOver() {
   var message;
-  if (game.turn() === playerColor) {
-    // Sıra bizde ama hamle yok -> kaybettik
-    message = "Maalesef oyunu kaybettiniz, şansınızı tekrar deneyiniz";
-    addMessage(message);
-    showGameOverScreen(message, false);
-  } else {
-    message = "Oyunu kazandınız, lütfen puanınızı alınız";
-    addMessage(message);
-    showGameOverScreen(message, true);
+  let moves = game.getAllValidMovesForTurn();
+  if(moves.length===0) {
+    // check for check or stalemate
+    if(game.inCheck(game.turn())) {
+      // checkmate
+      if(game.turn()!==playerColor) {
+        message = "Oyunu kazandınız, lütfen puanınızı alınız";
+        addMessage(message);
+        showGameOverScreen(message, true);
+      } else {
+        message = "Maalesef oyunu kaybettiniz, şansınızı tekrar deneyiniz";
+        addMessage(message);
+        showGameOverScreen(message, false);
+      }
+    } else {
+      // stalemate
+      message="Oyun berabere bitti.";
+      addMessage(message);
+      showGameOverScreen(message,false);
+    }
   }
 }
 
@@ -202,5 +217,5 @@ function showGameOverScreen(message, won) {
   });
 }
 
-// Sayfa yüklendiğinde oyunu başlatalım
+// Oyunu başlat
 document.addEventListener('DOMContentLoaded', initGame);
