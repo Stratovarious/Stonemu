@@ -9,8 +9,8 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
-// CORS ayarları - GitHub Pages üzerindeki sayfanızın URL'ini yazın.
-const allowedOrigin = 'https://stratovarious.github.io/Stonemu_'; // Örneğin: https://username.github.io/repo
+// CORS ayarları - GitHub Pages üzerindeki frontend URL'si
+const allowedOrigin = 'https://stratovarious.github.io/Stonemu_';
 
 app.use(cors({
   origin: allowedOrigin,
@@ -25,6 +25,11 @@ const client = new Client({
 });
 client.connect();
 
+// Kök URL için bir route tanımlandı
+app.get('/', (req, res) => {
+  res.send('Stonemu Backend Çalışıyor!');
+});
+
 // Socket.io Ayarları
 const io = new Server(server, {
   cors: {
@@ -37,7 +42,7 @@ const io = new Server(server, {
 let waitingPlayer = null;
 
 io.on('connection', (socket) => {
-  console.log('Bir kullanıcı bağlandı');
+  console.log('Bir kullanıcı bağlandı:', socket.id);
 
   socket.on('joinGame', (data) => {
     if (waitingPlayer) {
@@ -81,7 +86,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('Bir kullanıcı ayrıldı');
+    console.log('Bir kullanıcı ayrıldı:', socket.id);
     if (waitingPlayer === socket) {
       waitingPlayer = null;
     }
@@ -92,6 +97,7 @@ io.on('connection', (socket) => {
   });
 });
 
+// Sunucuyu başlat
 server.listen(port, () => {
   console.log('Sunucu çalışıyor: ' + port);
 });
