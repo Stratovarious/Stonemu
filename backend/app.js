@@ -9,9 +9,10 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
-// CORS ayarları - GitHub Pages üzerindeki frontend URL'si
+// GitHub Pages URL'iniz
 const allowedOrigin = 'https://stratovarious.github.io/Stonemu_';
 
+// CORS ayarları
 app.use(cors({
   origin: allowedOrigin,
   methods: ['GET', 'POST'],
@@ -48,6 +49,7 @@ io.on('connection', (socket) => {
     if (waitingPlayer) {
       let player1 = waitingPlayer;
       let player2 = socket;
+
       let player1Number = player1.randomNumber;
       let player2Number = data.randomNumber;
 
@@ -97,7 +99,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Sunucuyu başlat
 server.listen(port, () => {
   console.log('Sunucu çalışıyor: ' + port);
 });
