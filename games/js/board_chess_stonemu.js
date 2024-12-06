@@ -9,7 +9,7 @@
       orientation: "white",
       position: "start",
       showNotation: true,
-      pieceTheme: "../../img/chess_img/chips/{piece}.png",
+      pieceTheme: "../img/chess_img/chips/{piece}.png",
       onDragStart: function () {},
       onDrop: function () {},
       onSnapEnd: function () {},
