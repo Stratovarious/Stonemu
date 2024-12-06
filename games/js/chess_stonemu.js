@@ -4,16 +4,21 @@
 
 var board;
 var game = new Chess();
-// Heroku'da barındırdığınız backend URL'sini girin
-var socket = io('https://stonemu-8bdeedab7930.herokuapp.com');
+var socket = io('https://stonemu-8bdeedab7930.herokuapp.com'); // Heroku URL
 var playerColor;
 var gameStarted = false;
+
+// Telegram kullanıcı adını alma (placeholder)
+function getTelegramUsername() {
+  // Telegram WebApp üzerinden bilgi alınacak, burada varsayımsal
+  return "Player" + Math.floor(Math.random() * 1000);
+}
 
 function initGame() {
   var cfg = {
     draggable: true,
     position: "start",
-    pieceTheme: "../../img/chess_img/chips/{piece}.png",
+    pieceTheme: "../img/chess_img/chips/{piece}.png", // chess_stonemu.html games/ dizininde, ../ ile Stonemu_/ dizinine, sonra img/
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
@@ -30,9 +35,9 @@ function initGame() {
     playerColor = data.color;
     board.orientation(playerColor);
     if (playerColor === "white") {
-      alert("Your number has been randomly generated, your color is White, you start the game first");
+      alert("Your number has been randomly generated, your color is White, you start the game first.\nDokunarak taşınızı seçin ve hamlenizi yapın.");
     } else {
-      alert("Your number has been randomly generated, unfortunately your color is Black, please wait for the other player's move");
+      alert("Your number has been randomly generated, unfortunately your color is Black, please wait for the other player's move.\nDokunarak taş hamlelerini inceleyebilirsiniz ama hamleyi beyaz yapacak.");
     }
     gameStarted = true;
   });
@@ -46,8 +51,11 @@ function initGame() {
   });
 
   socket.on("opponentLeft", function () {
-    alert("Karşı oyuncu oyundan ayrıldı.");
+    alert("Karşı oyuncu oyundan ayrıldı. Yeni oyun için sayfayı yenileyin.");
   });
+
+  // Kullanıcıya başlangıçta bilgi ver
+  alert("Bu oyun Telegram üzerinde sadece telefondan oynanacak şekilde tasarlanmıştır.\nLütfen dokunmatik hamleleri kullanın.\n'Bol şanslar', 'İyi oyunlar', 'İyi oyundu' gibi mesajları alttaki panelden gönderebilirsiniz.");
 }
 
 function onDragStart(source, piece) {
@@ -102,27 +110,37 @@ function onMouseoutSquare(square, piece) {
 }
 
 function handleGameOver() {
-  var message = game.game_over()
-    ? "You won the game, please claim your points"
-    : "Draw!";
-  showGameOverScreen(message);
+  var message;
+  // Basit bir kontrol: eğer sırası gelen oyuncu hamle yapamıyorsa kaybetti varsayıyoruz
+  // Geliştirilebilir.
+  if (game.turn() === playerColor) {
+    // Sırası sizde ama hamle yoksa kaybettiniz
+    message = "Maalesef oyunu kaybettiniz, şansınızı tekrar deneyiniz";
+    showGameOverScreen(message, false);
+  } else {
+    // Rakip hamle yapamadı siz kazandınız
+    message = "Oyunu kazandınız, lütfen puanınızı alınız";
+    showGameOverScreen(message, true);
+  }
 }
 
-function showGameOverScreen(message) {
+function showGameOverScreen(message, won) {
   var overlay = document.createElement("div");
   overlay.id = "gameOverOverlay";
   overlay.innerHTML = `
     <div id="gameOverMessage">${message}</div>
-    <button id="claimButton">Claim</button>
+    ${won ? '<button id="claimButton">Claim</button>' : ''}
     <button id="newGameButton">New Game</button>
     <button id="closeButton">Close</button>
   `;
   document.body.appendChild(overlay);
 
-  document.getElementById("claimButton").addEventListener("click", function () {
-    socket.emit("claimVictory", { playerColor: playerColor });
-    alert("Your points have been added to your account.");
-  });
+  if (won) {
+    document.getElementById("claimButton").addEventListener("click", function () {
+      socket.emit("claimVictory", { playerColor: playerColor });
+      alert("Puanınız hesabınıza eklendi.");
+    });
+  }
 
   document.getElementById("newGameButton").addEventListener("click", function () {
     location.reload();
@@ -136,4 +154,13 @@ function showGameOverScreen(message) {
 $(document).ready(function () {
   initGame();
   $(window).resize(board.resize);
+
+  // Basit mesaj gönderme özelliği (opsiyonel)
+  $("#sendButton").click(function () {
+    var msg = $("#chatInput").val();
+    if (msg.trim() !== "") {
+      alert("Mesajınız: " + msg); // Gerçekte Telegram arayüzüne veya rakibe gönderilebilir.
+      $("#chatInput").val("");
+    }
+  });
 });
