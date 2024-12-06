@@ -1,24 +1,85 @@
-/* index.css */
+/* chess_stonemu.css */
 
 body, html {
-	margin: 0;
-	padding: 0;
-  }
-  
-  #headerCanvas {
-	width: 100%;
-	height: 60px;
-	background-color: #444;
-  }
-  
-  #headerCanvas {
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 1000;
-  }
-  
-  #gameContainer {
-	margin-top: 60px;
-  }
-  
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+#headerCanvas {
+  width: 100%;
+  height: 60px;
+  background-color: #444;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+#gameContainer {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+}
+
+#messagePanel {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #222;
+}
+
+#chatInput {
+  flex: 1;
+  padding: 5px;
+  color: #fff;
+  background-color: #333;
+  border: none;
+  margin-right: 10px;
+}
+
+#sendButton {
+  padding: 5px 10px;
+  background-color: #555;
+  color: #fff;
+  border: none;
+}
+
+#chatMessages {
+  display: none;
+}
+
+#gameOverOverlay {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color: rgba(0,0,0,0.7);
+  z-index:2000;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameOverMessage {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#gameOverOverlay button {
+  margin: 5px;
+  padding: 10px 20px;
+  background-color: #555;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+#gameOverOverlay button:hover {
+  background-color: #777;
+}
