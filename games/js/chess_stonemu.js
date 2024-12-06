@@ -4,21 +4,55 @@
 
 var board;
 var game = new Chess();
-var socket = io('https://stonemu-8bdeedab7930.herokuapp.com'); // Heroku URL
+// Backend URL (Heroku)
+var socket = io('https://stonemu-8bdeedab7930.herokuapp.com');
 var playerColor;
 var gameStarted = false;
+var matchFound = false;
+var countdown = 30;
+var countdownInterval;
+var botRequested = false;
 
-// Telegram kullanıcı adını alma (placeholder)
 function getTelegramUsername() {
-  // Telegram WebApp üzerinden bilgi alınacak, burada varsayımsal
-  return "Player" + Math.floor(Math.random() * 1000);
+  // Telegram WebApp API ile entegre etmelisiniz.
+  // Şimdilik placeholder
+  return "TGUser_" + Math.floor(Math.random()*1000);
+}
+
+function addMessage(msg) {
+  // Mesajları #chatMessages içinde gösterelim
+  // #chatMessages gizli, görünür yapalım
+  $("#chatMessages").css("display","block");
+  $("#chatMessages").append($("<div>").text(msg));
+}
+
+function startCountdown() {
+  addMessage("Eşleşme aranıyor, lütfen bekleyin...");
+  addMessage("Kalan süre: " + countdown + " sn");
+  // Spinner ekleyelim
+  addMessage("(Burada bir spinner animasyonu olduğunu varsayın)");
+
+  countdownInterval = setInterval(() => {
+    countdown--;
+    if (countdown <= 0) {
+      clearInterval(countdownInterval);
+      if (!matchFound && !botRequested) {
+        // Bot iste
+        socket.emit('botRequest');
+        botRequested = true;
+      }
+    } else {
+      // Süre güncelle
+      $("#chatMessages div:last-child").text("Kalan süre: " + countdown + " sn");
+    }
+  }, 1000);
 }
 
 function initGame() {
   var cfg = {
     draggable: true,
     position: "start",
-    pieceTheme: "../img/chess_img/chips/{piece}.png", // chess_stonemu.html games/ dizininde, ../ ile Stonemu_/ dizinine, sonra img/
+    pieceTheme: "../img/chess_img/chips/{piece}.png",
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
@@ -31,13 +65,19 @@ function initGame() {
   var randomNumber = Math.floor(Math.random() * 1000);
   socket.emit("joinGame", { randomNumber: randomNumber });
 
+  startCountdown();
+
   socket.on("assignColor", function (data) {
+    clearInterval(countdownInterval);
+    matchFound = true;
+    $("#chatMessages").append($("<div>").text("Eşleşme bulundu!"));
     playerColor = data.color;
     board.orientation(playerColor);
     if (playerColor === "white") {
-      alert("Your number has been randomly generated, your color is White, you start the game first.\nDokunarak taşınızı seçin ve hamlenizi yapın.");
+      addMessage("Sayınız rastgele üretildi, renginiz: Beyaz, ilk hamleyi siz yapıyorsunuz.");
+      addMessage("Dokunarak taşınızı seçin ve hamlenizi yapın.");
     } else {
-      alert("Your number has been randomly generated, unfortunately your color is Black, please wait for the other player's move.\nDokunarak taş hamlelerini inceleyebilirsiniz ama hamleyi beyaz yapacak.");
+      addMessage("Sayınız rastgele üretildi, renginiz: Siyah, lütfen rakibinizin hamlesini bekleyiniz.");
     }
     gameStarted = true;
   });
@@ -51,12 +91,32 @@ function initGame() {
   });
 
   socket.on("opponentLeft", function () {
-    alert("Karşı oyuncu oyundan ayrıldı. Yeni oyun için sayfayı yenileyin.");
+    addMessage("Karşı oyuncu oyundan ayrıldı. Yeni oyun için sayfayı yenileyin.");
   });
 
-  // Kullanıcıya başlangıçta bilgi ver
-  alert("Bu oyun Telegram üzerinde sadece telefondan oynanacak şekilde tasarlanmıştır.\nLütfen dokunmatik hamleleri kullanın.\n'Bol şanslar', 'İyi oyunlar', 'İyi oyundu' gibi mesajları alttaki panelden gönderebilirsiniz.");
+  socket.on("gameOver", function(data) {
+    // data.winner var
+    if (data.winner === playerColor) {
+      addMessage("Oyunu kazandınız, lütfen puanınızı claim butonu ile alın.");
+      showGameOverScreen("Oyunu kazandınız, lütfen puanınızı alınız", true);
+    } else {
+      addMessage("Maalesef oyunu kaybettiniz, tekrar deneyiniz.");
+      showGameOverScreen("Maalesef oyunu kaybettiniz, şansınızı tekrar deneyiniz", false);
+    }
 }
+
+$(document).ready(function () {
+  initGame();
+  $(window).resize(board.resize);
+
+  $("#sendButton").click(function () {
+    var msg = $("#chatInput").val().trim();
+    if (msg !== "") {
+      addMessage(getTelegramUsername() + ": " + msg);
+      $("#chatInput").val("");
+    }
+  });
+});
 
 function onDragStart(source, piece) {
   if (!gameStarted) return false;
@@ -111,15 +171,14 @@ function onMouseoutSquare(square, piece) {
 
 function handleGameOver() {
   var message;
-  // Basit bir kontrol: eğer sırası gelen oyuncu hamle yapamıyorsa kaybetti varsayıyoruz
-  // Geliştirilebilir.
   if (game.turn() === playerColor) {
-    // Sırası sizde ama hamle yoksa kaybettiniz
+    // Sıra bizde ama hamle yok -> kaybettik varsayımı
     message = "Maalesef oyunu kaybettiniz, şansınızı tekrar deneyiniz";
+    addMessage(message);
     showGameOverScreen(message, false);
   } else {
-    // Rakip hamle yapamadı siz kazandınız
     message = "Oyunu kazandınız, lütfen puanınızı alınız";
+    addMessage(message);
     showGameOverScreen(message, true);
   }
 }
@@ -138,7 +197,7 @@ function showGameOverScreen(message, won) {
   if (won) {
     document.getElementById("claimButton").addEventListener("click", function () {
       socket.emit("claimVictory", { playerColor: playerColor });
-      alert("Puanınız hesabınıza eklendi.");
+      addMessage("Puanınız hesabınıza eklendi.");
     });
   }
 
@@ -150,17 +209,3 @@ function showGameOverScreen(message, won) {
     window.history.back();
   });
 }
-
-$(document).ready(function () {
-  initGame();
-  $(window).resize(board.resize);
-
-  // Basit mesaj gönderme özelliği (opsiyonel)
-  $("#sendButton").click(function () {
-    var msg = $("#chatInput").val();
-    if (msg.trim() !== "") {
-      alert("Mesajınız: " + msg); // Gerçekte Telegram arayüzüne veya rakibe gönderilebilir.
-      $("#chatInput").val("");
-    }
-  });
-});
