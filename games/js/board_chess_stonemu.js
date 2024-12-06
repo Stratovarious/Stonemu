@@ -1,4 +1,4 @@
-// board_chess.js
+// board_chess_stonemu.js
 
 (function (global) {
   "use strict";
@@ -50,7 +50,6 @@
 
     function drawBoard() {
       boardEl.innerHTML = "";
-      var orientationFactor = config.orientation === "white" ? 1 : -1;
       var files = ["a", "b", "c", "d", "e", "f", "g", "h"];
       var ranks = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
@@ -161,7 +160,7 @@
     }
 
     function onMouseMove(e) {
-      // Sürükleme işlemleri
+      // İsteğe bağlı olarak sürükleme efektleri ekleyebilirsiniz
     }
 
     function onMouseUp(e) {
@@ -183,17 +182,14 @@
     }
 
     function onTouchStart(e) {
-      // Dokunmatik işlemler
       onMouseDown(e);
     }
 
     function onTouchMove(e) {
-      // Dokunmatik işlemler
       e.preventDefault();
     }
 
     function onTouchEnd(e) {
-      // Dokunmatik işlemler
       onMouseUp(e);
     }
 
@@ -213,18 +209,14 @@
 
     function highlightValidMoves(squareId) {
       clearHighlights();
-      var moves = game.getValidMoves(squareId);
-      moves.forEach(function (move) {
-        var targetSquare = squares[move.to];
-        if (targetSquare) {
-          targetSquare.classList.add("highlight");
-        }
-      });
+      // Bu fonksiyon, backend'den veya game nesnesinden hamleleri alıp vurgulayabilir.
+      // Burada backend olmadan da `io` üzerinden moves istenebilir.
+      // Ancak bu kod örnek niteliğindedir.
     }
 
     function clearHighlights() {
-      for (var square in squares) {
-        squares[square].classList.remove("highlight");
+      for (var s in squares) {
+        squares[s].classList.remove("highlight");
       }
     }
 
@@ -248,6 +240,14 @@
       config.orientation = newOrientation;
       drawBoard();
       setPosition(currentPosition);
+    };
+
+    this.clearHighlights = clearHighlights;
+    this.highlightValidMoves = function(moves) {
+      clearHighlights();
+      moves.forEach(function(move) {
+        if (squares[move.to]) squares[move.to].classList.add("highlight");
+      });
     };
   }
 
