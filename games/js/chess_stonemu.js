@@ -52,7 +52,7 @@ function initGame() {
   var cfg = {
     draggable: true,
     position: "start",
-    pieceTheme: "../img/chess_img/chips/{piece}.png",
+    pieceTheme: "../../img/chess_img/chips/{piece}.png",
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
