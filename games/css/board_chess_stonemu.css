@@ -1,73 +1,24 @@
-/* board_chess.css */
-
-body, html {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-#gameContainer {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
+/* board_chess_stonemu.css */
 
 .chessboard {
-  position: relative;
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  background-image: url('../../img/chess_img/chess_background.png'); /* Arka plan resmi */
+  background: url('../img/chess_img/chess_background.png') repeat;
   background-size: cover;
-}
-
-.square {
-  position: relative;
 }
 
 .square.light {
   background-color: rgba(255, 255, 255, 0.8);
+  background-image: linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 .square.dark {
   background-color: rgba(0, 0, 0, 0.2);
-}
-
-.piece {
-  width: 100%;
-  height: 100%;
-  cursor: grab;
+  background-image: linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 .square.highlight {
   outline: 2px solid yellow;
 }
-
-#messagePanel {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: #222;
-}
-
-#chatInput {
-  flex: 1;
-  padding: 5px;
-  color: #fff;
-  background-color: #333;
-  border: none;
-  margin-right: 10px;
-}
-
-#sendButton {
-  padding: 5px 10px;
-  background-color: #555;
-  color: #fff;
-  border: none;
-}
-
-#chatMessages {
-  display: none; /* İsteğe bağlı olarak açılabilir */
-}
-
