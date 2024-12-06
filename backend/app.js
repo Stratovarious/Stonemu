@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
 // GitHub Pages URL'iniz
-const allowedOrigin = 'https://stratovarious.github.io/Stonemu_/'; // Örnek
+const allowedOrigin = 'https://stratovarious.github.io/'; // Örnek
 
 app.use(cors({
   origin: allowedOrigin,
