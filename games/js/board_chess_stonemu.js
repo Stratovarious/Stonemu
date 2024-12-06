@@ -21,15 +21,11 @@
 
     var boardEl = document.getElementById(containerId);
     var squares = {};
-    var draggedPiece = null;
-    var draggedPieceSource = null;
     var currentPosition = {};
-    var squareSize = 0;
 
     init();
 
     function init() {
-      calculateSquareSize();
       drawBoard();
       if (config.position === "start") {
         currentPosition = fenToPosition(
@@ -40,16 +36,14 @@
       }
       setPosition(currentPosition);
       addEventListeners();
-      window.addEventListener("resize", onResize);
-    }
-
-    function calculateSquareSize() {
-      var containerWidth = boardEl.offsetWidth;
-      squareSize = containerWidth / 8;
     }
 
     function drawBoard() {
       boardEl.innerHTML = "";
+      boardEl.style.display = "grid";
+      boardEl.style.gridTemplateColumns = "repeat(8, 1fr)";
+      boardEl.style.gridTemplateRows = "repeat(8, 1fr)";
+
       var files = ["a", "b", "c", "d", "e", "f", "g", "h"];
       var ranks = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
@@ -63,8 +57,6 @@
           var squareColor = (i + j) % 2 === 0 ? "light" : "dark";
           var square = document.createElement("div");
           square.classList.add("square", squareColor);
-          square.style.width = squareSize + "px";
-          square.style.height = squareSize + "px";
           var squareId = files[j] + ranks[i];
           square.setAttribute("data-square", squareId);
           boardEl.appendChild(square);
@@ -133,26 +125,29 @@
     }
 
     function addEventListeners() {
-      if (config.draggable) {
-        boardEl.addEventListener("mousedown", onMouseDown);
-        boardEl.addEventListener("mousemove", onMouseMove);
-        boardEl.addEventListener("mouseup", onMouseUp);
+      // Dokunmatik için
+      boardEl.addEventListener("touchstart", onTouchStart, { passive: false });
+      boardEl.addEventListener("touchmove", onTouchMove, { passive: false });
+      boardEl.addEventListener("touchend", onTouchEnd, { passive: false });
 
-        boardEl.addEventListener("touchstart", onTouchStart);
-        boardEl.addEventListener("touchmove", onTouchMove);
-        boardEl.addEventListener("touchend", onTouchEnd);
+      // Mouse için
+      boardEl.addEventListener("mousedown", onMouseDown);
+      boardEl.addEventListener("mousemove", onMouseMove);
+      boardEl.addEventListener("mouseup", onMouseUp);
 
-        boardEl.addEventListener("mouseover", onMouseOver);
-        boardEl.addEventListener("mouseout", onMouseOut);
-      }
+      boardEl.addEventListener("mouseover", onMouseOver);
+      boardEl.addEventListener("mouseout", onMouseOut);
     }
+
+    var draggedPiece = null;
+    var draggedPieceSource = null;
 
     function onMouseDown(e) {
       var square = e.target.closest(".square");
       if (!square) return;
       var squareId = square.getAttribute("data-square");
-      if (!currentPosition[squareId]) return;
       var piece = currentPosition[squareId];
+      if (!piece) return;
       if (config.onDragStart(squareId, piece) === false) return;
       draggedPiece = piece;
       draggedPieceSource = squareId;
@@ -160,7 +155,7 @@
     }
 
     function onMouseMove(e) {
-      // İsteğe bağlı olarak sürükleme efektleri ekleyebilirsiniz
+      // İsteğe bağlı: sürükleme efekti
     }
 
     function onMouseUp(e) {
@@ -182,6 +177,7 @@
     }
 
     function onTouchStart(e) {
+      e.preventDefault();
       onMouseDown(e);
     }
 
@@ -190,6 +186,7 @@
     }
 
     function onTouchEnd(e) {
+      e.preventDefault();
       onMouseUp(e);
     }
 
@@ -209,9 +206,9 @@
 
     function highlightValidMoves(squareId) {
       clearHighlights();
-      // Bu fonksiyon, backend'den veya game nesnesinden hamleleri alıp vurgulayabilir.
-      // Burada backend olmadan da `io` üzerinden moves istenebilir.
-      // Ancak bu kod örnek niteliğindedir.
+      // Bu fonksiyon moves'u dışarıdan almanız gerekebilir.
+      // chess_stonemu.js tarafında game.getValidMoves() ile hamleler alınır.
+      // Burada statik kaldı, actual highlight chess_stonemu.js içinde yapılıyor.
     }
 
     function clearHighlights() {
@@ -220,14 +217,8 @@
       }
     }
 
-    function onResize() {
-      calculateSquareSize();
-      drawBoard();
-      setPosition(currentPosition);
-    }
-
     this.resize = function () {
-      onResize();
+      // Artık boyut hesaplaması yok, CSS hallediyor.
     };
 
     this.position = function (newPosition) {
