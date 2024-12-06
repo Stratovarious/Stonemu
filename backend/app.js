@@ -1,40 +1,57 @@
-"use strict";
-
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const { Client } = require("pg");
-require("dotenv").config();
+require('dotenv').config();
+const express = require('express');
+const { Client } = require('pg');
+const http = require('http');
+const { Server } = require('socket.io');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
 const port = process.env.PORT || 3000;
 
-// PostgreSQL veritabanı bağlantısı
+// CORS ayarları - GitHub Pages üzerindeki sayfanızın URL'ini yazın.
+const allowedOrigin = 'https://stratovarious.github.io/Stonemu_'; // Örneğin: https://username.github.io/repo
+
+app.use(cors({
+  origin: allowedOrigin,
+  methods: ['GET', 'POST'],
+  credentials: true,
+}));
+
+// PostgreSQL Veritabanı Bağlantısı
 const client = new Client({
-  connectionString: process.env.DATABASE_URL, // Heroku Config Vars'dan alır
-  ssl: {
-    rejectUnauthorized: false,
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+});
+client.connect();
+
+// Socket.io Ayarları
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigin,
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
-client.connect();
-
-// Statik dosyaları sunmayacağız çünkü sadece API ve Socket.IO kullanılıyor
-
-// Socket.IO bağlantı mantığı
 let waitingPlayer = null;
 
-io.on("connection", (socket) => {
-  console.log("Yeni bir kullanıcı bağlandı");
+io.on('connection', (socket) => {
+  console.log('Bir kullanıcı bağlandı');
 
-  socket.on("joinGame", (data) => {
+  socket.on('joinGame', (data) => {
     if (waitingPlayer) {
-      const player1 = waitingPlayer;
-      const player2 = socket;
+      let player1 = waitingPlayer;
+      let player2 = socket;
+      let player1Number = player1.randomNumber;
+      let player2Number = data.randomNumber;
 
-      let colorAssignment = ["white", "black"];
+      while (player1Number === player2Number) {
+        player1Number = Math.floor(Math.random() * 1000);
+        player2Number = Math.floor(Math.random() * 1000);
+      }
+
+      let colorAssignment = player1Number > player2Number ? ["white", "black"] : ["black", "white"];
       player1.emit("assignColor", { color: colorAssignment[0] });
       player2.emit("assignColor", { color: colorAssignment[1] });
 
@@ -44,17 +61,27 @@ io.on("connection", (socket) => {
       waitingPlayer = null;
     } else {
       waitingPlayer = socket;
+      socket.randomNumber = data.randomNumber;
     }
   });
 
-  socket.on("move", (move) => {
+  socket.on('move', (move) => {
     if (socket.opponent) {
-      socket.opponent.emit("move", move);
+      socket.opponent.emit('move', move);
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log("Bir kullanıcı ayrıldı");
+  socket.on('claimVictory', (data) => {
+    let query = "UPDATE users SET points = points + 100 WHERE user_id = $1";
+    client.query(query, [socket.id], (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Bir kullanıcı ayrıldı');
     if (waitingPlayer === socket) {
       waitingPlayer = null;
     }
@@ -65,7 +92,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// Sunucuyu başlat
 server.listen(port, () => {
-  console.log(`Backend çalışıyor: http://localhost:${port}`);
+  console.log('Sunucu çalışıyor: ' + port);
 });
