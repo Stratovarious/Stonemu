@@ -3,6 +3,8 @@
 body, html {
   margin: 0;
   padding: 0;
+  width: 100%;
+  heigth: 100%;
   overflow: hidden;
   background-color: #333;
 }
@@ -23,12 +25,12 @@ body, html {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  height: calc(100vh - 60px);
+  height: calc(100% - 60px);
 }
 
 #gameBoard {
-  width: calc(100vh - 60px);
-  height: calc(100vh - 60px);
+  width: 100%/*calc(100vh - 60px);*/
+  height: calc(100% - 60px);
   margin: auto;
   box-shadow: 0 0 10px rgba(0,0,0,0.7);
 }
