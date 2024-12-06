@@ -50,7 +50,7 @@
     };
 
     this.game_over = function () {
-      // Basit bir kontrol, geliştirilebilir.
+      // Geliştirilebilir: Şah mat vb. kontrol edilebilir.
       return false;
     };
 
