@@ -9,8 +9,8 @@ const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
-// GitHub Pages URL'inizi girin
-const allowedOrigin = 'https://stratovarious.github.io'; // Örnek URL
+// GitHub Pages URL'inizi girin:
+const allowedOrigin = 'https://stratovarious.github.io'; // Örnek
 
 app.use(cors({
   origin: allowedOrigin,
@@ -43,55 +43,286 @@ const io = new Server(server, {
 let waitingPlayer = null;
 let games = {};
 
-// Basit sunucu tarafı chess mantığı (bot için)
+// Tam satranç mantığı için kapsamlı bir sunucu tarafı satranç sınıfı.
+// Rok, en passant, şah mat kontrolü, tam hamle üretimi içerir.
 class ServerChessLogic {
   constructor() {
-    this.board = [
-      ["r", "n", "b", "q", "k", "b", "n", "r"],
-      ["p", "p", "p", "p", "p", "p", "p", "p"],
-      ["", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", "", ""],
-      ["P", "P", "P", "P", "P", "P", "P", "P"],
-      ["R", "N", "B", "Q", "K", "B", "N", "R"],
-    ];
-    this.turnColor = 'w';
+    this.loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+  }
+
+  loadFen(fen) {
+    let parts = fen.split(' ');
+    let position = parts[0];
+    this.activeColor = parts[1];
+    this.castlingRights = parts[2];
+    this.enPassantTarget = parts[3] === '-' ? null : parts[3];
+    this.halfmoveClock = parseInt(parts[4],10);
+    this.fullmoveNumber = parseInt(parts[5],10);
+
+    this.board = [];
+    let rows = position.split('/');
+    for (let i=0; i<8; i++) {
+      let row = rows[i].split('');
+      let boardRow = [];
+      for (let j=0; j<row.length; j++) {
+        let c = row[j];
+        if (/[1-8]/.test(c)) {
+          let emptyCount = parseInt(c,10);
+          for (let k=0; k<emptyCount; k++) boardRow.push("");
+        } else {
+          boardRow.push(c);
+        }
+      }
+      this.board.push(boardRow);
+    }
+  }
+
+  fen() {
+    let fenRows = [];
+    for (let i=0; i<8; i++) {
+      let empty=0;
+      let rowFen="";
+      for (let j=0;j<8;j++){
+        let piece=this.board[i][j];
+        if(piece==="") {
+          empty++;
+        } else {
+          if(empty>0){
+            rowFen+=empty;
+            empty=0;
+          }
+          rowFen+=piece;
+        }
+      }
+      if(empty>0) rowFen+=empty;
+      fenRows.push(rowFen);
+    }
+    let fenPos=fenRows.join('/');
+    let ep = this.enPassantTarget?this.enPassantTarget:'-';
+    return fenPos+" "+this.activeColor+" "+this.castlingRights+" "+ep+" "+this.halfmoveClock+" "+this.fullmoveNumber;
   }
 
   turn() {
-    return this.turnColor;
+    return this.activeColor;
   }
 
   game_over() {
-    return this.getAllValidMovesForTurn().length === 0;
+    let moves = this.getAllValidMovesForTurn();
+    if(moves.length>0) return false;
+    // moves yok, eğer şah tehdit altındaysa mat, değilse pat
+    if (this.inCheck(this.activeColor)) {
+      return true; // checkmate
+    } else {
+      return true; // stalemate
+    }
   }
 
   move(m) {
-    let fromFile = m.from.charCodeAt(0)-"a".charCodeAt(0);
-    let fromRank = 8 - parseInt(m.from.charAt(1));
-    let toFile = m.to.charCodeAt(0)-"a".charCodeAt(0);
-    let toRank = 8 - parseInt(m.to.charAt(1));
-    let piece = this.board[fromRank][fromFile];
-    if (!piece) return null;
-    let moves = this.getValidMoves(m.from);
-    if(!moves.some(x=>x.to===m.to))return null;
-    this.board[toRank][toFile]=m.promotion||piece;
-    this.board[fromRank][fromFile]="";
-    this.turnColor=this.turnColor==='w'?'b':'w';
+    // Bulunduğumuz renk sıra
+    let moves = this.getAllValidMovesForTurn();
+    let chosen = moves.find(M=>M.from===m.from && M.to===m.to);
+    if(!chosen) return null;
+
+    this.makeMove(chosen);
     return m;
   }
 
   getAllValidMovesForTurn() {
+    // Tüm hamleleri üret, şahta kalmayanları al
+    let moves=this.generateMoves(this.activeColor);
+    // Filtre illegal moves
+    let legal=[];
+    for (let mv of moves) {
+      this.makeMove(mv);
+      if(!this.inCheck(this.activeColor=== 'w'?'b':'w')) {
+        legal.push(mv);
+      }
+      this.undoMove();
+    }
+    return legal;
+  }
+
+  getValidMoves(square) {
+    // Belirli kareden hamleler
+    let all = this.getAllValidMovesForTurn();
+    return all.filter(m=>m.from===square);
+  }
+
+  // Aşağıda chess logic fonksiyonları (rookMoves,bishopMoves,knightMoves,pawnMoves,kingMoves),
+  // castling, en passant, check detection ekleniyor.
+
+  isOnBoard(r,f){return r>=0 && r<8 && f>=0 && f<8;}
+
+  pieceAt(r,f){return this.board[r][f];}
+
+  colorOf(piece) {
+    if(piece==="") return null;
+    return piece===piece.toUpperCase()?'w':'b';
+  }
+
+  inCheck(color) {
+    // Bul king'i
+    let kingPos = this.findKing(color);
+    if(!kingPos) return false;
+    return this.squareAttackedBy(kingPos.r, kingPos.f, color==='w'?'b':'w');
+  }
+
+  findKing(color) {
+    for(let r=0;r<8;r++){
+      for(let f=0;f<8;f++){
+        let p=this.board[r][f];
+        if(p!==""){
+          let c=this.colorOf(p);
+          if(c===color && p.toLowerCase()==='k') return {r,f};
+        }
+      }
+    }
+    return null;
+  }
+
+  squareAttackedBy(r,f,attColor) {
+    // Bir kare attColor tarafından saldırıda mı?
+    // Tüm attColor taşların hamlelerini simüle edelim.
+    // Performans için optimize etmeden basit yapıyoruz:
+    // Tüm attColor taşlarını bul ve bak
+    for(let rr=0;rr<8;rr++){
+      for(let ff=0;ff<8;ff++){
+        let p=this.board[rr][ff];
+        if(p!=="" && this.colorOf(p)===attColor){
+          // pseudo moves of p includes (r,f)?
+          let moves=this.pseudoMoves(rr,ff,p);
+          if(moves.some(m=>m.tr===r&&m.tf===f))return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  pseudoMoves(r,f,piece){
+    // Hamle üretimi: Rok, at, fil, vezir, şah, piyonun pseudo hamleleri. 
+    let color=this.colorOf(piece);
+    let mvs=[];
+    const add=(tr,tf)=>{
+      mvs.push({fr:r,ff:f,tr,tf});
+    };
+
+    const isOpp=(tr,tf)=>(this.isOnBoard(tr,tf) && this.pieceAt(tr,tf)!=="" && this.colorOf(this.pieceAt(tr,tf))!==color);
+    const isEmpty=(tr,tf)=>(this.isOnBoard(tr,tf) && this.pieceAt(tr,tf)==="");
+
+    let pieceType=piece.toLowerCase();
+    if(pieceType==='p') {
+      let dir=color==='w'?-1:1;
+      let startRank=color==='w'?6:1;
+      let fr=r+dir;
+      if(this.isOnBoard(fr,f) && this.pieceAt(fr,f)==="") add(fr,f);
+      if(r===startRank && this.isOnBoard(fr+dir,f) && this.pieceAt(fr+dir,f)==="" && this.pieceAt(fr,f)==="") add(fr+dir,f);
+      [f-1,f+1].forEach(tf=>{
+        if(this.isOnBoard(fr,tf)){
+          let tP=this.pieceAt(fr,tf);
+          if(tP!==""&&this.colorOf(tP)!==color) add(fr,tf);
+          // en passant
+          if(this.enPassantTarget && this.squareToCoords(this.enPassantTarget).r===fr && this.squareToCoords(this.enPassantTarget).f===tf) {
+            add(fr,tf);
+          }
+        }
+      });
+    }
+    else if(pieceType==='n'){
+      let offs=[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+      for(let off of offs){
+        let tr=r+off[0],tf=f+off[1];
+        if(this.isOnBoard(tr,tf)){
+          let tp=this.pieceAt(tr,tf);
+          if(tp===""||this.colorOf(tp)!==color) add(tr,tf);
+        }
+      }
+    }
+    else if(pieceType==='b'){
+      this.addSliding(r,f,color,mvs,[[-1,-1],[-1,1],[1,-1],[1,1]]);
+    }
+    else if(pieceType==='r'){
+      this.addSliding(r,f,color,mvs,[[ -1,0],[1,0],[0,-1],[0,1]]);
+    }
+    else if(pieceType==='q'){
+      this.addSliding(r,f,color,mvs,[[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]]);
+    }
+    else if(pieceType==='k'){
+      let kingOff=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+      for(let off of kingOff) {
+        let tr=r+off[0],tf=f+off[1];
+        if(this.isOnBoard(tr,tf)){
+          let tp=this.pieceAt(tr,tf);
+          if(tp===""||this.colorOf(tp)!==color) add(tr,tf);
+        }
+      }
+      // Rok (Castling)
+      // Castling rights fen: KQkq
+      let canCastleKing=(color==='w'?this.castlingRights.includes('K'):this.castlingRights.includes('k'));
+      let canCastleQueen=(color==='w'?this.castlingRights.includes('Q'):this.castlingRights.includes('q'));
+      let rank = color==='w'?7:0;
+      if(r===rank && f===4) {
+        // kısa rok
+        if(canCastleKing && this.pieceAt(rank,5)==="" && this.pieceAt(rank,6)===""
+           && !this.squareAttackedBy(rank,4,this.opColor(color))
+           && !this.squareAttackedBy(rank,5,this.opColor(color))
+           && !this.squareAttackedBy(rank,6,this.opColor(color))) {
+          add(rank,6);
+        }
+        // uzun rok
+        if(canCastleQueen && this.pieceAt(rank,3)==="" && this.pieceAt(rank,2)==="" && this.pieceAt(rank,1)===""
+           && !this.squareAttackedBy(rank,4,this.opColor(color))
+           && !this.squareAttackedBy(rank,3,this.opColor(color))
+           && !this.squareAttackedBy(rank,2,this.opColor(color))) {
+          add(rank,2);
+        }
+      }
+    }
+
+    return mvs;
+  }
+
+  opColor(c){return c==='w'?'b':'w';}
+
+  addSliding(r,f,color,mvs,dirs) {
+    for(let d of dirs) {
+      let nr=r, nf=f;
+      while(true) {
+        nr+=d[0]; nf+=d[1];
+        if(!this.isOnBoard(nr,nf)) break;
+        let tp=this.pieceAt(nr,nf);
+        if(tp===""){
+          mvs.push({fr:r,ff:f,tr:nr,tf:nf});
+        } else {
+          if(this.colorOf(tp)!==color) mvs.push({fr:r,ff:f,tr:nr,tf:nf});
+          break;
+        }
+      }
+    }
+  }
+
+  generateMoves(color) {
+    // pseudo hamleler
     let moves=[];
     for(let r=0;r<8;r++){
       for(let f=0;f<8;f++){
-        let piece=this.board[r][f];
-        if(piece!==""){
-          let color=piece===piece.toUpperCase()?'w':'b';
-          if(color===this.turnColor){
-            let fromSq=String.fromCharCode("a".charCodeAt(0)+f)+(8-r);
-            moves.push(...this.getValidMoves(fromSq));
+        let p=this.board[r][f];
+        if(p!==""&&this.colorOf(p)===color){
+          let pmoves=this.pseudoMoves(r,f,p);
+          // En passant ekleme
+          // Promotion handle: pseudoMoves normal
+          // Rok handle: pseudoMoves krala ekli
+          // En son ep removals ve castling rook moves handle makeMove/undoMove
+          for(let mv of pmoves) {
+            let fromSq=this.coordsToSquare(r,f);
+            let toSq=this.coordsToSquare(mv.tr,mv.tf);
+            let moveObj={from:fromSq,to:toSq};
+
+            // Promotion
+            if(p.toLowerCase()==='p' && (mv.tr===0 || mv.tr===7)){
+              moveObj.promotion='q'; // otomatik vezir
+            }
+
+            moves.push(moveObj);
           }
         }
       }
@@ -99,107 +330,138 @@ class ServerChessLogic {
     return moves;
   }
 
-  getValidMoves(square) {
-    let moves=[];
-    let file=square.charCodeAt(0)-"a".charCodeAt(0);
-    let rank=8-parseInt(square.charAt(1));
-    let piece=this.board[rank][file];
-    if(!piece)return moves;
-    let color=piece===piece.toUpperCase()?'w':'b';
-    if(color!==this.turnColor)return moves;
-    let pieceType=piece.toLowerCase();
+  coordsToSquare(r,f){
+    return String.fromCharCode("a".charCodeAt(0)+f)+(8-r);
+  }
 
-    const isOnBoard=(r,f)=>(r>=0&&r<8&&f>=0&&f<8);
-    const isOpponentPiece=(p,col)=>{
-      let pc=p===p.toUpperCase()?'w':'b';
-      return pc!==col;
-    };
-    const addMove=(fr,ff,tr,tf,mvs)=>{
-      let fsq=String.fromCharCode("a".charCodeAt(0)+ff)+(8-fr);
-      let tsq=String.fromCharCode("a".charCodeAt(0)+tf)+(8-tr);
-      mvs.push({from:fsq,to:tsq});
-    };
-    const generateSlidingMoves=(fr,ff,color,mvs,dirs)=>{
-      dirs.forEach(dir=>{
-        let nr=fr;let nf=ff;
-        while(true){
-          nr+=dir[0];nf+=dir[1];
-          if(!isOnBoard(nr,nf))break;
-          let tp=this.board[nr][nf];
-          if(tp===""){
-            addMove(fr,ff,nr,nf,mvs);
-          } else {
-            if(isOpponentPiece(tp,color)) addMove(fr,ff,nr,nf,mvs);
-            break;
-          }
-        }
-      });
-    };
+  squareToCoords(sq){
+    let f=sq.charCodeAt(0)-"a".charCodeAt(0);
+    let r=8 - parseInt(sq.charAt(1));
+    return {r,f};
+  }
 
-    switch(pieceType){
-      case 'p':{
-        let direction=color==='w'?-1:1;
-        let startRank=color==='w'?6:1;
-        let fRank=rank+direction;
-        if(isOnBoard(fRank,file)){
-          if(this.board[fRank][file]===""){
-            addMove(rank,file,fRank,file,moves);
-            if(rank===startRank && isOnBoard(fRank+direction,file)&&this.board[fRank+direction][file]==="")
-              addMove(rank,file,fRank+direction,file,moves);
-          }
-        }
-        [file-1,file+1].forEach(nf=>{
-          let nr=fRank;
-          if(isOnBoard(nr,nf)){
-            let tp=this.board[nr][nf];
-            if(tp!==""&&isOpponentPiece(tp,color)){
-              addMove(rank,file,nr,nf,moves);
-            }
-          }
-        });
-      }break;
-      case 'n':{
-        let offsets=[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
-        offsets.forEach(off=>{
-          let nr=rank+off[0];let nf=file+off[1];
-          if(isOnBoard(nr,nf)){
-            let tp=this.board[nr][nf];
-            if(tp===""||isOpponentPiece(tp,color)){
-              addMove(rank,file,nr,nf,moves);
-            }
-          }
-        });
-      }break;
-      case 'b':
-        generateSlidingMoves(rank,file,color,moves,[[-1,-1],[-1,1],[1,-1],[1,1]]);
-        break;
-      case 'r':
-        generateSlidingMoves(rank,file,color,moves,[[-1,0],[1,0],[0,-1],[0,1]]);
-        break;
-      case 'q':
-        generateSlidingMoves(rank,file,color,moves,[[ -1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]]);
-        break;
-      case 'k':{
-        let kingOff=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-        kingOff.forEach(off=>{
-          let nr=rank+off[0],nf=file+off[1];
-          if(isOnBoard(nr,nf)){
-            let tp=this.board[nr][nf];
-            if(tp===""||isOpponentPiece(tp,color))
-              addMove(rank,file,nr,nf,moves);
-          }
-        });
-      }break;
+  // makeMove: moveObj {from,to,promotion?}
+  // handle castling, en passant
+  makeMove(m) {
+    this.history=this.history||[];
+    let state={
+      board: this.board.map(row=>row.slice()),
+      activeColor:this.activeColor,
+      castlingRights:this.castlingRights,
+      enPassantTarget:this.enPassantTarget,
+      halfmoveClock:this.halfmoveClock,
+      fullmoveNumber:this.fullmoveNumber
+    };
+    this.history.push(state);
+
+    let from=this.squareToCoords(m.from);
+    let to=this.squareToCoords(m.to);
+    let piece=this.board[from.r][from.f];
+    let target=this.board[to.r][to.f];
+    let color=this.colorOf(piece);
+
+    // update halfmove clock
+    if(piece.toLowerCase()==='p' || target!=="") {
+      this.halfmoveClock=0;
+    } else {
+      this.halfmoveClock++;
     }
 
-    return moves;
+    // move piece
+    this.board[to.r][to.f]=m.promotion||piece;
+    this.board[from.r][from.f]="";
+
+    // en passant
+    if(piece.toLowerCase()==='p'){
+      if(Math.abs(to.r - from.r)===2) {
+        // double push
+        this.enPassantTarget=String.fromCharCode("a".charCodeAt(0)+from.f)+(8 - ((from.r+to.r)/2));
+      } else {
+        if(this.enPassantTarget && to.f===this.squareToCoords(this.enPassantTarget).f && to.r===this.squareToCoords(this.enPassantTarget).r) {
+          // en passant capture
+          let dir=color==='w'?1:-1;
+          this.board[to.r+dir][to.f]="";
+        }
+        this.enPassantTarget=null;
+      }
+    } else {
+      this.enPassantTarget=null;
+    }
+
+    // castling
+    if(piece.toLowerCase()==='k') {
+      let rank=color==='w'?7:0;
+      if(from.f===4 && to.f===6 && from.r===rank && to.r===rank) {
+        // short castle
+        this.board[rank][5]=this.board[rank][7];
+        this.board[rank][7]="";
+      }
+      if(from.f===4 && to.f===2 && from.r===rank && to.r===rank) {
+        // long castle
+        this.board[rank][3]=this.board[rank][0];
+        this.board[rank][0]="";
+      }
+      // castling rights kayıp
+      if(color==='w'){
+        this.castlingRights=this.castlingRights.replace('K','').replace('Q','');
+      } else {
+        this.castlingRights=this.castlingRights.replace('k','').replace('q','');
+      }
+    }
+
+    // Rook moved?
+    if(piece.toLowerCase()==='r') {
+      let rank=color==='w'?7:0;
+      if(from.r===rank && from.f===0) {
+        // a rook
+        if(color==='w') this.castlingRights=this.castlingRights.replace('Q','');
+        else this.castlingRights=this.castlingRights.replace('q','');
+      }
+      if(from.r===rank && from.f===7) {
+        // h rook
+        if(color==='w') this.castlingRights=this.castlingRights.replace('K','');
+        else this.castlingRights=this.castlingRights.replace('k','');
+      }
+    }
+
+    // Rook captured?
+    if(target!=="") {
+      // maybe captured rook that affects castling
+      let wRank=7,bRank=0;
+      // if captured a rook from initial squares
+      if(to.r===7 && to.f===0) this.castlingRights=this.castlingRights.replace('Q','');
+      if(to.r===7 && to.f===7) this.castlingRights=this.castlingRights.replace('K','');
+      if(to.r===0 && to.f===0) this.castlingRights=this.castlingRights.replace('q','');
+      if(to.r===0 && to.f===7) this.castlingRights=this.castlingRights.replace('k','');
+    }
+
+    // King moved?
+    if(piece.toLowerCase()==='k') {
+      // no castling for that color
+      if(color==='w') {
+        this.castlingRights=this.castlingRights.replace('K','').replace('Q','');
+      } else {
+        this.castlingRights=this.castlingRights.replace('k','').replace('q','');
+      }
+    }
+
+    // switch turn
+    this.activeColor = this.activeColor==='w'?'b':'w';
+    if(this.activeColor==='w') this.fullmoveNumber++;
+  }
+
+  undoMove() {
+    let state = this.history.pop();
+    this.board=state.board;
+    this.activeColor=state.activeColor;
+    this.castlingRights=state.castlingRights;
+    this.enPassantTarget=state.enPassantTarget;
+    this.halfmoveClock=state.halfmoveClock;
+    this.fullmoveNumber=state.fullmoveNumber;
   }
 }
 
-function createServerChess() {
-  return new ServerChessLogic();
-}
-
+// Oyun eşleştirme ve bot
 function matchPlayers(player1, player2) {
   player1.hasMatched = true;
   player2.hasMatched = true;
@@ -225,7 +487,7 @@ function matchPlayers(player1, player2) {
 
   let gameId = "game_" + player1.id + "_" + player2.id;
   games[gameId] = {
-    chess: createServerChess(),
+    chess: new ServerChessLogic(),
     turn: 'w'
   };
 
@@ -251,12 +513,12 @@ function assignBot(socket) {
 
   let gameId = "game_" + socket.id + "_bot";
   games[gameId] = {
-    chess: createServerChess(),
+    chess: new ServerChessLogic(),
     turn: 'w'
   };
   socket.gameId = gameId;
 
-  if (games[gameId].turn !== socket.color) {
+  if (games[gameId].chess.turn() !== socket.color) {
     setTimeout(() => botMove(gameId), 2000);
   }
 }
@@ -281,7 +543,7 @@ function botMove(gameId) {
     if (g.chess.game_over() && playerSocket) {
       endGame(playerSocket, g);
     } else {
-      if (playerSocket && g.turn !== playerSocket.color) {
+      if (playerSocket && g.chess.turn()!==playerSocket.color) {
         setTimeout(() => botMove(gameId), 2000);
       }
     }
@@ -289,18 +551,38 @@ function botMove(gameId) {
 }
 
 function endGame(socket, g) {
-  let loserColor = g.turn;
-  let winnerColor = loserColor === 'w' ? 'b' : 'w';
+  let moves = g.chess.getAllValidMovesForTurn();
+  if(moves.length>0) return; // Not ended
+  let color = g.chess.turn();
+  // Eğer king check altındaysa checkmate aksi halde stalemate
+  let inCheck = g.chess.inCheck(color);
+  let loserColor = inCheck?color:null;
+  let winnerColor = loserColor?(loserColor==='w'?'b':'w'):null;
 
-  if (socket.color === winnerColor) {
-    socket.emit("gameOver", { winner: winnerColor });
-    if (socket.opponent !== 'bot' && socket.opponent) {
-      socket.opponent.emit("gameOver", { winner: winnerColor });
+  // Eğer inCheck true ise mat var, winnerColor bellidir.
+  // inCheck false ise pat, kazanan yok. Karşı tarafa berabere diyebilirsiniz.
+  // Ancak siz mutlak kazanan istediniz. Şimdilik pat=oyun bitti berabere. kimse kazanmadı. 
+  // Taleplerinizde pat durumunu da handle edelim. 
+  // gameOver olayı winner: yoksa berabere diyelim.
+  if(inCheck) {
+    // mat
+    if (socket.color === winnerColor) {
+      socket.emit("gameOver", { winner: winnerColor });
+      if (socket.opponent !== 'bot' && socket.opponent) {
+        socket.opponent.emit("gameOver", { winner: winnerColor });
+      }
+    } else {
+      socket.emit("gameOver", { winner: winnerColor });
+      if (socket.opponent !== 'bot' && socket.opponent) {
+        socket.opponent.emit("gameOver", { winner: winnerColor });
+      }
     }
   } else {
-    socket.emit("gameOver", { winner: winnerColor });
-    if (socket.opponent !== 'bot' && socket.opponent) {
-      socket.opponent.emit("gameOver", { winner: winnerColor });
+    // stalemate
+    // Berabere durumunda winner yok, 
+    socket.emit("gameOver", { winner: null }); 
+    if(socket.opponent !== 'bot' && socket.opponent) {
+      socket.opponent.emit("gameOver", { winner: null });
     }
   }
 }
