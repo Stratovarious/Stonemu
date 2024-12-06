@@ -1,10 +1,11 @@
-// index.js
+// chess_stonemu.js
 
 "use strict";
 
 var board;
 var game = new Chess();
-var socket = io("https://stonemu-8bdeedab7930.herokuapp.com");
+// Heroku'da barındırdığınız backend URL'sini girin
+var socket = io('https://stonemu-8bdeedab7930.herokuapp.com');
 var playerColor;
 var gameStarted = false;
 
@@ -22,7 +23,6 @@ function initGame() {
 
   board = new ChessBoard("gameBoard", cfg);
 
-  // Rastgele sayı üretimi ve renk belirleme
   var randomNumber = Math.floor(Math.random() * 1000);
   socket.emit("joinGame", { randomNumber: randomNumber });
 
@@ -120,7 +120,6 @@ function showGameOverScreen(message) {
   document.body.appendChild(overlay);
 
   document.getElementById("claimButton").addEventListener("click", function () {
-    // Puanı veritabanına kaydet
     socket.emit("claimVictory", { playerColor: playerColor });
     alert("Your points have been added to your account.");
   });
