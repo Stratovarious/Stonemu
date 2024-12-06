@@ -18,7 +18,6 @@
     var turn = "w";
     var moveHistory = [];
 
-    // Tahtayı FEN dizgisine çevirir
     this.fen = function () {
       var fen = "";
       for (var i = 0; i < 8; i++) {
@@ -42,23 +41,19 @@
           fen += "/";
         }
       }
-      fen += " " + turn;
-      fen += " KQkq - 0 1"; // Rok hakları vb. ekleyebilirsiniz
+      fen += " " + turn + " KQkq - 0 1";
       return fen;
     };
 
-    // Geçerli oyuncunun sırası
     this.turn = function () {
       return turn;
     };
 
-    // Oyun bitti mi?
     this.game_over = function () {
-      // Şah mat, pat vb. durumları kontrol edebilirsiniz
+      // Basit bir kontrol, geliştirilebilir.
       return false;
     };
 
-    // Hamle yapma
     this.move = function (move) {
       var from = move.from;
       var to = move.to;
@@ -79,33 +74,22 @@
 
       if (!isValidMove) return null;
 
-      // Hamleyi uygula
       board[toRank][toFile] = promotion || piece;
       board[fromRank][fromFile] = "";
-
-      // Hamle geçmişine ekle
       moveHistory.push(move);
 
-      // Sıra değişimi
       turn = turn === "w" ? "b" : "w";
-
       return move;
     };
 
-    // Belirli bir taş için geçerli hamleleri döndürür
     this.getValidMoves = function (square) {
       var moves = [];
-
       var file = square.charCodeAt(0) - "a".charCodeAt(0);
       var rank = 8 - parseInt(square.charAt(1));
       var piece = board[rank][file];
-
       if (!piece) return moves;
-
       var color = piece === piece.toUpperCase() ? "w" : "b";
-
       if (color !== turn) return moves;
-
       var pieceType = piece.toLowerCase();
 
       switch (pieceType) {
@@ -137,23 +121,22 @@
       var startRank = color === "w" ? 6 : 1;
 
       var forwardRank = rank + direction;
-
       if (forwardRank >= 0 && forwardRank <= 7) {
         if (board[forwardRank][file] === "") {
           addMove(rank, file, forwardRank, file, moves);
-          if (rank === startRank && board[forwardRank + direction][file] === "") {
+          if (rank === startRank && board[forwardRank + direction] && board[forwardRank + direction][file] === "") {
             addMove(rank, file, forwardRank + direction, file, moves);
           }
         }
       }
 
-      // Yeme hareketleri
       var captures = [file - 1, file + 1];
       captures.forEach(function (newFile) {
-        if (newFile >= 0 && newFile <= 7) {
-          var targetPiece = board[forwardRank][newFile];
+        var newRank = forwardRank;
+        if (newFile >= 0 && newFile <= 7 && newRank >= 0 && newRank <= 7) {
+          var targetPiece = board[newRank][newFile];
           if (targetPiece !== "" && isOpponentPiece(targetPiece, color)) {
-            addMove(rank, file, forwardRank, newFile, moves);
+            addMove(rank, file, newRank, newFile, moves);
           }
         }
       });
@@ -236,8 +219,6 @@
           }
         }
       });
-
-      // Rok hareketleri eklenebilir
     }
 
     function generateSlidingMoves(rank, file, color, moves, directions) {
@@ -248,9 +229,7 @@
         while (true) {
           newRank += direction[0];
           newFile += direction[1];
-
           if (!isOnBoard(newRank, newFile)) break;
-
           var targetPiece = board[newRank][newFile];
           if (targetPiece === "") {
             addMove(rank, file, newRank, newFile, moves);
@@ -279,7 +258,6 @@
       return pieceColor !== color;
     }
 
-    // Hamle geçerli mi kontrol eder
     this.validate_move = function (move) {
       var validMoves = this.getValidMoves(move.from);
       return validMoves.some(function (m) {
@@ -287,7 +265,6 @@
       });
     };
 
-    // Oyun sıfırlama
     this.reset = function () {
       board = [
         ["r", "n", "b", "q", "k", "b", "n", "r"],
@@ -304,6 +281,5 @@
     };
   }
 
-  // Global alana ekleme
   global.Chess = Chess;
 })(window);
