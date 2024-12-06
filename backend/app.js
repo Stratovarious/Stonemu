@@ -5,14 +5,12 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 
-// Heroku ortamı için port
-const port = process.env.PORT || 3000;
-
 const app = express();
 const server = http.createServer(app);
+const port = process.env.PORT || 3000;
 
 // GitHub Pages URL'inizi girin
-const allowedOrigin = 'https://stratovarious.github.io'; // Örnek
+const allowedOrigin = 'https://stratovarious.github.io'; // Örnek URL
 
 app.use(cors({
   origin: allowedOrigin,
@@ -34,7 +32,14 @@ app.get('/', (req, res) => {
   res.send('Stonemu Backend Çalışıyor!');
 });
 
-// Oyun durumlarını tutacağız
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigin,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+
 let waitingPlayer = null;
 let games = {};
 
@@ -303,8 +308,3 @@ function endGame(socket, g) {
 server.listen(port, () => {
   console.log('Sunucu çalışıyor: ' + port);
 });
-"
-
-Bu kodlar Heroku'da çalıştırıldığında R10 (Boot timeout) hatasını vermeyecek, çünkü `server.listen(port,...)` en sonda ve hemen çalışıyor. Veritabanı bağlantısı asenkron, engelleyici değil. Bot logic hataları giderildi, `ServerChessLogic` tanımlandı, `createServerChess()` fonksiyonu app.js içinde tanımlandı. Bot hamleleri, eşleşme, 30 saniye bekleme, her şey tek bir dosyada eksiksiz entegre edilmiştir.
-
-Lütfen bu kodu projeye entegre edin ve frontendi GitHub Pages'e, backend'i Heroku'ya yükleyerek tekrar deneyin.
