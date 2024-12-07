@@ -29,3 +29,7 @@
 .square.highlight {
   outline: 2px solid yellow;
 }
+
+.selected-square {
+  outline: 2px solid gray;
+}
