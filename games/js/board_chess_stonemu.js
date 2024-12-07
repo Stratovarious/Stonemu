@@ -1,4 +1,5 @@
 // board_chess_stonemu.js
+// Tahtayı çizmek, taşları yerleştirmek, kareleri vurgulamak, dokunmatik/mouse eventleri ile drag-drop desteği.
 
 (function (global) {
   "use strict";
@@ -9,7 +10,7 @@
       orientation: "white",
       position: "start",
       showNotation: true,
-      pieceTheme: "../../img/chess_img/chips/{piece}.png",
+      pieceTheme: "../img/chess_img/chips/{piece}.png",
       onDragStart: function () {},
       onDrop: function () {},
       onSnapEnd: function () {},
@@ -22,6 +23,9 @@
     var boardEl = document.getElementById(containerId);
     var squares = {};
     var currentPosition = {};
+
+    var draggedPiece = null;
+    var draggedPieceSource = null;
 
     init();
 
@@ -139,15 +143,12 @@
       boardEl.addEventListener("mouseout", onMouseOut);
     }
 
-    var draggedPiece = null;
-    var draggedPieceSource = null;
-
     function onMouseDown(e) {
       var square = e.target.closest(".square");
       if (!square) return;
       var squareId = square.getAttribute("data-square");
+      if (!currentPosition[squareId]) return;
       var piece = currentPosition[squareId];
-      if (!piece) return;
       if (config.onDragStart(squareId, piece) === false) return;
       draggedPiece = piece;
       draggedPieceSource = squareId;
@@ -206,9 +207,7 @@
 
     function highlightValidMoves(squareId) {
       clearHighlights();
-      // Bu fonksiyon moves'u dışarıdan almanız gerekebilir.
-      // chess_stonemu.js tarafında game.getValidMoves() ile hamleler alınır.
-      // Burada statik kaldı, actual highlight chess_stonemu.js içinde yapılıyor.
+      // Actual highlight done in chess_stonemu.js after getValidMoves()
     }
 
     function clearHighlights() {
@@ -218,7 +217,7 @@
     }
 
     this.resize = function () {
-      // Artık boyut hesaplaması yok, CSS hallediyor.
+      // CSS hallediyor
     };
 
     this.position = function (newPosition) {
