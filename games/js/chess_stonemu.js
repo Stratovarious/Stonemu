@@ -13,6 +13,15 @@ var countdown = 30;
 var countdownInterval;
 var botRequested = false;
 
+var isTouchDevice = ('ontouchstart' in document.documentElement);
+var selectedSquare = null;
+
+// Dragging for desktop
+var draggedPieceEl = null;
+var isDragging = false;
+var draggable = true; // from config
+// On touch devices, no actual drag, just tap-based selection.
+
 function getTelegramUsername() {
   return "TGUser_" + Math.floor(Math.random()*1000);
 }
@@ -43,7 +52,7 @@ function startCountdown() {
 
 function initGame() {
   var cfg = {
-    draggable: true,
+    draggable: !isTouchDevice, 
     position: "start",
     pieceTheme: "../img/chess_img/chips/{piece}.png",
     onDragStart: onDragStart,
@@ -51,12 +60,16 @@ function initGame() {
     onSnapEnd: onSnapEnd,
     onMouseoverSquare: onMouseoverSquare,
     onMouseoutSquare: onMouseoutSquare,
+    showNotation:true
   };
 
   board = new ChessBoard("gameBoard", cfg);
 
-  var randomNumber = Math.floor(Math.random() * 1000);
-  socket.emit("joinGame", { randomNumber: randomNumber });
+  // For dragging piece img
+  $("body").append('<img id="draggedPiece" class="piece" />');
+  draggedPieceEl = $("#draggedPiece");
+
+  socket.emit("joinGame", { });
 
   startCountdown();
 
@@ -67,10 +80,10 @@ function initGame() {
     playerColor = data.color;
     board.orientation(playerColor);
     if (playerColor === "white") {
-      addMessage("Sayınız rastgele üretildi, renginiz: Beyaz, ilk hamleyi siz yapıyorsunuz.");
-      addMessage("Dokunarak taşınızı seçin ve hamlenizi yapın.");
+      addMessage("Renginiz: Beyaz, ilk hamleyi siz yapıyorsunuz.");
+      addMessage("Dokunarak (veya mouse ile) taşınızı seçin ve hamlenizi yapın.");
     } else {
-      addMessage("Sayınız rastgele üretildi, renginiz: Siyah, lütfen rakibinizin hamlesini bekleyiniz.");
+      addMessage("Renginiz: Siyah, lütfen rakibinizin hamlesini bekleyiniz.");
     }
     gameStarted = true;
   });
@@ -89,7 +102,6 @@ function initGame() {
 
   socket.on("gameOver", function(data) {
     if (data.winner === null) {
-      // berabere
       addMessage("Oyun berabere bitti.");
       showGameOverScreen("Oyun berabere bitti.", false);
     } else if (data.winner === playerColor) {
@@ -112,9 +124,104 @@ function initGame() {
       }
     });
   });
+
+  // Touch-based selection logic
+  if(isTouchDevice) {
+    $("#gameBoard").on("touchstart", ".square", function(e) {
+      e.preventDefault();
+      var square = $(this).attr("data-square");
+      var piece = game.fen().split(' ')[0]; // just to ensure fen loaded
+      // actually piece from board position:
+      var pos=board.position();
+      var pieceAt=pos[square];
+
+      if(!gameStarted) return;
+      if(!selectedSquare) {
+        // no selection
+        if(pieceAt && pieceAt.charAt(0)===playerColor.charAt(0)) {
+          // select this piece
+          selectedSquare=square;
+          highlightSelectionAndMoves(square);
+        } else {
+          // tap on empty or opponent piece does nothing
+        }
+      } else {
+        // piece selected previously
+        if(selectedSquare===square) {
+          // same square tapped again => deselect
+          clearSelection();
+        } else {
+          // try move
+          var moves=game.getValidMoves(selectedSquare);
+          var valid = moves.find(m=>m.to===square);
+          if(valid) {
+            // make move
+            var move = {from:selectedSquare,to:square,promotion:'q'};
+            if(game.validate_move(move)) {
+              game.move(move);
+              board.position(game.fen());
+              socket.emit("move", move);
+              if(game.game_over()) handleGameOver();
+            }
+          }
+          clearSelection();
+        }
+      }
+    });
+  } else {
+    // Mouse-based dragging logic already implemented via onDragStart, onMouseMove, onMouseUp
+    // Additional: If user just click without dragging: select piece logic?
+    // We'll just rely on dragging for desktop. If user just clicks piece and releases, no move performed => no harm.
+    // If we want click-to-select also on desktop, we can implement similarly:
+    $("#gameBoard").on("click",".square",function(e){
+      if(!gameStarted||isDragging)return;
+      var square=$(this).attr("data-square");
+      var pos=board.position();
+      var pieceAt=pos[square];
+
+      if(!selectedSquare) {
+        if(pieceAt && pieceAt.charAt(0)===playerColor.charAt(0)) {
+          selectedSquare=square;
+          highlightSelectionAndMoves(square);
+        }
+      } else {
+        if(selectedSquare===square) {
+          clearSelection();
+        } else {
+          var moves=game.getValidMoves(selectedSquare);
+          var valid=moves.find(m=>m.to===square);
+          if(valid) {
+            var move={from:selectedSquare,to:square,promotion:'q'};
+            if(game.validate_move(move)) {
+              game.move(move);
+              board.position(game.fen());
+              socket.emit("move",move);
+              if(game.game_over()) handleGameOver();
+            }
+          }
+          clearSelection();
+        }
+      }
+    });
+  }
+}
+
+function highlightSelectionAndMoves(square) {
+  board.clearHighlights();
+  // highlight selected piece square with gray
+  $("[data-square='"+square+"']").addClass("selected-square");
+  var moves=game.getValidMoves(square);
+  board.highlightValidMoves(moves);
+}
+
+function clearSelection() {
+  selectedSquare=null;
+  $("[data-square]").removeClass("selected-square");
+  board.clearHighlights();
 }
 
 function onDragStart(source, piece) {
+  if(isTouchDevice) return false; // no drag on touch
   if (!gameStarted) return false;
   if (
     (game.turn() === "w" && playerColor !== "white") ||
@@ -129,9 +236,22 @@ function onDragStart(source, piece) {
   ) {
     return false;
   }
+  isDragging=true;
+  // Show dragged piece
+  var pos=board.position();
+  var sqEl = $("[data-square='"+source+"']");
+  var pieceEl=sqEl.find(".piece");
+  if(pieceEl.length>0) {
+    draggedPieceEl.attr("src",pieceEl.attr("src"));
+    draggedPieceEl.show();
+  }
 }
 
-function onDrop(source, target) {
+function onDrop(source, target, piece) {
+  if(isTouchDevice) return;
+  isDragging=false;
+  draggedPieceEl.hide();
+
   var move = {
     from: source,
     to: target,
@@ -154,35 +274,52 @@ function onSnapEnd() {
 }
 
 function onMouseoverSquare(square, piece) {
+  if(isTouchDevice) return;
   if (!gameStarted) return;
-  if (piece && piece.charAt(0) === playerColor.charAt(0)) {
-    var moves = game.getValidMoves(square);
+  if (selectedSquare) return; // if already selected by click
+  // If just hover: highlight moves if piece belongs to player
+  var pos=board.position();
+  var pieceAt=pos[square];
+  if(pieceAt && pieceAt.charAt(0)===playerColor.charAt(0)) {
+    var moves=game.getValidMoves(square);
     board.highlightValidMoves(moves);
   }
 }
 
 function onMouseoutSquare(square, piece) {
-  board.clearHighlights();
+  if(isTouchDevice)return;
+  if(!selectedSquare) board.clearHighlights();
+}
+
+function onMouseMove(e) {
+  if(isTouchDevice) return;
+  if(isDragging && draggedPieceEl.is(":visible")) {
+    draggedPieceEl.css({
+      left:e.pageX-25+"px",
+      top:e.pageY-25+"px"
+    });
+  }
 }
 
 function handleGameOver() {
-  var message;
-  let moves = game.getAllValidMovesForTurn();
-  if(moves.length===0) {
-    // check for check or stalemate
-    if(game.inCheck(game.turn())) {
-      // checkmate
+  var moves = game.getAllValidMovesForTurn();
+  if(moves.length===0){
+    // check or stalemate
+    var inCheck=game.inCheck(game.turn());
+    var message;
+    if(inCheck) {
+      // mat
       if(game.turn()!==playerColor) {
-        message = "Oyunu kazandınız, lütfen puanınızı alınız";
+        message="Oyunu kazandınız, lütfen puanınızı alınız";
         addMessage(message);
-        showGameOverScreen(message, true);
+        showGameOverScreen(message,true);
       } else {
-        message = "Maalesef oyunu kaybettiniz, şansınızı tekrar deneyiniz";
+        message="Maalesef oyunu kaybettiniz, şansınızı tekrar deneyiniz";
         addMessage(message);
-        showGameOverScreen(message, false);
+        showGameOverScreen(message,false);
       }
     } else {
-      // stalemate
+      // pat
       message="Oyun berabere bitti.";
       addMessage(message);
       showGameOverScreen(message,false);
@@ -217,5 +354,7 @@ function showGameOverScreen(message, won) {
   });
 }
 
-// Oyunu başlat
-document.addEventListener('DOMContentLoaded', initGame);
+document.addEventListener('DOMContentLoaded', ()=>{
+  initGame();
+  $(window).on("mousemove",onMouseMove);
+});
