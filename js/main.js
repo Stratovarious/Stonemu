@@ -196,6 +196,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     const data = await response.json();
                     a = data.a || 5000; // Backend'de tanımlı ise alın, yoksa varsayılan
+                    b = data.b || 5000; // Backend'de tanımlı ise alın, yoksa varsayılan
+                    dolum_hizi = data.dolum_hizi || 10; // 10 saniye varsayılan
+                    tiklama_hakki = data.tiklama_hakki || 1; // Her tıklamada eklenen puan
                     points = data.points || 0;
                     updateCounterDisplay();
                     updatePointsDisplay();
@@ -226,14 +229,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Sayıları binlik ayırıcı ile formatla
         function formatNumber(number) {
-            try {
-                return number.toLocaleString('tr-TR');
-                console.log("Binlik ayırıcı tamam.");
+        try {
+            const formatted = number.toLocaleString('tr-TR');
+            console.log("Binlik ayırıcı tamam.");
+            return formatted;
             } catch (error) {
                 console.error('Binlik ayırıcı hatası:', error);
+                return number;
+                }
             }
-            
-        }
+
 
         // Sayaç ekranını güncelle
         function updateCounterDisplay() {
@@ -272,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
         async function handleClick() {
             if (a > 0) {
                 a -= 1;
-                points += 1;
+                points += tiklama_hakki; // Her tıklamada tiklama_hakki kadar puan ekle
                 updateCounterDisplay();
                 updatePointsDisplay();
                 await saveData();
@@ -309,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateCounterDisplay();
                     await saveData();
                 }
-            }, 10000);
+            }, dolum_hizi * 1000); // dolum_hizi saniye cinsinden
         }
 
         // Resimlerin sürüklenmesini ve seçilmesini engelle
