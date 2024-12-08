@@ -104,6 +104,31 @@
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
+            // Kullanıcı Kaydını yap
+            async function registerUser() {
+                const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
+                const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+
+                try {
+                    const response = await fetch('/api/users', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                            body: JSON.stringify({ user_id, username }),
+                    });
+
+                if (response.ok) {
+                    console.log('Kullanıcı kaydedildi veya güncellendi.');
+                } else {
+                    console.error('Kullanıcı kaydedilemedi.');
+                    }
+                } catch (error) {
+                    console.error('Kullanıcı kaydetme hatası:', error);
+                }
+            }
+            registerUser();
+            
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
 
