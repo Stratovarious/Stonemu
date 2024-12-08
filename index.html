@@ -128,6 +128,19 @@
                 }
             }
             registerUser();
+
+            const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+            try {
+                const response = await fetch(`/api/users/${user_id}/is_banned`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.is_banned) {
+                        window.location.href = 'banned.html';
+                    }
+                }
+            } catch (error) {
+                console.error('Ban durumu kontrol hatası:', error);
+            }
             
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
