@@ -11,6 +11,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    a: { // Tıklama hakkı
+      type: DataTypes.INTEGER,
+      defaultValue: 5000,
+    },
+    b: { // Maksimum tıklama hakkı
+      type: DataTypes.INTEGER,
+      defaultValue: 5000,
+    },
+    dolum_hizi: { // Dolum hızı (saniye cinsinden)
+      type: DataTypes.INTEGER,
+      defaultValue: 10,
+    },
+    tiklama_hakki: { // Her tıklamada eklenen puan
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
     cheat_count: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
