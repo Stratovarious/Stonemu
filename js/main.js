@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function registerUser() {
-      const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
-      const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+      const username = getTelegramUsername() || "TestUser"; // Telegram'dan alınan kullanıcı adı
+      const user_id = getTelegramUserId() || "test_user_id"; // Telegram'dan alınan kullanıcı ID
     
       if (!user_id) {
         console.error("Kullanıcı ID alınamadı.");
