@@ -122,3 +122,13 @@ body, html {
   z-index: 9999;
   display: none;
 }
+
+/* chess_stonemu.css veya ilgili CSS dosyanıza ekleyin */
+.selected-square {
+  outline: 2px solid yellow;
+}
+
+.highlight {
+  background-color: rgba(0, 255, 0, 0.3); /* Yeşil vurgulama */
+}
+
