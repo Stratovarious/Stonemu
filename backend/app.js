@@ -93,31 +93,41 @@ app.get('/api/users/:user_id/points', async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
-    res.json({ points: user.points, a: 5000 }); // 'a' değerini backend'den almanız gerekebilir
+    res.json({ 
+      points: user.points, 
+      a: user.a, 
+      b: user.b, 
+      dolum_hizi: user.dolum_hizi, 
+      tiklama_hakki: user.tiklama_hakki 
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Sunucu hatası.' });
   }
 });
 
-// Kullanıcının Puanını Güncelleme
+// Kullanıcının Puanını ve 'a' değerini Güncelleme
 app.post('/api/users/:user_id/points', async (req, res) => {
   try {
     const { user_id } = req.params;
-    const { points } = req.body;
-    if (typeof points !== 'number') {
-      return res.status(400).json({ error: 'Geçersiz puan değeri.' });
-    }
+    const { points, a } = req.body;
 
     const user = await db.User.findByPk(user_id);
     if (!user) {
       return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
 
-    user.points += points;
+    if (typeof points === 'number') {
+      user.points += points;
+    }
+
+    if (typeof a === 'number') {
+      user.a = a;
+    }
+
     await user.save();
 
-    res.json({ points: user.points });
+    res.json({ points: user.points, a: user.a });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Sunucu hatası.' });
@@ -167,6 +177,23 @@ app.post('/api/users/:user_id/cheats', async (req, res) => {
     await notifyUserOfCheat(user_id, warningMessage);
 
     res.json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+
+  // Puan Güncellemesi
+    // Her tıklama puan ekleniyor
+    const tiklamaHakki = user.tiklama_hakki || 1;
+    const totalPointsToAdd = tiklamaHakki * click_timestamps.length;
+
+    user.points += totalPointsToAdd;
+    user.a -= click_timestamps.length;
+    if (user.a < 0) user.a = 0;
+
+    await user.save();
+
+    res.json({ message: 'Tıklama verileri işlendi.', points: user.points, a: user.a });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Sunucu hatası.' });
@@ -314,6 +341,7 @@ app.post('/api/users/:user_id/clicks', async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Sunucu hatası.' });
   }
+
 });
 
 // Middleware: Kullanıcı ban kontrolü
