@@ -77,6 +77,8 @@
         <div class="loading-bar"></div>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <script>
         // Service Worker kaydı ve güncelleme bildirimi
         if ("serviceWorker" in navigator) {
@@ -102,6 +104,9 @@
                 console.error("Service Worker Registration Failed:", error);
             });
         }
+
+        // Telegram Web App API'sini başlat
+        window.Telegram.WebApp.ready();
 
         document.addEventListener("DOMContentLoaded", async () => {
             // Kullanıcı Kaydını yap
@@ -141,7 +146,8 @@
             } catch (error) {
                 console.error('Ban durumu kontrol hatası:', error);
             }
-            
+
+            //Slaytlar
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
 
@@ -299,6 +305,14 @@
             // Tüm kaynaklar yüklendiğinde yönlendirme yap
             window.location.href = "mainpage.html";
         });
+
+        function getTelegramUserId() {
+        return window.Telegram.WebApp.initDataUnsafe.user.id;
+        }
+
+        function getTelegramUsername() {
+            return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+        }
     </script>
 </body>
 </html>
