@@ -22,8 +22,13 @@ var isDragging = false;
 var draggable = true; // from config
 // On touch devices, no actual drag, just tap-based selection.
 
+// Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
 function getTelegramUsername() {
-  return "TGUser_" + Math.floor(Math.random()*1000);
+  return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+}
+
+function getTelegramUserId() {
+  return window.Telegram.WebApp.initDataUnsafe.user.id;
 }
 
 function addMessage(msg) {
@@ -33,7 +38,7 @@ function addMessage(msg) {
 
 function startCountdown() {
   addMessage("Eşleşme aranıyor, lütfen bekleyin...");
-  addMessage("(Burada bir spinner animasyonu olduğunu varsayın)");
+  addMessage("İşlem Devam Ediyor...");
   $("#chatMessages").append('<div id="countdownLine">Kalan süre: 30 sn</div>');
 
   countdownInterval = setInterval(() => {
@@ -69,7 +74,8 @@ function initGame() {
   $("body").append('<img id="draggedPiece" class="piece" />');
   draggedPieceEl = $("#draggedPiece");
 
-  socket.emit("joinGame", { });
+ // Kullanıcıyı backend'e kaydet ve register event'ini tetikle
+  socket.emit('register', { user_id: getTelegramUserId() });
 
   startCountdown();
 
