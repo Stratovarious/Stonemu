@@ -1,17 +1,30 @@
 {
-  "name": "stonemu-chess",
+  "name": "stonemu-app",
   "version": "1.0.0",
-  "description": "Stonemu Chess Game",
+  "description": "Stonemu App Backend",
   "main": "backend/app.js",
   "scripts": {
-    "start": "node backend/app.js"
+    "start": "node backend/app.js",
+    "dev": "nodemon backend/app.js"
+  },
+  "engines": {
+    "node": ">=14.x"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "express": "^4.17.1",
-    "pg": "^8.7.3",
-    "socket.io": "^4.8.1"
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "pg": "^8.11.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.32.1",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   },
   "author": "Stratovarious",
-  "license": "ISC"
+  "license": "STONEMU"
 }
+
