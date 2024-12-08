@@ -1,9 +1,31 @@
 document.addEventListener('DOMContentLoaded', function () {
+
     // Dinamik içerik yüklenecek container
     const container = document.getElementById('container');
 
     // Sayfa yüklendiğinde home.html'i yükle
     loadPage('home.html');
+
+    //Hile uyarı mesajını göster
+    const socket = io('https://stonemu-8bdeedab7930.herokuapp.com');
+
+    socket.on('cheatDetected', (data) => {
+        showCheatWarning(data.message);
+    });
+    
+    function showCheatWarning(message) {
+        // Uyarı mesajını göstermek için DOM manipülasyonu
+        const warningDiv = document.createElement('div');
+        warningDiv.className = 'cheat-warning';
+        warningDiv.textContent = message;
+        document.body.appendChild(warningDiv);
+    
+        // 10 saniye sonra kaldır
+        setTimeout(() => {
+            warningDiv.remove();
+        }, 10000);
+    }
+
 
     // Linklerin tıklanmasını yönet
     function attachNavLinkEventListeners() {
