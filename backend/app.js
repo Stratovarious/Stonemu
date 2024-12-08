@@ -1,9 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const { Client } = require('pg');
+const { Sequelize, Op } = require('sequelize');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const server = http.createServer(app);
@@ -12,26 +14,322 @@ const port = process.env.PORT || 3000;
 // GitHub Pages URL'inizi girin:
 const allowedOrigin = 'https://stratovarious.github.io'; // Örnek URL
 
+// Rate Limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 dakika
+  max: 100, // Her IP için maksimum 100 istek
+  message: 'Çok fazla istek gönderildi, lütfen daha sonra tekrar deneyin.',
+});
+
+app.use('/api/', apiLimiter);
+
+// CORS Ayarları
 app.use(cors({
   origin: allowedOrigin,
   methods: ['GET', 'POST'],
   credentials: true,
 }));
 
-// PostgreSQL Veritabanı Bağlantısı
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
-client.connect(err => {
-  if (err) console.error('Veritabanı bağlantı hatası:', err);
-  else console.log('Veritabanına bağlanıldı.');
-});
+// Body Parser
+app.use(bodyParser.json());
 
+// Veritabanı Bağlantısı ve ORM
+const db = require('./models');
+
+db.sequelize.authenticate()
+  .then(() => {
+    console.log('Veritabanına başarıyla bağlanıldı.');
+  })
+  .catch(err => {
+    console.error('Veritabanı bağlantı hatası:', err);
+  });
+
+db.sequelize.sync()
+  .then(() => {
+    console.log('Veritabanı senkronize edildi.');
+  })
+  .catch(err => {
+    console.error('Veritabanı senkronizasyon hatası:', err);
+  });
+
+// Ana Sayfa
 app.get('/', (req, res) => {
   res.send('Stonemu Backend Çalışıyor!');
 });
 
+// API Endpoint'leri
+
+// Kullanıcı Kayıt/Güncelleme
+app.post('/api/users', async (req, res) => {
+  try {
+    const { user_id, username } = req.body;
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id gerekli.' });
+    }
+
+    const [user, created] = await db.User.findOrCreate({
+      where: { user_id },
+      defaults: { username },
+    });
+
+    if (!created) {
+      // Kullanıcı zaten var, güncelle
+      user.username = username || user.username;
+      await user.save();
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+// Kullanıcının Puanını Alma
+app.get('/api/users/:user_id/points', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const user = await db.User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+    res.json({ points: user.points, a: 5000 }); // 'a' değerini backend'den almanız gerekebilir
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+// Kullanıcının Puanını Güncelleme
+app.post('/api/users/:user_id/points', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { points } = req.body;
+    if (typeof points !== 'number') {
+      return res.status(400).json({ error: 'Geçersiz puan değeri.' });
+    }
+
+    const user = await db.User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    user.points += points;
+    await user.save();
+
+    res.json({ points: user.points });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+// Hile Tespiti Eklenmesi
+app.post('/api/users/:user_id/cheats', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { cheat_type } = req.body;
+    if (!cheat_type) {
+      return res.status(400).json({ error: 'cheat_type gerekli.' });
+    }
+
+    const user = await db.User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    const cheat = await db.Cheat.create({
+      user_id,
+      cheat_type,
+    });
+
+    // Kullanıcının toplam hile sayısını güncelle
+    user.cheat_count += 1;
+
+    // Hile sayısına göre uyarı veya ban
+    if (user.cheat_count >= 3) {
+      user.is_banned = true;
+    }
+
+    await user.save();
+
+    // Uyarı oluştur
+    const warningMessage = user.is_banned
+      ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
+      : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
+
+    await db.Warning.create({
+      user_id,
+      message: warningMessage,
+    });
+
+    // Kullanıcıya WebSocket ile uyarı gönder
+    notifyUserOfCheat(user_id, warningMessage);
+
+    res.json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+// Kullanıcının Banlı Olup Olmadığını Kontrol Etme
+app.get('/api/users/:user_id/is_banned', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const user = await db.User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+    res.json({ is_banned: user.is_banned });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+// Kullanıcının Tıklama Verilerini Alma ve Hile Tespiti Yapma
+app.post('/api/users/:user_id/clicks', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { click_timestamps, click_positions } = req.body;
+
+    if (!Array.isArray(click_timestamps)) {
+      return res.status(400).json({ error: 'Geçersiz veri formatı.' });
+    }
+
+    // Hile tespiti için örnek kurallar:
+    // 1. 3 dakika içinde 1000'den fazla tıklama
+    // 2. 3 saat boyunca aralıksız tıklama
+    // 3. Hep aynı noktaya tıklama
+
+    const user = await db.User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    // 1. 3 dakika içinde 1000'den fazla tıklama
+    const threeMinutesAgo = Date.now() - (3 * 60 * 1000);
+    const recentClicks = click_timestamps.filter(ts => ts >= threeMinutesAgo);
+    if (recentClicks.length > 1000) {
+      // Hile tespit edildi
+      await db.Cheat.create({
+        user_id,
+        cheat_type: 'rapid_clicks',
+      });
+      user.cheat_count += 1;
+
+      // Hile sayısına göre uyarı veya ban
+      if (user.cheat_count >= 3) {
+        user.is_banned = true;
+      }
+
+      await user.save();
+
+      // Uyarı oluştur
+      const warningMessage = user.is_banned
+        ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
+        : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
+
+      await db.Warning.create({
+        user_id,
+        message: warningMessage,
+      });
+
+      // Kullanıcıya WebSocket ile uyarı gönder
+      notifyUserOfCheat(user_id, warningMessage);
+
+      return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
+    }
+
+    // 2. 3 saat boyunca aralıksız tıklama
+    const threeHoursAgo = Date.now() - (3 * 60 * 60 * 1000);
+    const clicksInThreeHours = click_timestamps.filter(ts => ts >= threeHoursAgo);
+    if (clicksInThreeHours.length > (3 * 60 * 60 * 1000) / 10) { // Örneğin, her 10ms'ye bir tıklama
+      await db.Cheat.create({
+        user_id,
+        cheat_type: 'continuous_clicking',
+      });
+      user.cheat_count += 1;
+
+      // Hile sayısına göre uyarı veya ban
+      if (user.cheat_count >= 3) {
+        user.is_banned = true;
+      }
+
+      await user.save();
+
+      // Uyarı oluştur
+      const warningMessage = user.is_banned
+        ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
+        : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
+
+      await db.Warning.create({
+        user_id,
+        message: warningMessage,
+      });
+
+      // Kullanıcıya WebSocket ile uyarı gönder
+      notifyUserOfCheat(user_id, warningMessage);
+
+      return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
+    }
+
+    // 3. Hep aynı noktaya tıklama
+    if (click_positions && click_positions.length > 0) {
+      const uniquePositions = new Set(click_positions);
+      if (uniquePositions.size === 1 && click_positions.length > 100) {
+        await db.Cheat.create({
+          user_id,
+          cheat_type: 'same_position_clicks',
+        });
+        user.cheat_count += 1;
+
+        // Hile sayısına göre uyarı veya ban
+        if (user.cheat_count >= 3) {
+          user.is_banned = true;
+        }
+
+        await user.save();
+
+        // Uyarı oluştur
+        const warningMessage = user.is_banned
+          ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
+          : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
+
+        await db.Warning.create({
+          user_id,
+          message: warningMessage,
+        });
+
+        // Kullanıcıya WebSocket ile uyarı gönder
+        notifyUserOfCheat(user_id, warningMessage);
+
+        return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
+      }
+    }
+
+    res.json({ message: 'Hile tespiti yapılmadı.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Sunucu hatası.' });
+  }
+});
+
+// Middleware: Kullanıcı ban kontrolü
+const checkIfBanned = async (req, res, next) => {
+  const { user_id } = req.params;
+  const user = await db.User.findByPk(user_id);
+  if (user && user.is_banned) {
+    return res.status(403).json({ error: 'Hesabınız banlanmıştır.' });
+  }
+  next();
+};
+
+// Middleware'i kullanın
+app.use('/api/users/:user_id/*', checkIfBanned);
+
+// WebSocket Server
 const io = new Server(server, {
   cors: {
     origin: allowedOrigin,
@@ -39,6 +337,14 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+
+// Function to notify user of cheat via WebSocket
+async function notifyUserOfCheat(user_id, message) {
+  const userSocket = Array.from(io.sockets.sockets.values()).find(s => s.user_id === user_id);
+  if (userSocket) {
+    userSocket.emit('cheatDetected', { message });
+  }
+}
 
 let waitingPlayer = null;
 let games = {};
@@ -470,7 +776,7 @@ class ServerChessLogic {
     return moves.some(mv => mv.from === m.from && mv.to === m.to);
   }
 
-// Burada ... yerine önceki paylaşımlarda tam satranç kurallı chess.js kodundaki fonksiyonlar aynen yerleştirilecek.
+
 // Burada yer kısıtlı olduğu için tüm fonksiyonları tekrar yazmıyorum, lütfen önceki cevaptaki tam `chess.js`
 // kodunu buraya kopyalayın. Aynı mantık. Tüm satranç kuralları uygulanmıştır.
 }
@@ -478,6 +784,12 @@ class ServerChessLogic {
 // Match/bot logic
 io.on('connection', (socket) => {
   console.log('Bir kullanıcı bağlandı:', socket.id);
+
+  // Kullanıcının user_id'sini belirlemek için socket'a ekleyin
+  socket.on('register', async (data) => {
+    const { user_id } = data;
+    socket.user_id = user_id;
+  });
 
   socket.hasMatched = false;
   socket.isBotGame = false;
@@ -498,12 +810,29 @@ io.on('connection', (socket) => {
     }, 30000);
   }
 
-  socket.on('move', (move) => {
+  socket.on('move', async (move) => {
     if (socket.gameId && games[socket.gameId]) {
       let g = games[socket.gameId];
       if (g.chess.turn() === socket.color) {
         let result = g.chess.move(move);
         if (result) {
+          // Puan hesaplama
+          if (g.chess.game_over()) {
+            // Oyuncu kazandıysa
+            if (result.color === socket.color) {
+              const pointsEarned = 100; // Örneğin
+              await db.Game.create({
+                user_id: socket.user_id,
+                game_type: 'chess',
+                points_earned: pointsEarned,
+                claimed: false,
+              });
+              socket.emit("gameOver", { winner: socket.color });
+              // Socket'e puan gönder
+              socket.emit('updatePoints', { points: socket.points + pointsEarned });
+            }
+          }
+
           if (socket.opponent==='bot') {
             setTimeout(()=>botMove(socket.gameId),2000);
           } else {
@@ -519,13 +848,34 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('claimVictory', (data) => {
-    let query = "UPDATE users SET points = points + 100 WHERE user_id = $1";
-    client.query(query, [socket.id], (err) => {
-      if (err) {
-        console.error(err);
+  socket.on('claimVictory', async (data) => {
+    try {
+      const user = await db.User.findByPk(socket.user_id);
+      if (!user) {
+        return;
       }
-    });
+
+      user.points += 100; // Örneğin, kazandığı puan
+      await user.save();
+
+      // Oyun kaydını güncelle
+      const game = await db.Game.findOne({
+        where: {
+          user_id: socket.user_id,
+          game_type: 'chess',
+          claimed: false,
+        },
+      });
+
+      if (game) {
+        game.claimed = true;
+        await game.save();
+      }
+
+      socket.emit('pointsUpdated', { points: user.points });
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   socket.on('botRequest', () => {
@@ -654,6 +1004,17 @@ function endGame(socket,g) {
     }
   }
 }
+
+// Kullanıcıya puan güncellemesini göndermek için
+io.on('connection', (socket) => {
+  // Diğer socket olayları...
+
+  // Kullanıcı kaydını yaparken
+  socket.on('register', async (data) => {
+    const { user_id } = data;
+    socket.user_id = user_id;
+  });
+});
 
 server.listen(port, () => {
   console.log('Sunucu çalışıyor: ' + port);
