@@ -111,8 +111,9 @@
         document.addEventListener("DOMContentLoaded", async () => {
             // Kullanıcı Kaydını yap
             async function registerUser() {
-                const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
-                const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+                const username = getTelegramUsername() || "TestUser"; // Telegram'dan alınan kullanıcı adı
+                const user_id = getTelegramUserId() || "test_user_id"; // Telegram'dan alınan kullanıcı ID
+
 
                 try {
                     const response = await fetch('/api/users', {
@@ -134,7 +135,16 @@
             }
             registerUser();
 
-            const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+            function getTelegramUserId() {
+              if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+                return window.Telegram.WebApp.initDataUnsafe.user.id;
+              } else {
+                console.error("Telegram WebApp API kullanılamıyor.");
+                return null;
+              }
+            }
+
+            const user_id = getTelegramUserId()  || "test_user_id"; // Telegram'dan alınan kullanıcı ID
             try {
                 const response = await fetch(`/api/users/${user_id}/is_banned`);
                 if (response.ok) {
