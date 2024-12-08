@@ -127,19 +127,20 @@ function initGame() {
   startCountdown();
 
   socket.on("assignColor", function (data) {
-    clearInterval(countdownInterval);
-    matchFound = true;
-    addMessage("Eşleşme bulundu!");
-    playerColor = data.color;
-    board.orientation(playerColor);
-    if (playerColor === "white") {
-      addMessage("Renginiz: Beyaz, ilk hamleyi siz yapıyorsunuz.");
-      addMessage("Dokunarak (veya mouse ile) taşınızı seçin ve hamlenizi yapın.");
-    } else {
-      addMessage("Renginiz: Siyah, lütfen rakibinizin hamlesini bekleyiniz.");
-    }
-    gameStarted = true;
-  });
+      clearInterval(countdownInterval);
+      matchFound = true;
+      addMessage("Eşleşme bulundu!");
+      playerColor = data.color.toLowerCase(); // 'white' veya 'black' olarak alın
+      board.orientation(playerColor);
+      if (playerColor === "white") {
+        addMessage("Renginiz: Beyaz, ilk hamleyi siz yapıyorsunuz.");
+        addMessage("Dokunarak (veya mouse ile) taşınızı seçin ve hamlenizi yapın.");
+      } else {
+        addMessage("Renginiz: Siyah, lütfen rakibinizin hamlesini bekleyiniz.");
+      }
+      gameStarted = true;
+    });
+
 
   socket.on("move", function (move) {
     game.move(move);
@@ -259,11 +260,19 @@ function initGame() {
   }
 }
 
+this.highlightValidMoves = function(moves) {
+  clearHighlights();
+  moves.forEach(function(move) {
+    if (squares[move.tf]) squares[move.tf].classList.add("highlight");
+  });
+};
+
+
 function highlightSelectionAndMoves(square) {
   board.clearHighlights();
   // highlight selected piece square with gray
-  $("[data-square='"+square+"']").addClass("selected-square");
-  var moves=game.getValidMoves(square);
+  squares[square].classList.add("selected-square");
+  var moves = game.getValidMoves(square);
   board.highlightValidMoves(moves);
 }
 
