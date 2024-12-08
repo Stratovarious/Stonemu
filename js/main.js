@@ -21,16 +21,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Sayfayı yükle ve container içine yerleştir
-    function loadPage(page) {
-        fetch(page)
-            .then((response) => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Sayfa yüklenemedi.');
-                }
-            })
-            .then((html) => {
+    async function loadPage(page) {
+        try {
+            const response = await fetch(page);
+            if (response.ok) {
+                const html = await response.text();
                 container.innerHTML = html;
                 // Dinamik olarak yüklenen sayfadaki eventleri yeniden bağla
                 attachNavLinkEventListeners();
@@ -42,10 +37,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     attachFriendsEventListeners();
                 }
                 // Diğer sayfalar için benzer kontroller ekleyin
-            })
-            .catch((error) => {
-                console.error('Hata:', error);
-            });
+            } else {
+                throw new Error('Sayfa yüklenemedi.');
+            }
+        } catch (error) {
+            console.error('Hata:', error);
+        }
     }
 
     // İlk başta link eventlerini bağla
@@ -90,27 +87,70 @@ document.addEventListener('DOMContentLoaded', function () {
     adjustScale();
 
     // Home sayfası için eventleri bağlayan fonksiyon
-    function attachHomeEventListeners() {
+    async function attachHomeEventListeners() {
+        const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+        const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
+
+        // Kullanıcıyı backend'e kaydet
+        await registerUser(user_id, username);
+
         // Başlangıç değerleri
         let a = 5000; // Sayaç başlangıç değeri
         const b = 5000; // Sayaç maksimum değeri
         let points = 0; // Puan başlangıç değeri
 
-        // Verileri localStorage'dan yükle
-        function loadData() {
-            const storedData = JSON.parse(localStorage.getItem('gameData'));
-            if (storedData) {
-                a = storedData.a;
-                points = storedData.points;
+        // Verileri backend'den yükle
+        async function loadData() {
+            try {
+                const response = await fetch(`/api/users/${user_id}/points`);
+                if (response.ok) {
+                    const data = await response.json();
+                    a = data.a || 5000; // Backend'de tanımlı ise alın, yoksa varsayılan
+                    points = data.points || 0;
+                    updateCounterDisplay();
+                    updatePointsDisplay();
+                } else {
+                    console.error('Puanlar alınamadı.');
+                }
+            } catch (error) {
+                console.error('Veri çekme hatası:', error);
             }
-            updateCounterDisplay();
-            updatePointsDisplay();
         }
 
-        // Verileri localStorage'a kaydet
-        function saveData() {
-            const data = { a: a, points: points };
-            localStorage.setItem('gameData', JSON.stringify(data));
+        // Verileri backend'e kaydet
+        async function saveData() {
+            try {
+                await fetch(`/api/users/${user_id}/points`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ points }),
+                });
+            } catch (error) {
+                console.error('Veri kaydetme hatası:', error);
+            }
+        }
+
+        // Kullanıcı kaydını yapma
+        async function registerUser(user_id, username) {
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id, username }),
+                });
+
+                if (response.ok) {
+                    console.log('Kullanıcı kaydedildi veya güncellendi.');
+                } else {
+                    console.error('Kullanıcı kaydedilemedi.');
+                }
+            } catch (error) {
+                console.error('Kullanıcı kaydetme hatası:', error);
+            }
         }
 
         // Sayıları binlik ayırıcı ile formatla
@@ -138,31 +178,47 @@ document.addEventListener('DOMContentLoaded', function () {
         function attachFrameClickListener() {
             const frameImage = document.querySelector('.frame img');
             if (frameImage) {
-                frameImage.addEventListener('click', function () {
-                    if (a > 0) {
-                        a -= 1;
-                        points += 1;
-                        updateCounterDisplay();
-                        updatePointsDisplay();
-                        saveData();
-                    }
+                frameImage.addEventListener('click', handleClick);
+            }
+        }
+
+        // Tıklama işleme fonksiyonu
+        async function handleClick() {
+            if (a > 0) {
+                a -= 1;
+                points += 1;
+                updateCounterDisplay();
+                updatePointsDisplay();
+                await saveData();
+
+                // Tıklama verilerini backend'e gönder
+                const clickData = {
+                    click_timestamps: [Date.now()],
+                    click_positions: ['center'], // Mevcut tıklama pozisyonunu ekleyin
+                };
+                await fetch(`/api/users/${user_id}/clicks`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(clickData),
                 });
             }
         }
 
         // Sayaç her 10 saniyede 1 artar
         function startCounterInterval() {
-            setInterval(function () {
+            setInterval(async function () {
                 if (a < b) {
                     a += 1;
                     updateCounterDisplay();
-                    saveData();
+                    await saveData();
                 }
             }, 10000);
         }
 
         // Başlangıç ayarları
-        loadData();
+        await loadData();
         attachFrameClickListener();
         startCounterInterval();
 
