@@ -1,60 +1,60 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     / Telegram Web App API'sini başlat
-if (window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.ready();
-} else {
-    console.error("Telegram WebApp API yüklenemedi.");
-}
-
-// Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
-function getTelegramUsername() {
-  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-    return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
-  } else {
-    console.error("Telegram WebApp API kullanılamıyor.");
-    return "Anonymous";
-  }
-}
-
-function getTelegramUserId() {
-  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-    return window.Telegram.WebApp.initDataUnsafe.user.id;
-  } else {
-    console.error("Telegram WebApp API kullanılamıyor.");
-    return null;
-  }
-}
-
-async function registerUser() {
-  const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
-  const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
-
-  if (!user_id) {
-    console.error("Kullanıcı ID alınamadı.");
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user_id, username }),
-    });
-
-    if (response.ok) {
-        console.log('Kullanıcı kaydedildi veya güncellendi.');
-        // Socket.io ile register event'ini gönder
-        socket.emit('register', { user_id });
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
     } else {
-        console.error('Kullanıcı kaydedilemedi.');
+        console.error("Telegram WebApp API yüklenemedi.");
     }
-  } catch (error) {
-    console.error('Kullanıcı kaydetme hatası:', error);
-  }
-}
+
+    // Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
+    function getTelegramUsername() {
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+      } else {
+        console.error("Telegram WebApp API kullanılamıyor.");
+        return "Anonymous";
+      }
+    }
+    
+    function getTelegramUserId() {
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        return window.Telegram.WebApp.initDataUnsafe.user.id;
+      } else {
+        console.error("Telegram WebApp API kullanılamıyor.");
+        return null;
+      }
+    }
+
+    async function registerUser() {
+      const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
+      const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+    
+      if (!user_id) {
+        console.error("Kullanıcı ID alınamadı.");
+        return;
+      }
+    
+      try {
+        const response = await fetch('/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_id, username }),
+        });
+    
+        if (response.ok) {
+            console.log('Kullanıcı kaydedildi veya güncellendi.');
+            // Socket.io ile register event'ini gönder
+            socket.emit('register', { user_id });
+        } else {
+            console.error('Kullanıcı kaydedilemedi.');
+        }
+      } catch (error) {
+        console.error('Kullanıcı kaydetme hatası:', error);
+      }
+    }
     
     // Dinamik içerik yüklenecek container
     const container = document.getElementById('container');
@@ -123,9 +123,6 @@ async function registerUser() {
         }
     }
 
-    // İlk başta link eventlerini bağla
-    attachNavLinkEventListeners();
-
     // Sayfanın ölçeklenmesini sağlayan fonksiyon
     function adjustScale() {
         const wrapper = document.getElementById('wrapper');
@@ -163,6 +160,9 @@ async function registerUser() {
 
     // Sayfa yüklendiğinde ölçeklendirme yap
     adjustScale();
+
+    // İlk başta link eventlerini bağla
+    attachNavLinkEventListeners();
 
     // Home sayfası için eventleri bağlayan fonksiyon
     async function attachHomeEventListeners() {
@@ -207,27 +207,6 @@ async function registerUser() {
                 });
             } catch (error) {
                 console.error('Veri kaydetme hatası:', error);
-            }
-        }
-
-        // Kullanıcı kaydını yapma
-        async function registerUser() {
-            try {
-                const response = await fetch('/api/users', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ user_id, username }),
-                });
-
-                if (response.ok) {
-                    console.log('Kullanıcı kaydedildi veya güncellendi.');
-                } else {
-                    console.error('Kullanıcı kaydedilemedi.');
-                }
-            } catch (error) {
-                console.error('Kullanıcı kaydetme hatası:', error);
             }
         }
 
@@ -295,11 +274,6 @@ async function registerUser() {
             }, 10000);
         }
 
-        // Başlangıç ayarları
-        await loadData();
-        attachFrameClickListener();
-        startCounterInterval();
-
         // Resimlerin sürüklenmesini ve seçilmesini engelle
         function preventImageDragging() {
             const images = document.querySelectorAll('img');
@@ -321,6 +295,11 @@ async function registerUser() {
         document.addEventListener('selectstart', function (e) {
             e.preventDefault();
         });
+
+        // Başlangıç ayarları
+        await loadData();
+        attachFrameClickListener();
+        startCounterInterval();
     }
 
     // Events sayfası için eventleri bağlayan fonksiyon
@@ -356,6 +335,7 @@ async function registerUser() {
 
         // Öğelerin varlığını kontrol edin
         if (!(overlay && playButton && backButton && slides.length > 0 && prevButton && nextButton && dynamicText && centerContent && events_scrollUp && events_scrollDown)) {
+            console.warn("Events sayfasındaki öğeler bulunamadı.");
             return; // Öğeler bulunamazsa fonksiyondan çık
         }
 
@@ -471,32 +451,49 @@ async function registerUser() {
         const inviteCode ="1234567891012";
         
         // Davet linkini uygun alana ekle
-        document.getElementById("friends_invite_code").innerHTML = `
-            <p>Invite Code:</p>
-            <p>${inviteCode}</p>
-        `;
+        const inviteCodeElement = document.getElementById("friends_invite_code");
+        if (inviteCodeElement) {
+            inviteCodeElement.innerHTML = `
+                <p>Invite Code:</p>
+                <p>${inviteCode}</p>
+            `;
+        } else {
+            console.warn("Invite code elementi bulunamadı.");
+        }
         
         // Copy link button functionality
-        document.getElementById("friends_copy_link_btn").addEventListener("click", function() {
-            navigator.clipboard.writeText(inviteLink+inviteCode).then(() => {
-                alert("Copied!");
+       const copyLinkBtn = document.getElementById("friends_copy_link_btn");
+        if (copyLinkBtn) {
+            copyLinkBtn.addEventListener("click", function () {
+                navigator.clipboard.writeText(inviteLink + inviteCode).then(() => {
+                    alert("Copied!");
+                }).catch((err) => {
+                    console.error('Copy failed: ', err);
+                });
             });
-        });
+        } else {
+            console.warn("Copy link butonu bulunamadı.");
+        }
         
         // Share link button functionality
-        document.getElementById("friends_share_link_btn").addEventListener("click", function() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Invite Link',
-                    text: 'Join me using this link:',
-                    url: inviteLink+inviteCode
-                }).then(() => {
-                    alert("Shared!");
-                }).catch(console.error);
-            } else {
-                alert("Sharing not supported on this device.");
-            }
-        });
+        const shareLinkBtn = document.getElementById("friends_share_link_btn");
+        if (shareLinkBtn) {
+            shareLinkBtn.addEventListener("click", function () {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Invite Link',
+                        text: 'Join me using this link:',
+                        url: inviteLink + inviteCode
+                    }).then(() => {
+                        alert("Shared!");
+                    }).catch(console.error);
+                } else {
+                    alert("Sharing not supported on this device.");
+                }
+            });
+        } else {
+            console.warn("Share link butonu bulunamadı.");
+        }
         
         // Tablo verileri
         const friendsData = [
@@ -511,6 +508,11 @@ async function registerUser() {
         const tableBody = document.querySelector("#friends_table tbody");
         
         function renderTable(sortKey = "userName", sortAsc = true) {
+            if (!tableBody) {
+                console.warn("Friends tablosu bulunamadı.");
+                return;
+            }
+            
             tableBody.innerHTML = "";
         
             const claimData = friendsData.filter((friend) => !friend.claimed);
@@ -564,17 +566,21 @@ async function registerUser() {
         }
         
         // Sıralama başlıklarına tıklama
-        document.querySelectorAll(".sortable").forEach((header) => {
+        const sortableHeaders = document.querySelectorAll(".sortable");
+        sortableHeaders.forEach((header) => {
             let sortAsc = true;
             header.addEventListener("click", () => {
                 const key = header.dataset.key;
                 sortAsc = !sortAsc;
                 renderTable(key, sortAsc);
-        
+
                 document
                     .querySelectorAll(".sortable .sort-icon")
                     .forEach((icon) => (icon.textContent = ""));
-                header.querySelector(".sort-icon").textContent = sortAsc ? "▲" : "▼";
+                const sortIcon = header.querySelector(".sort-icon");
+                if (sortIcon) {
+                    sortIcon.textContent = sortAsc ? "▲" : "▼";
+                }
             });
         });
         
