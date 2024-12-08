@@ -1,5 +1,61 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    / Telegram Web App API'sini başlat
+if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.ready();
+} else {
+    console.error("Telegram WebApp API yüklenemedi.");
+}
+
+// Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
+function getTelegramUsername() {
+  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+    return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+  } else {
+    console.error("Telegram WebApp API kullanılamıyor.");
+    return "Anonymous";
+  }
+}
+
+function getTelegramUserId() {
+  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+    return window.Telegram.WebApp.initDataUnsafe.user.id;
+  } else {
+    console.error("Telegram WebApp API kullanılamıyor.");
+    return null;
+  }
+}
+
+async function registerUser() {
+  const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
+  const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+
+  if (!user_id) {
+    console.error("Kullanıcı ID alınamadı.");
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id, username }),
+    });
+
+    if (response.ok) {
+        console.log('Kullanıcı kaydedildi veya güncellendi.');
+        // Socket.io ile register event'ini gönder
+        socket.emit('register', { user_id });
+    } else {
+        console.error('Kullanıcı kaydedilemedi.');
+    }
+  } catch (error) {
+    console.error('Kullanıcı kaydetme hatası:', error);
+  }
+}
+    
     // Dinamik içerik yüklenecek container
     const container = document.getElementById('container');
 
@@ -114,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
 
         // Kullanıcıyı backend'e kaydet
-        await registerUser(user_id, username);
+        await registerUser();
 
         // Başlangıç değerleri
         let a = 5000; // Sayaç başlangıç değeri
@@ -155,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Kullanıcı kaydını yapma
-        async function registerUser(user_id, username) {
+        async function registerUser() {
             try {
                 const response = await fetch('/api/users', {
                     method: 'POST',
