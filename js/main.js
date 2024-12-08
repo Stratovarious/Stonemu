@@ -185,8 +185,10 @@ document.addEventListener('DOMContentLoaded', function () {
         await registerUser();
 
         // Başlangıç değerleri
-        let a = 5000; // Sayaç başlangıç değeri
-        const b = 5000; // Sayaç maksimum değeri
+        let a = 5000; // Sayaç başlangıç değeri (geçici)
+        let b = 5000; // Sayaç maksimum değeri
+        let dolum_hizi = 10; // Dolum hızı (saniye)
+        let tiklama_hakki = 1; // Her tıklamada eklenen puan
         let points = 0; // Puan başlangıç değeri
 
         // Verileri backend'den yükle
@@ -219,14 +221,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ points }),
+                    body: JSON.stringify({ points, a }),
                 });
-                console.log("Veriler kaydedildi: ", points);
+                console.log("Veriler kaydedildi: ", points, a);
             } catch (error) {
                 console.error('Veri kaydetme hatası:', error);
             }
         }
-
         // Sayıları binlik ayırıcı ile formatla
         function formatNumber(number) {
         try {
