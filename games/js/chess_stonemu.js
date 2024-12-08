@@ -22,13 +22,30 @@ var isDragging = false;
 var draggable = true; // from config
 // On touch devices, no actual drag, just tap-based selection.
 
+// Telegram Web App API'sini başlat
+if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.ready();
+} else {
+    console.error("Telegram WebApp API yüklenemedi.");
+}
+
 // Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
 function getTelegramUsername() {
-  return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+    return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+  } else {
+    console.error("Telegram WebApp API kullanılamıyor.");
+    return "Anonymous";
+  }
 }
 
 function getTelegramUserId() {
-  return window.Telegram.WebApp.initDataUnsafe.user.id;
+  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+    return window.Telegram.WebApp.initDataUnsafe.user.id;
+  } else {
+    console.error("Telegram WebApp API kullanılamıyor.");
+    return null;
+  }
 }
 
 function addMessage(msg) {
@@ -55,6 +72,36 @@ function startCountdown() {
   }, 1000);
 }
 
+async function registerUser() {
+  const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
+  const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
+
+  if (!user_id) {
+    console.error("Kullanıcı ID alınamadı.");
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id, username }),
+    });
+
+    if (response.ok) {
+        console.log('Kullanıcı kaydedildi veya güncellendi.');
+        // Socket.io ile register event'ini gönder
+        socket.emit('register', { user_id });
+    } else {
+        console.error('Kullanıcı kaydedilemedi.');
+    }
+  } catch (error) {
+    console.error('Kullanıcı kaydetme hatası:', error);
+  }
+}
+
 function initGame() {
   var cfg = {
     draggable: !isTouchDevice, 
@@ -75,7 +122,7 @@ function initGame() {
   draggedPieceEl = $("#draggedPiece");
 
  // Kullanıcıyı backend'e kaydet ve register event'ini tetikle
-  socket.emit('register', { user_id: getTelegramUserId() });
+ registerUser();
 
   startCountdown();
 
