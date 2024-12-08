@@ -58,6 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Dinamik içerik yüklenecek container
     const container = document.getElementById('container');
+    if (!container) {
+        console.error("Container elementi bulunamadı.");
+    }
 
     // Sayfa yüklendiğinde home.html'i yükle
     loadPage('home.html');
@@ -105,13 +108,17 @@ document.addEventListener('DOMContentLoaded', function () {
             if (response.ok) {
                 const html = await response.text();
                 container.innerHTML = html;
+                console.log(`${page} yüklendi.`);
                 // Dinamik olarak yüklenen sayfadaki eventleri yeniden bağla
                 attachNavLinkEventListeners();
                 if (page === 'home.html') {
+                    console.log("Home sayfası için event listener'lar bağlanıyor.");
                     attachHomeEventListeners();
                 } else if (page === 'events.html') {
+                    console.log("Events sayfası için event listener'lar bağlanıyor.");
                     attachEventsEventListeners();
                 } else if (page === 'friends.html') {
+                    console.log("Friends sayfası için event listener'lar bağlanıyor.");
                     attachFriendsEventListeners();
                 }
                 // Diğer sayfalar için benzer kontroller ekleyin
@@ -126,6 +133,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Sayfanın ölçeklenmesini sağlayan fonksiyon
     function adjustScale() {
         const wrapper = document.getElementById('wrapper');
+        if (!wrapper) {
+            console.warn("Wrapper elementi bulunamadı. Ölçeklendirme işlemi atlandı.");
+            return;
+        }
 
         // Pencere boyutlarını al
         const windowWidth = window.innerWidth;
@@ -166,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Home sayfası için eventleri bağlayan fonksiyon
     async function attachHomeEventListeners() {
+        console.log("Home sayfası event listener'ları çalışıyor.");
         const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
         const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
 
@@ -187,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     points = data.points || 0;
                     updateCounterDisplay();
                     updatePointsDisplay();
+                    console.log("Veriler yüklendi: ", data);
                 } else {
                     console.error('Puanlar alınamadı.');
                 }
@@ -205,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: JSON.stringify({ points }),
                 });
+                console.log("Veriler kaydedildi: ", points);
             } catch (error) {
                 console.error('Veri kaydetme hatası:', error);
             }
@@ -212,7 +226,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Sayıları binlik ayırıcı ile formatla
         function formatNumber(number) {
-            return number.toLocaleString('tr-TR');
+            try {
+                return number.toLocaleString('tr-TR');
+                console.log("Binlik ayırıcı tamam.");
+            } catch (error) {
+                console.error('Binlik ayırıcı hatası:', error);
+            }
+            
         }
 
         // Sayaç ekranını güncelle
@@ -220,6 +240,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const counterElement = document.querySelector('.counter');
             if (counterElement) {
                 counterElement.textContent = `${formatNumber(a)}/${formatNumber(b)}`;
+                console.log("Sayaç güncellendi:", a, "/", b);
+            } else {
+                console.warn("Sayaç elementi bulunamadı.");
             }
         }
 
@@ -228,6 +251,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const pointsValueElement = document.querySelector('.points-value');
             if (pointsValueElement) {
                 pointsValueElement.textContent = formatNumber(points);
+                console.log("Puan güncellendi:", points);
+            } else {
+                console.warn("Puan değeri elementi bulunamadı.");
             }
         }
 
@@ -236,6 +262,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const frameImage = document.querySelector('.frame img');
             if (frameImage) {
                 frameImage.addEventListener('click', handleClick);
+                console.log("Frame image tıklama event listener'ı eklendi.");
+            } else {
+                console.warn("Frame image elementi bulunamadı.");
             }
         }
 
@@ -253,13 +282,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     click_timestamps: [Date.now()],
                     click_positions: ['center'], // Mevcut tıklama pozisyonunu ekleyin
                 };
-                await fetch(`/api/users/${user_id}/clicks`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(clickData),
-                });
+                try {
+                    const response = await fetch(`/api/users/${user_id}/clicks`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(clickData),
+                    });
+                    if (response.ok) {
+                        console.log("Tıklama verileri gönderildi.");
+                    } else {
+                        console.error("Tıklama verileri gönderilemedi.");
+                    }
+                } catch (error) {
+                    console.error('Tıklama gönderme hatası:', error);
+                }
             }
         }
 
