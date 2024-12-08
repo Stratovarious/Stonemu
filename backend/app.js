@@ -789,6 +789,7 @@ io.on('connection', (socket) => {
   socket.on('register', async (data) => {
     const { user_id } = data;
     socket.user_id = user_id;
+    console.log(`Socket ${socket.id} için user_id: ${user_id}`);
   });
 
   socket.hasMatched = false;
@@ -813,13 +814,14 @@ io.on('connection', (socket) => {
   socket.on('move', async (move) => {
     if (socket.gameId && games[socket.gameId]) {
       let g = games[socket.gameId];
-      if (g.chess.turn() === socket.color) {
+      if (g.chess.turn() === (socket.color === 'white' ? 'w' : 'b')) {
         let result = g.chess.move(move);
         if (result) {
           // Puan hesaplama
           if (g.chess.game_over()) {
             // Oyuncu kazandıysa
-            if (result.color === socket.color) {
+            if ((result.color === 'w' && socket.color === 'white') ||
+                (result.color === 'b' && socket.color === 'black')) {
               const pointsEarned = 100; // Örneğin
               await db.Game.create({
                 user_id: socket.user_id,
