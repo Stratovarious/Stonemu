@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    / Telegram Web App API'sini başlat
+    // Telegram Web App API'sini başlat
     if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.ready();
     } else {
