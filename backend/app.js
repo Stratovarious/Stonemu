@@ -164,7 +164,7 @@ app.post('/api/users/:user_id/cheats', async (req, res) => {
     });
 
     // Kullanıcıya WebSocket ile uyarı gönder
-    notifyUserOfCheat(user_id, warningMessage);
+    await notifyUserOfCheat(user_id, warningMessage);
 
     res.json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
   } catch (error) {
@@ -237,7 +237,7 @@ app.post('/api/users/:user_id/clicks', async (req, res) => {
       });
 
       // Kullanıcıya WebSocket ile uyarı gönder
-      notifyUserOfCheat(user_id, warningMessage);
+      await notifyUserOfCheat(user_id, warningMessage);
 
       return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
     }
@@ -270,7 +270,7 @@ app.post('/api/users/:user_id/clicks', async (req, res) => {
       });
 
       // Kullanıcıya WebSocket ile uyarı gönder
-      notifyUserOfCheat(user_id, warningMessage);
+      await notifyUserOfCheat(user_id, warningMessage);
 
       return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
     }
@@ -303,7 +303,7 @@ app.post('/api/users/:user_id/clicks', async (req, res) => {
         });
 
         // Kullanıcıya WebSocket ile uyarı gönder
-        notifyUserOfCheat(user_id, warningMessage);
+        await notifyUserOfCheat(user_id, warningMessage);
 
         return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
       }
