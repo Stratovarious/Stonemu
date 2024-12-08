@@ -997,24 +997,24 @@ function assignBot(socket) {
 }
 
 function botMove(gameId) {
-  let g=games[gameId];
-  if(!g)return;
-  if(g.chess.game_over())return;
-  let moves=g.chess.getAllValidMovesForTurn();
-  if(moves.length===0)return;
-  let move=moves[Math.floor(Math.random()*moves.length)];
-  let result=g.chess.move(move);
-  if(result) {
-    let playerSocketId=gameId.split('_')[1];
-    let playerSocket=Array.from(io.sockets.sockets.values()).find(s=>s.id===playerSocketId);
-    if(playerSocket) {
-      playerSocket.emit('move',move);
+  let g = games[gameId];
+  if (!g) return;
+  if (g.chess.game_over()) return;
+  let moves = g.chess.getAllValidMovesForTurn();
+  if (moves.length === 0) return;
+  let move = moves[Math.floor(Math.random() * moves.length)];
+  let result = g.chess.move(move);
+  if (result) {
+    let playerSocketId = gameId.split('_')[1];
+    let playerSocket = Array.from(io.sockets.sockets.values()).find(s => s.id === playerSocketId);
+    if (playerSocket) {
+      playerSocket.emit('move', move);
     }
-    if(g.chess.game_over() && playerSocket) {
-      endGame(playerSocket,g);
+    if (g.chess.game_over()) {
+      endGame(playerSocket, g);
     } else {
-      if(playerSocket && g.chess.turn()!==playerSocket.color) {
-        setTimeout(()=>botMove(gameId),2000);
+      if (playerSocket && g.chess.turn() !== playerSocket.color) {
+        setTimeout(() => botMove(gameId), 2000);
       }
     }
   }
