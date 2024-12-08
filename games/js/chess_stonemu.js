@@ -284,8 +284,8 @@ function onDragStart(source, piece) {
     return false;
   }
   if (
-    (playerColor === "white" && piece.search(/^w/) !== -1) ||
-    (playerColor === "black" && piece.search(/^b/) !== -1)
+    (playerColor === "white" && piece.search(/^b/) !== -1) ||
+    (playerColor === "black" && piece.search(/^w/) !== -1)
   ) {
     return false;
   }
