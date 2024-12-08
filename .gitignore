@@ -1,2 +1,7 @@
 /backend/
 /js/
+/img/
+/css/
+/games/
+Procfile
+*.html
