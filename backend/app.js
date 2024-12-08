@@ -85,7 +85,7 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
-// Kullanıcının Puanını Alma
+// Kullanıcının Puanını Alma ve 'a' Güncelleme
 app.get('/api/users/:user_id/points', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -93,6 +93,20 @@ app.get('/api/users/:user_id/points', async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
+
+    // Geçen süreyi hesapla
+    const now = Date.now();
+    const lastUpdate = new Date(user.last_a_update).getTime();
+    const elapsedSeconds = Math.floor((now - lastUpdate) / 1000);
+    const dolumHizi = user.dolum_hizi || 10;
+    const aIncrement = Math.floor(elapsedSeconds / dolumHizi);
+    if (aIncrement > 0) {
+      user.a += aIncrement;
+      if (user.a > user.b) user.a = user.b;
+      user.last_a_update = new Date(lastUpdate + aIncrement * dolumHizi * 1000);
+      await user.save();
+    }
+
     res.json({ 
       points: user.points, 
       a: user.a, 
@@ -105,6 +119,7 @@ app.get('/api/users/:user_id/points', async (req, res) => {
     res.status(500).json({ error: 'Sunucu hatası.' });
   }
 });
+
 
 // Kullanıcının Puanını ve 'a' değerini Güncelleme
 app.post('/api/users/:user_id/points', async (req, res) => {
