@@ -196,23 +196,6 @@ app.post('/api/users/:user_id/cheats', async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Sunucu hatası.' });
   }
-
-  // Puan Güncellemesi
-    // Her tıklama puan ekleniyor
-    const tiklamaHakki = user.tiklama_hakki || 1;
-    const totalPointsToAdd = tiklamaHakki * click_timestamps.length;
-
-    user.points += totalPointsToAdd;
-    user.a -= click_timestamps.length;
-    if (user.a < 0) user.a = 0;
-
-    await user.save();
-
-    res.json({ message: 'Tıklama verileri işlendi.', points: user.points, a: user.a });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Sunucu hatası.' });
-  }
 });
 
 // Kullanıcının Banlı Olup Olmadığını Kontrol Etme
@@ -351,12 +334,26 @@ app.post('/api/users/:user_id/clicks', async (req, res) => {
       }
     }
 
+    // Hile tespiti yapılmadı, puanları güncelle
+    const tiklamaHakki = user.tiklama_hakki || 1;
+    const totalPointsToAdd = tiklamaHakki * click_timestamps.length;
+
+    user.points += totalPointsToAdd;
+    user.a -= click_timestamps.length;
+    
+    if (user.a < 0) user.a = 0;
+      await user.save();
+      res.json({ message: 'Tıklama verileri işlendi.', points: user.points, a: user.a });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Sunucu hatası.' });
+    }
+
     res.json({ message: 'Hile tespiti yapılmadı.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Sunucu hatası.' });
   }
-
 });
 
 // Middleware: Kullanıcı ban kontrolü
