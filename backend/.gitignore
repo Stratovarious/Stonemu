@@ -1,0 +1,4 @@
+# .gitignore
+.env
+app.js
+sql/initialize.sql
