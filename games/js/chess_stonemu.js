@@ -2,10 +2,12 @@
 
 "use strict";
 
+const backendURL = 'https://stonemu-8bdeedab7930.herokuapp.com'; // Backend URL'i tanımlandı
+
 var board;
 var game = new Chess();
-// Backend URL (Heroku)
-var socket = io('https://stonemu-8bdeedab7930.herokuapp.com');
+// Backend URL (Heroku) zaten tanımlandı, aşağıda tekrar tanımlamıyoruz
+var socket = io(`${backendURL}`); // Socket.io URL'i güncellendi
 var playerColor;
 var gameStarted = false;
 var matchFound = false;
@@ -56,7 +58,7 @@ function addMessage(msg) {
 function startCountdown() {
   addMessage("Eşleşme aranıyor, lütfen bekleyin...");
   addMessage("İşlem Devam Ediyor...");
-  $("#chatMessages").append('<div id="countdownLine">Kalan süre: 30 sn</div>');
+  $("#chatMessages").append('<div id="countdownLine">Kalan süre: 5 sn</div>');
 
   countdownInterval = setInterval(() => {
     countdown--;
@@ -82,7 +84,7 @@ async function registerUser() {
   }
 
   try {
-    const response = await fetch('/api/users', {
+    const response = await fetch(`${backendURL}/api/users`, { // Backend URL'i kullanıldı
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -127,20 +129,19 @@ function initGame() {
   startCountdown();
 
   socket.on("assignColor", function (data) {
-      clearInterval(countdownInterval);
-      matchFound = true;
-      addMessage("Eşleşme bulundu!");
-      playerColor = data.color.toLowerCase(); // 'white' veya 'black' olarak alın
-      board.orientation(playerColor);
-      if (playerColor === "white") {
-        addMessage("Renginiz: Beyaz, ilk hamleyi siz yapıyorsunuz.");
-        addMessage("Dokunarak (veya mouse ile) taşınızı seçin ve hamlenizi yapın.");
-      } else {
-        addMessage("Renginiz: Siyah, lütfen rakibinizin hamlesini bekleyiniz.");
-      }
-      gameStarted = true;
-    });
-
+    clearInterval(countdownInterval);
+    matchFound = true;
+    addMessage("Eşleşme bulundu!");
+    playerColor = data.color;
+    board.orientation(playerColor);
+    if (playerColor === "white") {
+      addMessage("Renginiz: Beyaz, ilk hamleyi siz yapıyorsunuz.");
+      addMessage("Dokunarak (veya mouse ile) taşınızı seçin ve hamlenizi yapın.");
+    } else {
+      addMessage("Renginiz: Siyah, lütfen rakibinizin hamlesini bekleyiniz.");
+    }
+    gameStarted = true;
+  });
 
   socket.on("move", function (move) {
     game.move(move);
@@ -260,19 +261,11 @@ function initGame() {
   }
 }
 
-this.highlightValidMoves = function(moves) {
-  clearHighlights();
-  moves.forEach(function(move) {
-    if (squares[move.tf]) squares[move.tf].classList.add("highlight");
-  });
-};
-
-
 function highlightSelectionAndMoves(square) {
   board.clearHighlights();
   // highlight selected piece square with gray
-  squares[square].classList.add("selected-square");
-  var moves = game.getValidMoves(square);
+  $("[data-square='"+square+"']").addClass("selected-square");
+  var moves=game.getValidMoves(square);
   board.highlightValidMoves(moves);
 }
 
@@ -392,12 +385,11 @@ function handleGameOver() {
 function showGameOverScreen(message, won) {
   var overlay = document.createElement("div");
   overlay.id = "gameOverOverlay";
-  overlay.innerHTML = `
-    <div id="gameOverMessage">${message}</div>
+  overlay.innerHTML = 
+     `<div id="gameOverMessage">${message}</div>
     ${won ? '<button id="claimButton">Claim</button>' : ''}
     <button id="newGameButton">New Game</button>
-    <button id="closeButton">Close</button>
-  `;
+    <button id="closeButton">Close</button>`;
   document.body.appendChild(overlay);
 
   if (won) {
