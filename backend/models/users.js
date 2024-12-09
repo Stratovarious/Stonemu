@@ -1,3 +1,5 @@
+// models/users.js
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     user_id: {
@@ -11,19 +13,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    a: { // Tıklama hakkı
+    a: { // Click rights
       type: DataTypes.INTEGER,
       defaultValue: 5000,
     },
-    b: { // Maksimum tıklama hakkı
+    b: { // Maximum click rights
       type: DataTypes.INTEGER,
       defaultValue: 5000,
     },
-    dolum_hizi: { // Dolum hızı (saniye cinsinden)
+    dolum_hizi: { // Refill speed (in seconds)
       type: DataTypes.INTEGER,
       defaultValue: 10,
     },
-    tiklama_hakki: { // Her tıklamada eklenen puan
+    tiklama_hakki: { // Points added per click
       type: DataTypes.INTEGER,
       defaultValue: 1,
     },
@@ -34,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
     is_banned: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    last_a_update: { // Added as per SQL schema
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   }, {
     tableName: 'users',
