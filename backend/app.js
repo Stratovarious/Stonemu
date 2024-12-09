@@ -929,13 +929,34 @@ function botMove(gameId) {
   if (g.chess.game_over()) return;
   let moves = g.chess.getAllValidMovesForTurn();
   if (moves.length === 0) return;
-  let move = moves[Math.floor(Math.random() * moves.length)];
-  let result = g.chess.move(move);
+
+  // Basit bir değerlendirme fonksiyonu: En fazla taş yakalama
+  let bestMove = null;
+  let maxCaptures = -1;
+
+  for (let move of moves) {
+    let tempChess = new ServerChessLogic();
+    tempChess.loadFen(g.chess.fen());
+    let result = tempChess.move(move);
+    if (result && result.captured) {
+      if (maxCaptures < 1) {
+        maxCaptures = 1;
+        bestMove = move;
+      }
+    }
+  }
+
+  // Eğer herhangi bir taş yakalama hamlesi yoksa rastgele hamle seç
+  if (!bestMove) {
+    bestMove = moves[Math.floor(Math.random() * moves.length)];
+  }
+
+  let result = g.chess.move(bestMove);
   if (result) {
     let playerSocketId = gameId.split('_')[1];
     let playerSocket = io.sockets.sockets.get(playerSocketId);
     if (playerSocket) {
-      playerSocket.emit('move', move);
+      playerSocket.emit('move', bestMove);
     }
     if (g.chess.game_over()) {
       endGame(playerSocket, g);
