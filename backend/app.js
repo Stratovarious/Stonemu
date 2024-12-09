@@ -82,7 +82,10 @@ app.get('/', (req, res) => {
 app.post('/api/users', async (req, res) => {
   try {
     const { user_id, username } = req.body;
+    console.log("Received POST /api/users with data:", req.body);
+
     if (!user_id) {
+      console.error("user_id eksik.");
       return res.status(400).json({ error: 'user_id gerekli.' });
     }
 
@@ -91,15 +94,19 @@ app.post('/api/users', async (req, res) => {
       defaults: { username },
     });
 
-    if (!created) {
+    if (created) {
+      console.log(`Yeni kullanıcı oluşturuldu: ${user_id} - ${username}`);
+    } else {
+      console.log(`Kullanıcı güncellendi: ${user_id} - ${username}`);
       // User exists, update
       user.username = username || user.username;
       await user.save();
+      console.log(`Kullanıcı kaydedildi: ${user_id} - ${user.username}`);
     }
 
     res.json(user);
   } catch (error) {
-    console.error(error);
+    console.error("POST /api/users hata:", error);
     res.status(500).json({ error: 'Sunucu hatası.' });
   }
 });
