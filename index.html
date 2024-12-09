@@ -118,14 +118,16 @@
             // Telegram Web App API'sini başlat
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.ready();
+                console.log("Telegram WebApp ready.");
+                console.log("Telegram User:", window.Telegram.WebApp.user);
             } else {
                 console.error("Telegram WebApp API yüklenemedi.");
             }
 
             // Telegram Kullanıcı Fonksiyonları
             function getTelegramUsername() {
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-                    return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.user) {
+                    return window.Telegram.WebApp.user.username || "Anonymous";
                 } else {
                     console.error("Telegram WebApp API kullanılamıyor.");
                     return "Anonymous";
@@ -133,8 +135,8 @@
             }
             
             function getTelegramUserId() {
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-                    return window.Telegram.WebApp.initDataUnsafe.user.id;
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.user) {
+                    return window.Telegram.WebApp.user.id;
                 } else {
                     console.error("Telegram WebApp API kullanılamıyor.");
                     return null;
@@ -142,10 +144,18 @@
             }
 
             // Kullanıcı Kaydını yap
+           // Kullanıcı Kaydını yap
             async function registerUser() {
                 const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
                 const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
-
+            
+                console.log("Registering user:", { user_id, username });
+            
+                if (!user_id) {
+                    console.error("Kullanıcı ID alınamadı.");
+                    return;
+                }
+            
                 try {
                     const response = await fetch(`${backendURL}/api/users`, {
                         method: 'POST',
@@ -154,32 +164,41 @@
                         },
                         body: JSON.stringify({ user_id, username }),
                     });
-
+            
                     if (response.ok) {
                         console.log('Kullanıcı kaydedildi veya güncellendi.');
                         // Socket.io ile register event'ini gönder
                         socket.emit('register', { user_id });
                     } else {
-                        console.error('Kullanıcı kaydedilemedi.');
+                        console.error('Kullanıcı kaydedilemedi. Durum Kodu:', response.status);
+                        const errorData = await response.json();
+                        console.error('Hata Mesajı:', errorData);
                     }
                 } catch (error) {
                     console.error('Kullanıcı kaydetme hatası:', error);
                 }
             }
 
+
             await registerUser(); // registerUser fonksiyonunu bekleyin
 
             const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
-            try {
-                const response = await fetch(`${backendURL}/api/users/${user_id}/is_banned`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.is_banned) {
-                        window.location.href = 'banned.html';
+            if (user_id) {
+                try {
+                    const response = await fetch(`${backendURL}/api/users/${user_id}/is_banned`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.is_banned) {
+                            window.location.href = 'banned.html';
+                        }
+                    } else {
+                        console.error('Ban durumu kontrol edilemedi. Durum Kodu:', response.status);
                     }
+                } catch (error) {
+                    console.error('Ban durumu kontrol hatası:', error);
                 }
-            } catch (error) {
-                console.error('Ban durumu kontrol hatası:', error);
+            } else {
+                console.error('Geçerli bir kullanıcı ID bulunamadı.');
             }
             
             const slides = document.querySelectorAll(".slide");
