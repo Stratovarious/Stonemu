@@ -27,10 +27,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
-        is_banned: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
+        // is_banned alanını kaldırdık
     }, {
         tableName: 'cheats',
         timestamps: false,
