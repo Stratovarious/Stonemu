@@ -231,7 +231,7 @@
                                     res();
                                 };
                                 element.onerror = () => {
-                                    console.error(Error loading `${resource}`);
+                                    console.error(Error loading ${resource});
                                     loadedResources++;
                                     updateLoadingBar();
                                     res();
