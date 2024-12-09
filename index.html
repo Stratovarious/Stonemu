@@ -77,8 +77,9 @@
         <div class="loading-bar"></div>
     </div>
 
-    <!-- socket.io  -->
-    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+	<!-- socket.io  -->
+	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+	
 	<!-- Telegram Web App API -->
 	<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -110,33 +111,33 @@
             }).catch((error) => {
                 console.error("Service Worker Registration Failed:", error);
             });
-        }
+        };
 
         document.addEventListener("DOMContentLoaded", async () => {
 		// Telegram Web App API'sini başlat
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-        } else {
-            console.error("Telegram WebApp API yüklenemedi.");
-        }
-        // Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
-        function getTelegramUsername() {
-          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-            return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
-          } else {
-            console.error("Telegram WebApp API kullanılamıyor.");
-            return "Anonymous";
-          }
-        }
+	        if (window.Telegram && window.Telegram.WebApp) {
+	            window.Telegram.WebApp.ready();
+	        } else {
+	            console.error("Telegram WebApp API yüklenemedi.");
+	        }
+	        // Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
+	        function getTelegramUsername() {
+	          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+	            return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+	          } else {
+	            console.error("Telegram WebApp API kullanılamıyor.");
+	            return "Anonymous";
+	          }
+        	}
             
-	    function getTelegramUserId() {
-          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-            return window.Telegram.WebApp.initDataUnsafe.user.id;
-          } else {
-            console.error("Telegram WebApp API kullanılamıyor.");
-            return null;
-          }
-        }
+	    	function getTelegramUserId() {
+	          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+	            return window.Telegram.WebApp.initDataUnsafe.user.id;
+	          } else {
+	            console.error("Telegram WebApp API kullanılamıyor.");
+	            return null;
+	          }
+	        }
 
             // Kullanıcı Kaydını yap
             async function registerUser() {
@@ -212,7 +213,7 @@
                 const timeProgress = Math.min(elapsedTime / minDisplayTime, 1);
                 const resourceProgress = loadedResources / totalResources;
                 const progress = Math.min(timeProgress, resourceProgress);
-                loadingBar.style.width = ${progress * 100}%;
+                loadingBar.style.width = `${progress * 100}%`;
             };
 
             // Kaynakları preload eden fonksiyon
@@ -230,7 +231,7 @@
                                     res();
                                 };
                                 element.onerror = () => {
-                                    console.error(Error loading ${resource});
+                                    console.error(Error loading `${resource}`);
                                     loadedResources++;
                                     updateLoadingBar();
                                     res();
@@ -287,54 +288,54 @@
                                 });
                             }
                         });
-                    });
+                    };
 
                     Promise.all(promises).then(() => {
                         resolve();
                     });
-                });
-            };
+                
+           
 
-            const startSlideshow = () => {
-                let currentIndex = 0;
+		    const startSlideshow = () => {
+			let currentIndex = 0;
+			
+			const showSlide = (index) => {
+			slides.forEach((slide, i) => {
+				slide.classList.toggle("active", i === index);
+				});
+			};
+	
+			showSlide(currentIndex);
+			const slideshowInterval = setInterval(() => {
+			    currentIndex = (currentIndex + 1) % slides.length;
+			    showSlide(currentIndex);
+			}, 2000);
+	            };
 
-                const showSlide = (index) => {
-                    slides.forEach((slide, i) => {
-                        slide.classList.toggle("active", i === index);
-                    });
-                };
+	            // Slayt gösterisini başlat
+	            startSlideshow();
 
-                showSlide(currentIndex);
-                const slideshowInterval = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % slides.length;
-                    showSlide(currentIndex);
-                }, 2000);
-            };
+	            // Yükleme çubuğunu düzenli aralıklarla güncelle
+	            const loadingInterval = setInterval(() => {
+	                updateLoadingBar();
+	            }, 100);
 
-            // Slayt gösterisini başlat
-            startSlideshow();
+	            // Kaynakları yükle
+	            await preloadResources();
 
-            // Yükleme çubuğunu düzenli aralıklarla güncelle
-            const loadingInterval = setInterval(() => {
-                updateLoadingBar();
-            }, 100);
+	            // En az 6 saniye bekle
+	            const elapsedTime = Date.now() - startTime;
+	            if (elapsedTime < minDisplayTime) {
+	                await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
+	            }
 
-            // Kaynakları yükle
-            await preloadResources();
+	            // Yükleme çubuğunu son kez güncelle ve interval'i temizle
+	            updateLoadingBar();
+	            clearInterval(loadingInterval);
 
-            // En az 6 saniye bekle
-            const elapsedTime = Date.now() - startTime;
-            if (elapsedTime < minDisplayTime) {
-                await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
-            }
-
-            // Yükleme çubuğunu son kez güncelle ve interval'i temizle
-            updateLoadingBar();
-            clearInterval(loadingInterval);
-
-            // Tüm kaynaklar yüklendiğinde yönlendirme yap
-            window.location.href = "mainpage.html";
-        });
+	            // Tüm kaynaklar yüklendiğinde yönlendirme yap
+	            window.location.href = "mainpage.html";
+        	});
     </script>
 </body>
 </html>
