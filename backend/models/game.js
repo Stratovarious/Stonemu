@@ -1,4 +1,6 @@
-module.exports = (sequelize, DataTypes) => {
+// models/game.js
+
+module.exports = (sequelize, DataTypes) => { 
   const Game = sequelize.define('Game', {
     game_id: {
       type: DataTypes.INTEGER,
