@@ -77,9 +77,16 @@
         <div class="loading-bar"></div>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- socket.io  -->
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+	<!-- Telegram Web App API -->
+	<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <script>
+
+        // Backend URL'ini tanımla
+        const backendURL = 'https://stonemu-8bdeedab7930.herokuapp.com';
+
         // Service Worker kaydı ve güncelleme bildirimi
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("js/sw.js").then((registration) => {
@@ -105,48 +112,62 @@
             });
         }
 
-        // Telegram Web App API'sini başlat
-        window.Telegram.WebApp.ready();
-
         document.addEventListener("DOMContentLoaded", async () => {
+		// Telegram Web App API'sini başlat
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+        } else {
+            console.error("Telegram WebApp API yüklenemedi.");
+        }
+        // Güncellenmiş getTelegramUsername ve getTelegramUserId fonksiyonları
+        function getTelegramUsername() {
+          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+            return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
+          } else {
+            console.error("Telegram WebApp API kullanılamıyor.");
+            return "Anonymous";
+          }
+        }
+            
+	    function getTelegramUserId() {
+          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+            return window.Telegram.WebApp.initDataUnsafe.user.id;
+          } else {
+            console.error("Telegram WebApp API kullanılamıyor.");
+            return null;
+          }
+        }
+
             // Kullanıcı Kaydını yap
             async function registerUser() {
-                const username = getTelegramUsername() || "TestUser"; // Telegram'dan alınan kullanıcı adı
-                const user_id = getTelegramUserId() || "test_user_id"; // Telegram'dan alınan kullanıcı ID
-
+                const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
+                const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
 
                 try {
-                    const response = await fetch('/api/users', {
+                    const response = await fetch(`${backendURL}/api/users`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                            body: JSON.stringify({ user_id, username }),
+                        body: JSON.stringify({ user_id, username }),
                     });
 
-                if (response.ok) {
-                    console.log('Kullanıcı kaydedildi veya güncellendi.');
-                } else {
-                    console.error('Kullanıcı kaydedilemedi.');
+                    if (response.ok) {
+                        console.log('Kullanıcı kaydedildi veya güncellendi.');
+                        // Socket.io ile register event'ini gönder
+                        socket.emit('register', { user_id });
+                    } else {
+                        console.error('Kullanıcı kaydedilemedi.');
                     }
                 } catch (error) {
                     console.error('Kullanıcı kaydetme hatası:', error);
                 }
             }
-            registerUser();
+            await registerUser(); // registerUser fonksiyonunu bekleyin
 
-            function getTelegramUserId() {
-              if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-                return window.Telegram.WebApp.initDataUnsafe.user.id;
-              } else {
-                console.error("Telegram WebApp API kullanılamıyor.");
-                return null;
-              }
-            }
-
-            const user_id = getTelegramUserId()  || "test_user_id"; // Telegram'dan alınan kullanıcı ID
+            const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
             try {
-                const response = await fetch(`/api/users/${user_id}/is_banned`);
+                const response = await fetch(`${backendURL}/api/users/${user_id}/is_banned`);
                 if (response.ok) {
                     const data = await response.json();
                     if (data.is_banned) {
@@ -156,8 +177,7 @@
             } catch (error) {
                 console.error('Ban durumu kontrol hatası:', error);
             }
-
-            //Slaytlar
+            
             const slides = document.querySelectorAll(".slide");
             const loadingBar = document.querySelector(".loading-bar");
 
@@ -192,7 +212,7 @@
                 const timeProgress = Math.min(elapsedTime / minDisplayTime, 1);
                 const resourceProgress = loadedResources / totalResources;
                 const progress = Math.min(timeProgress, resourceProgress);
-                loadingBar.style.width = `${progress * 100}%`;
+                loadingBar.style.width = ${progress * 100}%;
             };
 
             // Kaynakları preload eden fonksiyon
@@ -210,7 +230,7 @@
                                     res();
                                 };
                                 element.onerror = () => {
-                                    console.error(`Error loading ${resource}`);
+                                    console.error(Error loading ${resource});
                                     loadedResources++;
                                     updateLoadingBar();
                                     res();
@@ -225,7 +245,7 @@
                                     res();
                                 };
                                 element.onerror = () => {
-                                    console.error(`Error loading ${resource}`);
+                                    console.error(Error loading ${resource});
                                     loadedResources++;
                                     updateLoadingBar();
                                     res();
@@ -240,7 +260,7 @@
                                     res();
                                 };
                                 element.onerror = () => {
-                                    console.error(`Error loading ${resource}`);
+                                    console.error(Error loading ${resource});
                                     loadedResources++;
                                     updateLoadingBar();
                                     res();
@@ -254,13 +274,13 @@
                                         updateLoadingBar();
                                         res();
                                     } else {
-                                        console.error(`Failed to load ${resource}`);
+                                        console.error(Failed to load ${resource});
                                         loadedResources++;
                                         updateLoadingBar();
                                         res();
                                     }
                                 }).catch((error) => {
-                                    console.error(`Error loading ${resource}:`, error);
+                                    console.error(Error loading ${resource}:, error);
                                     loadedResources++;
                                     updateLoadingBar();
                                     res();
@@ -315,14 +335,6 @@
             // Tüm kaynaklar yüklendiğinde yönlendirme yap
             window.location.href = "mainpage.html";
         });
-
-        function getTelegramUserId() {
-        return window.Telegram.WebApp.initDataUnsafe.user.id;
-        }
-
-        function getTelegramUsername() {
-            return window.Telegram.WebApp.initDataUnsafe.user.username || "Anonymous";
-        }
     </script>
 </body>
 </html>
