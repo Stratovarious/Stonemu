@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    // Backend URL'ini tanımla
+    const backendURL = 'https://stonemu-8bdeedab7930.herokuapp.com';
+
     // Telegram Web App API'sini başlat
     if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.ready();
@@ -26,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+
     async function registerUser() {
       const username = getTelegramUsername() || "TestUser"; // Telegram'dan alınan kullanıcı adı
       const user_id = getTelegramUserId() || "test_user_id"; // Telegram'dan alınan kullanıcı ID
@@ -36,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     
       try {
-        const response = await fetch('https://stonemu-8bdeedab7930.herokuapp.com/api/users', { // API URL'sini doğru şekilde belirleyin
+        const response = await fetch(`${backendURL}/api/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,32 +66,29 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error("Container elementi bulunamadı.");
     }
 
-    // Sayaç ve Puanlar için başlangıç değerleri
-    let a = 5000; // Sayaç başlangıç değeri (geçici)
-    let b = 5000; // Sayaç maksimum değeri
-    let dolum_hizi = 10; // Dolum hızı (saniye)
-    let tiklama_hakki = 1; // Her tıklamada eklenen puan
-    let points = 0; // Puan başlangıç değeri
+    // Sayfa yüklendiğinde home.html'i yükle
+    loadPage('home.html');
 
-    // Socket.io Client
-    const socket = io('https://stonemu-8bdeedab7930.herokuapp.com'); // API URL'sini doğru şekilde belirleyin
+    //Hile uyarı mesajını göster
+    const socket = io(`${backendURL}`);
 
     socket.on('cheatDetected', (data) => {
         showCheatWarning(data.message);
     });
-
+    
     function showCheatWarning(message) {
         // Uyarı mesajını göstermek için DOM manipülasyonu
         const warningDiv = document.createElement('div');
         warningDiv.className = 'cheat-warning';
         warningDiv.textContent = message;
         document.body.appendChild(warningDiv);
-
+    
         // 10 saniye sonra kaldır
         setTimeout(() => {
             warningDiv.remove();
         }, 10000);
     }
+
 
     // Linklerin tıklanmasını yönet
     function attachNavLinkEventListeners() {
@@ -187,9 +188,164 @@ document.addEventListener('DOMContentLoaded', function () {
         // Kullanıcıyı backend'e kaydet
         await registerUser();
 
-        // Verileri backend'den yükle
-        await loadData();
+        // Başlangıç değerleri
+        let a; // = 5000; // Sayaç başlangıç değeri (geçici)
+        let b; // = 5000; // Sayaç maksimum değeri
+        let dolum_hizi; // = 10; // Dolum hızı (saniye)
+        let tiklama_hakki;// = 1; // Her tıklamada eklenen puan
+        let points; //= 0; // Puan başlangıç değeri
 
+        // Verileri backend'den yükle
+        async function loadData() {
+            try {
+                const response = await fetch(`${backendURL}/api/users/${user_id}/points`);
+                if (response.ok) {
+                    const data = await response.json();
+                    a = data.a || 5000; // Backend'de tanımlı ise alın, yoksa varsayılan
+                    b = data.b || 5000; // Backend'de tanımlı ise alın, yoksa varsayılan
+                    dolum_hizi = data.dolum_hizi || 10; // 10 saniye varsayılan
+                    tiklama_hakki = data.tiklama_hakki || 1; // Her tıklamada eklenen puan
+                    points = data.points || 0;
+                    updateCounterDisplay();
+                    updatePointsDisplay();
+                    console.log("Veriler yüklendi: ", data);
+                } else {
+                    console.error('Puanlar alınamadı.');
+                }
+            } catch (error) {
+                console.error('Veri çekme hatası:', error);
+            }
+        }
+
+        // Verileri backend'e kaydet
+        async function saveData() {
+            try {
+               await fetch(`${backendURL}/api/users/${user_id}/points`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ points, a }),
+                });
+                console.log("Veriler kaydedildi: ", points, a);
+            } catch (error) {
+                console.error('Veri kaydetme hatası:', error);
+            }
+        }
+        // Sayıları binlik ayırıcı ile formatla
+        function formatNumber(number) {
+        try {
+            const formatted = number.toLocaleString('tr-TR');
+            console.log("Binlik ayırıcı tamam.");
+            return formatted;
+            } catch (error) {
+                console.error('Binlik ayırıcı hatası:', error);
+                return number;
+                }
+            }
+
+
+        // Sayaç ekranını güncelle
+        function updateCounterDisplay() {
+            const counterElement = document.querySelector('.counter');
+            if (counterElement) {
+                counterElement.textContent = `${formatNumber(a)}/${formatNumber(b)}`;
+                console.log("Sayaç güncellendi:", a, "/", b);
+            } else {
+                console.warn("Sayaç elementi bulunamadı.");
+            }
+        }
+
+        // Puan ekranını güncelle
+        function updatePointsDisplay() {
+            const pointsValueElement = document.querySelector('.points-value');
+            if (pointsValueElement) {
+                pointsValueElement.textContent = formatNumber(points);
+                console.log("Puan güncellendi:", points);
+            } else {
+                console.warn("Puan değeri elementi bulunamadı.");
+            }
+        }
+
+        // Frame tıklama işlemi sadece çerçeve resmine sınırlı
+        function attachFrameClickListener() {
+            const frameImage = document.querySelector('.frame img');
+            if (frameImage) {
+                frameImage.addEventListener('click', handleClick);
+                console.log("Frame image tıklama event listener'ı eklendi.");
+            } else {
+                console.warn("Frame image elementi bulunamadı.");
+            }
+        }
+
+        // Tıklama işleme fonksiyonu
+        async function handleClick() {
+            if (a > 0) {
+                a -= 1;
+                points += tiklama_hakki; // Her tıklamada tiklama_hakki kadar puan ekle
+                updateCounterDisplay();
+                updatePointsDisplay();
+                await saveData();
+
+                // Tıklama verilerini backend'e gönder
+                const clickData = {
+                    click_timestamps: [Date.now()],
+                    click_positions: ['center'], // Mevcut tıklama pozisyonunu ekleyin
+                };
+                try {
+                    const response = await fetch(`${backendURL}/api/users/${user_id}/clicks`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(clickData),
+                    });
+                    if (response.ok) {
+                        console.log("Tıklama verileri gönderildi.");
+                    } else {
+                        console.error("Tıklama verileri gönderilemedi.");
+                    }
+                } catch (error) {
+                    console.error('Tıklama gönderme hatası:', error);
+                }
+            }
+        }
+
+        // Sayaç her 10 saniyede 1 artar
+        function startCounterInterval() {
+            setInterval(async function () {
+                if (a < b) {
+                    a += 1;
+                    updateCounterDisplay();
+                    await saveData();
+                }
+            }, dolum_hizi * 1000); // dolum_hizi saniye cinsinden
+        }
+
+        // Resimlerin sürüklenmesini ve seçilmesini engelle
+        function preventImageDragging() {
+            const images = document.querySelectorAll('img');
+            images.forEach(function (img) {
+                img.addEventListener('dragstart', function (e) {
+                    e.preventDefault();
+                });
+            });
+        }
+
+        preventImageDragging();
+
+        // Sağ tık menüsünü engelle
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        // Metin seçimini engelle
+        document.addEventListener('selectstart', function (e) {
+            e.preventDefault();
+        });
+
+        // Başlangıç ayarları
+        await loadData();
         attachFrameClickListener();
         startCounterInterval();
     }
@@ -210,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
             "Everything For Decentralization": {
                 shortDescription: "Decentralization is our first goal!",
                 title: "Everything For Decentralization",
-                description: "We would like to reduce the costs for swap and others. Lorem Ipsum is simply dummy text of the printing and typesetting industry. ...", // Kısaltıldı
+                description: "We would like to reduce the costs for swap and others. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
             }
         };
 
@@ -278,10 +434,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const currentEvent = slides[currentSlide].textContent.trim();
             const eventInfo = eventDetails[currentEvent];
 
-            centerContent.innerHTML = `
+            centerContent.innerHTML = 
                 <h2>${eventInfo.title}</h2>
                 <p>${eventInfo.description}</p>
-            `;
+            ;
 
             overlay.classList.add('open'); // İkinci sayfayı aç
         });
@@ -297,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function () {
             pauseSlideshowFor20Seconds();
         });
 
-        // Ok tuşlarının çalışması sırasında slaytın bekletilmesi.
+        //Ok tuşlarının çalışması sırasında slaytın bekletilmesi.
         prevButton.addEventListener('click', () => {
             prevSlide();
             pauseSlideshowFor20Seconds();
@@ -336,25 +492,25 @@ document.addEventListener('DOMContentLoaded', function () {
         startSlideshow();
     }
 
-    // Friends sayfası için js kodları
+    //Friends sayfası için js kodları
     function attachFriendsEventListeners() {
         // Davet linki dinamik olarak oluşturuluyor
-        const inviteLink = "https://t.me/"; // Tam URL olmalı
-        const inviteCode = "1234567891012";
+        const inviteLink = "t.me/";
+        const inviteCode ="1234567891012";
         
         // Davet linkini uygun alana ekle
         const inviteCodeElement = document.getElementById("friends_invite_code");
         if (inviteCodeElement) {
-            inviteCodeElement.innerHTML = `
+            inviteCodeElement.innerHTML = 
                 <p>Invite Code:</p>
                 <p>${inviteCode}</p>
-            `;
+            ;
         } else {
             console.warn("Invite code elementi bulunamadı.");
         }
         
         // Copy link button functionality
-        const copyLinkBtn = document.getElementById("friends_copy_link_btn");
+       const copyLinkBtn = document.getElementById("friends_copy_link_btn");
         if (copyLinkBtn) {
             copyLinkBtn.addEventListener("click", function () {
                 navigator.clipboard.writeText(inviteLink + inviteCode).then(() => {
@@ -433,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function () {
             sortedData.forEach((friend, index) => {
                 const row = document.createElement("tr");
         
-                row.innerHTML = `
+                row.innerHTML = 
                     <td>${index + 1}</td>
                     <td>${friend.userName}</td>
                     <td>${friend.level}</td>
@@ -445,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             ${friend.claimed ? "Claimed" : "Claim"}
                         </button>
                     </td>
-                `;
+                ;
         
                 const claimBtn = row.querySelector(".friends-claim-btn");
                 claimBtn.addEventListener("click", () => {
@@ -479,159 +635,4 @@ document.addEventListener('DOMContentLoaded', function () {
         // İlk tablo sıralamasını yap
         renderTable();
     }
-
-    // Sayaç ve Puan Güncelleme Fonksiyonları
-    function formatNumber(number) {
-      try {
-          const formatted = number.toLocaleString('tr-TR');
-          console.log("Binlik ayırıcı tamam.");
-          return formatted;
-      } catch (error) {
-          console.error('Binlik ayırıcı hatası:', error);
-          return number;
-      }
-    }
-
-    // Sayaç ekranını güncelle
-    function updateCounterDisplay() {
-        const counterElement = document.querySelector('.counter');
-        if (counterElement) {
-            counterElement.textContent = `${formatNumber(a)}/${formatNumber(b)}`;
-            console.log("Sayaç güncellendi:", a, "/", b);
-        } else {
-            console.warn("Sayaç elementi bulunamadı.");
-        }
-    }
-
-    // Puan ekranını güncelle
-    function updatePointsDisplay() {
-        const pointsValueElement = document.querySelector('.points-value');
-        if (pointsValueElement) {
-            pointsValueElement.textContent = formatNumber(points);
-            console.log("Puan güncellendi:", points);
-        } else {
-            console.warn("Puan değeri elementi bulunamadı.");
-        }
-    }
-
-    // Frame tıklama işlemi sadece çerçeve resmine sınırlı
-    function attachFrameClickListener() {
-        const frameImage = document.querySelector('.frame img');
-        if (frameImage) {
-            frameImage.addEventListener('click', handleClick);
-            console.log("Frame image tıklama event listener'ı eklendi.");
-        } else {
-            console.warn("Frame image elementi bulunamadı.");
-        }
-    }
-
-    // Tıklama işleme fonksiyonu
-    async function handleClick() {
-        if (a > 0) {
-            a -= 1;
-            points += tiklama_hakki; // Her tıklamada tiklama_hakki kadar puan ekle
-            updateCounterDisplay();
-            updatePointsDisplay();
-            await saveData();
-
-            // Tıklama verilerini backend'e gönder
-            const clickData = {
-                click_timestamps: [Date.now()],
-                click_positions: ['center'], // Mevcut tıklama pozisyonunu ekleyin
-            };
-            try {
-                const response = await fetch(`https://stonemu-8bdeedab7930.herokuapp.com/api/users/${encodeURIComponent(getTelegramUserId())}/clicks`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(clickData),
-                });
-                if (response.ok) {
-                    console.log("Tıklama verileri gönderildi.");
-                } else {
-                    console.error("Tıklama verileri gönderilemedi.");
-                }
-            } catch (error) {
-                console.error('Tıklama gönderme hatası:', error);
-            }
-        }
-    }
-
-    // Verileri backend'e kaydet
-    async function saveData() {
-        try {
-            await fetch(`https://stonemu-8bdeedab7930.herokuapp.com/api/users/${encodeURIComponent(getTelegramUserId())}/points`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ points, a }),
-            });
-            console.log("Veriler kaydedildi: ", points, a);
-        } catch (error) {
-            console.error('Veri kaydetme hatası:', error);
-        }
-    }
-
-    // Verileri backend'den yükle
-    async function loadData() {
-        const user_id = getTelegramUserId();
-        if (!user_id) {
-            console.error("Geçerli bir user_id yok.");
-            return;
-        }
-        try {
-            const response = await fetch(`https://stonemu-8bdeedab7930.herokuapp.com/api/users/${encodeURIComponent(user_id)}/points`);
-            if (response.ok) {
-                const data = await response.json();
-                a = data.a || 5000; // Backend'de tanımlı ise alın, yoksa varsayılan
-                b = data.b || 5000; // Backend'de tanımlı ise alın, yoksa varsayılan
-                dolum_hizi = data.dolum_hizi || 10; // 10 saniye varsayılan
-                tiklama_hakki = data.tiklama_hakki || 1; // Her tıklamada eklenen puan
-                points = data.points || 0;
-                updateCounterDisplay();
-                updatePointsDisplay();
-                console.log("Veriler yüklendi: ", data);
-            } else {
-                console.error('Puanlar alınamadı.');
-            }
-        } catch (error) {
-            console.error('Veri çekme hatası:', error);
-        }
-    }
-
-    // Sayaç her dolum_hizi saniyede 1 artar
-    function startCounterInterval() {
-        setInterval(async function () {
-            if (a < b) {
-                a += 1;
-                updateCounterDisplay();
-                await saveData();
-            }
-        }, dolum_hizi * 1000); // dolum_hizi saniye cinsinden
-    }
-
-    // Resimlerin sürüklenmesini ve seçilmesini engelle
-    function preventImageDragging() {
-        const images = document.querySelectorAll('img');
-        images.forEach(function (img) {
-            img.addEventListener('dragstart', function (e) {
-                e.preventDefault();
-            });
-        });
-    }
-
-    preventImageDragging();
-
-    // Sağ tık menüsünü engelle
-    document.addEventListener('contextmenu', function (e) {
-        e.preventDefault();
-    });
-
-    // Metin seçimini engelle
-    document.addEventListener('selectstart', function (e) {
-        e.preventDefault();
-    });
-
 });
