@@ -1,11 +1,14 @@
-
 {
-  "name": "stonemu-backend",
+  "name": "stonemu-app",
   "version": "1.0.0",
-  "description": "Stonemu Backend",
+  "description": "Stonemu App Backend",
   "main": "backend/app.js",
   "scripts": {
-    "start": "node backend/app.js"
+    "start": "node backend/app.js",
+    "dev": "nodemon backend/app.js"
+  },
+  "engines": {
+    "node": ">=14.x"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -18,7 +21,9 @@
     "sequelize": "^6.32.1",
     "socket.io": "^4.7.2"
   },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
   "author": "Stratovarious",
   "license": "STONEMU"
 }
-
