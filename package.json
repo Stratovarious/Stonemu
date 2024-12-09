@@ -1,14 +1,14 @@
 {
-  "name": "stonemu-app",
+  "name": "stonemu-backend",
   "version": "1.0.0",
-  "description": "Stonemu App Backend",
+  "description": "Backend for Stonemu application",
   "main": "backend/app.js",
   "scripts": {
     "start": "node backend/app.js",
     "dev": "nodemon backend/app.js"
   },
   "engines": {
-    "node": ">=14.x"
+    "node": "18.x"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -24,6 +24,8 @@
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
+  "keywords": [],
   "author": "Stratovarious",
   "license": "STONEMU"
 }
+
