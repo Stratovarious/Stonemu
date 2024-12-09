@@ -70,7 +70,7 @@
     let moves = this.getAllValidMovesForTurn();
     if(moves.length>0) return false;
     // moves yok, şah çekilme durumu kontrol
-    if (this.inCheck(this.activeColor)) {
+    if (this.inCheck(this.turn())) {
       // mat
       return true;
     } else {
