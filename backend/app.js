@@ -1,3 +1,5 @@
+// app.js
+
 require('dotenv').config();
 const express = require('express');
 const { Sequelize, Op } = require('sequelize');
@@ -9,23 +11,27 @@ const rateLimit = require('express-rate-limit');
 
 const app = express();
 const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: 'https://stratovarious.github.io', // Allowed origin
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
 const port = process.env.PORT || 3000;
-
-// GitHub Pages URL'inizi girin:
-const allowedOrigin = 'https://stratovarious.github.io'; // Örnek URL
 
 // Rate Limiting
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 dakika
-  max: 100, // Her IP için maksimum 100 istek
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Max 100 requests per IP
   message: 'Çok fazla istek gönderildi, lütfen daha sonra tekrar deneyin.',
 });
 
 app.use('/api/', apiLimiter);
 
-// CORS Ayarları
+// CORS Configuration
 app.use(cors({
-  origin: allowedOrigin,
+  origin: 'https://stratovarious.github.io', // Allowed origin
   methods: ['GET', 'POST'],
   credentials: true,
 }));
@@ -33,16 +39,7 @@ app.use(cors({
 // Body Parser
 app.use(bodyParser.json());
 
-// WebSocket Server
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigin,
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-});
-
-// Veritabanı Bağlantısı ve ORM
+// Database Connection and ORM
 const db = require('./models');
 
 db.sequelize.authenticate()
@@ -61,7 +58,7 @@ db.sequelize.sync()
     console.error('Veritabanı senkronizasyon hatası:', err);
   });
 
-// Middleware: Kullanıcı ban kontrolü
+// Middleware: Check if user is banned
 const checkIfBanned = async (req, res, next) => {
   const { user_id } = req.params;
   const user = await db.User.findByPk(user_id);
@@ -71,17 +68,17 @@ const checkIfBanned = async (req, res, next) => {
   next();
 };
 
-// Middleware'i kullanın
+// Apply Middleware
 app.use('/api/users/:user_id/*', checkIfBanned);
 
-// Ana Sayfa
+// Home Route
 app.get('/', (req, res) => {
   res.send('Stonemu Backend Çalışıyor!');
 });
 
-// API Endpoint'leri
+// API Endpoints
 
-// Kullanıcı Kayıt/Güncelleme
+// 1. User Registration/Update
 app.post('/api/users', async (req, res) => {
   try {
     const { user_id, username } = req.body;
@@ -95,7 +92,7 @@ app.post('/api/users', async (req, res) => {
     });
 
     if (!created) {
-      // Kullanıcı zaten var, güncelle
+      // User exists, update
       user.username = username || user.username;
       await user.save();
     }
@@ -107,7 +104,7 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
-// Kullanıcının Puanını Alma ve 'a' Güncelleme
+// 2. Get User Points and 'a' Value
 app.get('/api/users/:user_id/points', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -116,7 +113,7 @@ app.get('/api/users/:user_id/points', async (req, res) => {
       return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
 
-    // Geçen süreyi hesapla
+    // Calculate elapsed time
     const now = Date.now();
     const lastUpdate = new Date(user.last_a_update).getTime();
     const elapsedSeconds = Math.floor((now - lastUpdate) / 1000);
@@ -142,7 +139,7 @@ app.get('/api/users/:user_id/points', async (req, res) => {
   }
 });
 
-// Kullanıcının Puanını ve 'a' değerini Güncelleme
+// 3. Update User Points and 'a' Value
 app.post('/api/users/:user_id/points', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -170,7 +167,7 @@ app.post('/api/users/:user_id/points', async (req, res) => {
   }
 });
 
-// Hile Tespiti Eklenmesi
+// 4. Add Cheat Detection
 app.post('/api/users/:user_id/cheats', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -189,17 +186,17 @@ app.post('/api/users/:user_id/cheats', async (req, res) => {
       cheat_type,
     });
 
-    // Kullanıcının toplam hile sayısını güncelle
+    // Update user's cheat count
     user.cheat_count += 1;
 
-    // Hile sayısına göre uyarı veya ban
+    // Warn or ban based on cheat count
     if (user.cheat_count >= 3) {
       user.is_banned = true;
     }
 
     await user.save();
 
-    // Uyarı oluştur
+    // Create warning
     const warningMessage = user.is_banned
       ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
       : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
@@ -209,7 +206,7 @@ app.post('/api/users/:user_id/cheats', async (req, res) => {
       message: warningMessage,
     });
 
-    // Kullanıcıya WebSocket ile uyarı gönder
+    // Notify user via WebSocket
     notifyUserOfCheat(user_id, warningMessage);
 
     res.json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
@@ -219,7 +216,7 @@ app.post('/api/users/:user_id/cheats', async (req, res) => {
   }
 });
 
-// Kullanıcının Banlı Olup Olmadığını Kontrol Etme
+// 5. Check if User is Banned
 app.get('/api/users/:user_id/is_banned', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -234,7 +231,7 @@ app.get('/api/users/:user_id/is_banned', async (req, res) => {
   }
 });
 
-// Kullanıcının Tıklama Verilerini Alma ve Hile Tespiti Yapma
+// 6. Handle Click Data and Cheat Detection
 app.post('/api/users/:user_id/clicks', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -244,118 +241,42 @@ app.post('/api/users/:user_id/clicks', async (req, res) => {
       return res.status(400).json({ error: 'Geçersiz veri formatı.' });
     }
 
-    // Hile tespiti için örnek kurallar:
-    // 1. 3 dakika içinde 1000'den fazla tıklama
-    // 2. 3 saat boyunca aralıksız tıklama
-    // 3. Hep aynı noktaya tıklama
+    // Cheat detection rules:
+    // 1. More than 1000 clicks in 3 minutes
+    // 2. Continuous clicking for 3 hours
+    // 3. Clicking the same position repeatedly
 
     const user = await db.User.findByPk(user_id);
     if (!user) {
       return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
     }
 
-    // 1. 3 dakika içinde 1000'den fazla tıklama
+    // 1. More than 1000 clicks in 3 minutes
     const threeMinutesAgo = Date.now() - (3 * 60 * 1000);
     const recentClicks = click_timestamps.filter(ts => ts >= threeMinutesAgo);
     if (recentClicks.length > 1000) {
-      // Hile tespit edildi
-      await db.Cheat.create({
-        user_id,
-        cheat_type: 'rapid_clicks',
-      });
-      user.cheat_count += 1;
-
-      // Hile sayısına göre uyarı veya ban
-      if (user.cheat_count >= 3) {
-        user.is_banned = true;
-      }
-
-      await user.save();
-
-      // Uyarı oluştur
-      const warningMessage = user.is_banned
-        ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
-        : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
-
-      await db.Warning.create({
-        user_id,
-        message: warningMessage,
-      });
-
-      // Kullanıcıya WebSocket ile uyarı gönder
-      notifyUserOfCheat(user_id, warningMessage);
-
+      await handleCheatDetection(user, 'rapid_clicks');
       return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
     }
 
-    // 2. 3 saat boyunca aralıksız tıklama
+    // 2. Continuous clicking for 3 hours
     const threeHoursAgo = Date.now() - (3 * 60 * 60 * 1000);
     const clicksInThreeHours = click_timestamps.filter(ts => ts >= threeHoursAgo);
-    if (clicksInThreeHours.length > (3 * 60 * 60 * 1000) / 10) { // Örneğin, her 10ms'ye bir tıklama
-      await db.Cheat.create({
-        user_id,
-        cheat_type: 'continuous_clicking',
-      });
-      user.cheat_count += 1;
-
-      // Hile sayısına göre uyarı veya ban
-      if (user.cheat_count >= 3) {
-        user.is_banned = true;
-      }
-
-      await user.save();
-
-      // Uyarı oluştur
-      const warningMessage = user.is_banned
-        ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
-        : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
-
-      await db.Warning.create({
-        user_id,
-        message: warningMessage,
-      });
-
-      // Kullanıcıya WebSocket ile uyarı gönder
-      notifyUserOfCheat(user_id, warningMessage);
-
+    if (clicksInThreeHours.length > (3 * 60 * 60 * 1000) / 10) { // Example: one click every 10ms
+      await handleCheatDetection(user, 'continuous_clicking');
       return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
     }
 
-    // 3. Hep aynı noktaya tıklama
+    // 3. Repeatedly clicking the same position
     if (click_positions && click_positions.length > 0) {
       const uniquePositions = new Set(click_positions);
       if (uniquePositions.size === 1 && click_positions.length > 100) {
-        await db.Cheat.create({
-          user_id,
-          cheat_type: 'same_position_clicks',
-        });
-        user.cheat_count += 1;
-
-        // Hile sayısına göre uyarı veya ban
-        if (user.cheat_count >= 3) {
-          user.is_banned = true;
-        }
-
-        await user.save();
-
-        // Uyarı oluştur
-        const warningMessage = user.is_banned
-          ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
-          : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
-
-        await db.Warning.create({
-          user_id,
-          message: warningMessage,
-        });
-
-        // Kullanıcıya WebSocket ile uyarı gönder
-        notifyUserOfCheat(user_id, warningMessage);
-
+        await handleCheatDetection(user, 'same_position_clicks');
         return res.status(200).json({ message: 'Hile tespit edildi.', is_banned: user.is_banned });
       }
     }
 
-    // Hile tespiti yapılmadı, puanları güncelle
+    // No cheating detected, update points
     const tiklamaHakki = user.tiklama_hakki || 1;
     const totalPointsToAdd = tiklamaHakki * click_timestamps.length;
 
@@ -371,16 +292,50 @@ app.post('/api/users/:user_id/clicks', async (req, res) => {
   }
 });
 
-// Function to notify user of cheat via WebSocket
+// Helper Function to Handle Cheat Detection
+const handleCheatDetection = async (user, cheatType) => {
+  try {
+    await db.Cheat.create({
+      user_id: user.user_id,
+      cheat_type: cheatType,
+    });
+
+    user.cheat_count += 1;
+
+    if (user.cheat_count >= 3) {
+      user.is_banned = true;
+    }
+
+    await user.save();
+
+    // Create warning
+    const warningMessage = user.is_banned
+      ? "Hile yaptığınız tespit edildi, hesabınız banlanmıştır."
+      : "Hile yaptığınız tespit edildi, lütfen tekrarlamayınız. Tekrarlamanız durumunda hesabınız kapatılacaktır.";
+
+    await db.Warning.create({
+      user_id: user.user_id,
+      message: warningMessage,
+    });
+
+    // Notify user via WebSocket
+    notifyUserOfCheat(user.user_id, warningMessage);
+  } catch (error) {
+    console.error('Cheat Detection Error:', error);
+  }
+};
+
+// Function to Notify User of Cheat via WebSocket
 function notifyUserOfCheat(user_id, message) {
-  const userSocket = Array.from(io.sockets.sockets.values()).find(s => s.user_id === user_id);
-  if (userSocket) {
-    userSocket.emit('cheatDetected', { message });
+  for (let [id, socket] of io.sockets.sockets) {
+    if (socket.user_id === user_id) {
+      socket.emit('cheatDetected', { message });
+      break;
+    }
   }
 }
 
-// Tam satranç mantığı için kapsamlı bir sunucu tarafı satranç sınıfı.
-// Rok, en passant, şah mat kontrolü, tam hamle üretimi içerir.
+// Comprehensive Server-Side Chess Logic Class
 class ServerChessLogic {
   constructor() {
     this.history = [];
@@ -451,16 +406,16 @@ class ServerChessLogic {
   game_over() {
     let moves = this.getAllValidMovesForTurn();
     if (moves.length > 0) return false;
-    // moves yok, eğer şah tehdit altındaysa mat, değilse pat
+    // No moves left, checkmate or stalemate
     if (this.inCheck(this.activeColor)) {
-      return true; // checkmate
+      return true; // Checkmate
     } else {
-      return true; // stalemate
+      return true; // Stalemate
     }
   }
 
   move(m) {
-    // Bulunduğumuz renk sıra
+    // Current turn color
     let moves = this.getAllValidMovesForTurn();
     let chosen = moves.find(M => M.from === m.from && M.to === m.to);
     if (!chosen) return null;
@@ -470,9 +425,8 @@ class ServerChessLogic {
   }
 
   getAllValidMovesForTurn() {
-    // Tüm hamleleri üret, şahta kalmayanları al
+    // Generate all moves and filter out illegal ones
     let moves = this.generateMoves(this.activeColor);
-    // Filtre illegal moves
     let legal = [];
     for (let mv of moves) {
       this.makeMove(mv);
@@ -485,7 +439,7 @@ class ServerChessLogic {
   }
 
   getValidMoves(square) {
-    // Belirli kareden hamleler
+    // Get moves from a specific square
     let all = this.getAllValidMovesForTurn();
     return all.filter(m => m.from === square);
   }
@@ -500,7 +454,7 @@ class ServerChessLogic {
   }
 
   inCheck(color) {
-    // Bul king'i
+    // Find king position
     let kingPos = this.findKing(color);
     if (!kingPos) return false;
     return this.squareAttackedBy(kingPos.r, kingPos.f, color === 'w' ? 'b' : 'w');
@@ -520,13 +474,11 @@ class ServerChessLogic {
   }
 
   squareAttackedBy(r, f, attColor) {
-    // Bir kare attColor tarafından saldırıda mı?
-    // Tüm attColor taşların hamlelerini simüle edelim.
+    // Check if square (r,f) is attacked by attColor
     for (let rr = 0; rr < 8; rr++) {
       for (let ff = 0; ff < 8; ff++) {
         let p = this.board[rr][ff];
         if (p !== "" && this.colorOf(p) === attColor) {
-          // pseudo moves of p includes (r,f)?
           let moves = this.pseudoMoves(rr, ff, p);
           if (moves.some(m => m.tr === r && m.tf === f)) return true;
         }
@@ -536,7 +488,7 @@ class ServerChessLogic {
   }
 
   pseudoMoves(r, f, piece) {
-    // Hamle üretimi: Rok, at, fil, vezir, şah, piyonun pseudo hamleleri. 
+    // Generate pseudo moves for a piece
     let color = this.colorOf(piece);
     let mvs = [];
     const add = (tr, tf) => {
@@ -592,20 +544,20 @@ class ServerChessLogic {
           if (tp === "" || this.colorOf(tp) !== color) add(tr, tf);
         }
       }
-      // Rok (Castling)
+      // Castling
       // Castling rights fen: KQkq
       let canCastleKing = (color === 'w' ? this.castlingRights.includes('K') : this.castlingRights.includes('k'));
       let canCastleQueen = (color === 'w' ? this.castlingRights.includes('Q') : this.castlingRights.includes('q'));
       let rank = color === 'w' ? 7 : 0;
       if (r === rank && f === 4) {
-        // kısa rok
+        // Short castling
         if (canCastleKing && this.pieceAt(rank, 5) === "" && this.pieceAt(rank, 6) === ""
           && !this.squareAttackedBy(rank, 4, this.opColor(color))
           && !this.squareAttackedBy(rank, 5, this.opColor(color))
           && !this.squareAttackedBy(rank, 6, this.opColor(color))) {
           add(rank, 6);
         }
-        // uzun rok
+        // Long castling
         if (canCastleQueen && this.pieceAt(rank, 3) === "" && this.pieceAt(rank, 2) === "" && this.pieceAt(rank, 1) === ""
           && !this.squareAttackedBy(rank, 4, this.opColor(color))
           && !this.squareAttackedBy(rank, 3, this.opColor(color))
@@ -638,19 +590,20 @@ class ServerChessLogic {
   }
 
   generateMoves(color) {
-    // pseudo hamleler
+    // Generate all pseudo moves
     let moves = [];
     for (let r = 0; r < 8; r++) {
       for (let f = 0; f < 8; f++) {
         let p = this.board[r][f];
         if (p !== "" && this.colorOf(p) === color) {
           let pmoves = this.pseudoMoves(r, f, p);
-          // Promotion handle
+          // Handle promotion
           pmoves.forEach(mv => {
-            if (p.toLowerCase() === 'p' && (mv.to.charAt(1) === '1' || mv.to.charAt(1) === '8')) {
-              mvs.push({ from: mv.from, to: mv.to, promotion: 'q' }); // otomatik vezir
+            const toRank = parseInt(mv.to.charAt(1));
+            if (p.toLowerCase() === 'p' && (toRank === 1 || toRank === 8)) {
+              moves.push({ from: mv.from, to: mv.to, promotion: 'q' }); // Auto promote to queen
             } else {
-              mvs.push({ from: mv.from, to: mv.to });
+              moves.push({ from: mv.from, to: mv.to });
             }
           });
         }
@@ -687,25 +640,25 @@ class ServerChessLogic {
     let target = this.board[to.r][to.f];
     let color = this.colorOf(piece);
 
-    // update halfmove clock
+    // Update halfmove clock
     if (piece.toLowerCase() === 'p' || target !== "") {
       this.halfmoveClock = 0;
     } else {
       this.halfmoveClock++;
     }
 
-    // move piece
+    // Move piece
     this.board[to.r][to.f] = m.promotion || piece;
     this.board[from.r][from.f] = "";
 
-    // en passant
+    // En passant
     if (piece.toLowerCase() === 'p') {
       if (Math.abs(to.r - from.r) === 2) {
-        // double push
+        // Double push
         this.enPassantTarget = String.fromCharCode("a".charCodeAt(0) + from.f) + (8 - ((from.r + to.r) / 2));
       } else {
         if (this.enPassantTarget && to.f === this.squareToCoords(this.enPassantTarget).f && to.r === this.squareToCoords(this.enPassantTarget).r) {
-          // en passant capture
+          // En passant capture
           let dir = color === 'w' ? 1 : -1;
           this.board[to.r + dir][to.f] = "";
         }
@@ -715,20 +668,20 @@ class ServerChessLogic {
       this.enPassantTarget = null;
     }
 
-    // castling
+    // Castling
     if (piece.toLowerCase() === 'k') {
       let rank = color === 'w' ? 7 : 0;
       if (from.f === 4 && to.f === 6 && from.r === rank && to.r === rank) {
-        // short castle
+        // Short castling
         this.board[rank][5] = this.board[rank][7];
         this.board[rank][7] = "";
       }
       if (from.f === 4 && to.f === 2 && from.r === rank && to.r === rank) {
-        // long castle
+        // Long castling
         this.board[rank][3] = this.board[rank][0];
         this.board[rank][0] = "";
       }
-      // castling rights kayıp
+      // Remove castling rights
       if (color === 'w') {
         this.castlingRights = this.castlingRights.replace('K', '').replace('Q', '');
       } else {
@@ -736,7 +689,7 @@ class ServerChessLogic {
       }
     }
 
-    // Rook moved?
+    // Rook moved
     if (piece.toLowerCase() === 'r') {
       let rank = color === 'w' ? 7 : 0;
       if (from.r === rank && from.f === 0) {
@@ -751,18 +704,18 @@ class ServerChessLogic {
       }
     }
 
-    // Rook captured?
+    // Rook captured
     if (target !== "") {
-      // maybe captured rook that affects castling
+      // Captured rook affects castling rights
       if (to.r === 7 && to.f === 0) this.castlingRights = this.castlingRights.replace('Q', '');
       if (to.r === 7 && to.f === 7) this.castlingRights = this.castlingRights.replace('K', '');
       if (to.r === 0 && to.f === 0) this.castlingRights = this.castlingRights.replace('q', '');
       if (to.r === 0 && to.f === 7) this.castlingRights = this.castlingRights.replace('k', '');
     }
 
-    // King moved?
+    // King moved
     if (piece.toLowerCase() === 'k') {
-      // no castling for that color
+      // No castling for this color
       if (color === 'w') {
         this.castlingRights = this.castlingRights.replace('K', '').replace('Q', '');
       } else {
@@ -770,7 +723,7 @@ class ServerChessLogic {
       }
     }
 
-    // switch turn
+    // Switch turn
     this.activeColor = this.activeColor === 'w' ? 'b' : 'w';
     if (this.activeColor === 'w') this.fullmoveNumber++;
   }
@@ -792,11 +745,14 @@ class ServerChessLogic {
   }
 }
 
-// Match/bot logic
+// Match/Bot Logic
+let waitingPlayer = null;
+let games = {};
+
 io.on('connection', (socket) => {
   console.log('Bir kullanıcı bağlandı:', socket.id);
 
-  // Kullanıcının user_id'sini belirlemek için socket'a ekleyin
+  // Assign user_id to socket
   socket.on('register', async (data) => {
     const { user_id } = data;
     socket.user_id = user_id;
@@ -806,17 +762,17 @@ io.on('connection', (socket) => {
   socket.hasMatched = false;
   socket.isBotGame = false;
 
-  // Oyuncu oyuna girdi, başka oyuncu var mı kontrol
-  if (waitingPlayer) {
-    // Eşleştir
+  // Player enters the game, check for waiting players
+  if (waitingPlayer && waitingPlayer !== socket) {
+    // Match players
     matchPlayers(waitingPlayer, socket);
     waitingPlayer = null;
   } else {
-    // Bekleyen oyuncu yok, bu oyuncuyu beklemeye al
+    // No waiting player, add to waiting
     waitingPlayer = socket;
     socket.matchTimeout = setTimeout(() => {
       if (!socket.hasMatched && !socket.isBotGame) {
-        // bot iste
+        // Assign bot
         assignBot(socket);
       }
     }, 30000);
@@ -828,12 +784,12 @@ io.on('connection', (socket) => {
       if (g.chess.turn() === (socket.color === 'white' ? 'w' : 'b')) {
         let result = g.chess.move(move);
         if (result) {
-          // Puan hesaplama
+          // Point calculation
           if (g.chess.game_over()) {
-            // Oyuncu kazandıysa
+            // Player won
             if ((result.color === 'w' && socket.color === 'white') ||
                 (result.color === 'b' && socket.color === 'black')) {
-              const pointsEarned = 100; // Örneğin
+              const pointsEarned = 100; // Example
               await db.Game.create({
                 user_id: socket.user_id,
                 game_type: 'chess',
@@ -841,7 +797,7 @@ io.on('connection', (socket) => {
                 claimed: false,
               });
               socket.emit("gameOver", { winner: socket.color });
-              // Socket'e puan gönder
+              // Send updated points
               socket.emit('updatePoints', { points: socket.points + pointsEarned });
             }
           }
@@ -868,10 +824,10 @@ io.on('connection', (socket) => {
         return;
       }
 
-      user.points += 100; // Örneğin, kazandığı puan
+      user.points += 100; // Example points
       await user.save();
 
-      // Oyun kaydını güncelle
+      // Update game record
       const game = await db.Game.findOne({
         where: {
           user_id: socket.user_id,
@@ -910,14 +866,12 @@ io.on('connection', (socket) => {
   });
 });
 
-let waitingPlayer = null;
-let games = {};
-
+// Function to Match Players
 function matchPlayers(player1, player2) {
   player1.hasMatched = true;
   player2.hasMatched = true;
 
-  // Rastgele sayılar şimdi üretelim
+  // Generate random numbers
   let player1Number = Math.floor(Math.random() * 1000);
   let player2Number = Math.floor(Math.random() * 1000);
   while (player1Number === player2Number) {
@@ -943,6 +897,7 @@ function matchPlayers(player1, player2) {
   player2.gameId = gameId;
 }
 
+// Function to Assign Bot
 function assignBot(socket) {
   socket.hasMatched = true;
   socket.isBotGame = true;
@@ -967,6 +922,7 @@ function assignBot(socket) {
   }
 }
 
+// Function for Bot Moves
 function botMove(gameId) {
   let g = games[gameId];
   if (!g) return;
@@ -977,7 +933,7 @@ function botMove(gameId) {
   let result = g.chess.move(move);
   if (result) {
     let playerSocketId = gameId.split('_')[1];
-    let playerSocket = Array.from(io.sockets.sockets.values()).find(s => s.id === playerSocketId);
+    let playerSocket = io.sockets.sockets.get(playerSocketId);
     if (playerSocket) {
       playerSocket.emit('move', move);
     }
@@ -991,6 +947,7 @@ function botMove(gameId) {
   }
 }
 
+// Function to End Game
 function endGame(socket, g) {
   let moves = g.chess.getAllValidMovesForTurn();
   if (moves.length > 0) return; // Not ended
@@ -1000,7 +957,7 @@ function endGame(socket, g) {
   let winnerColor = loserColor ? (loserColor === 'w' ? 'b' : 'w') : null;
 
   if (inCheck) {
-    // mat
+    // Checkmate
     if (socket.color === (winnerColor === 'w' ? 'white' : 'black')) {
       socket.emit("gameOver", { winner: socket.color });
       if (socket.opponent !== 'bot' && socket.opponent) {
@@ -1008,24 +965,13 @@ function endGame(socket, g) {
       }
     }
   } else {
-    // pat
+    // Stalemate
     socket.emit("gameOver", { winner: null });
     if (socket.opponent !== 'bot' && socket.opponent) {
       socket.opponent.emit("gameOver", { winner: null });
     }
   }
 }
-
-// Kullanıcıya puan güncellemesini göndermek için
-io.on('connection', (socket) => {
-  // Diğer socket olayları...
-
-  // Kullanıcı kaydını yaparken
-  socket.on('register', async (data) => {
-    const { user_id } = data;
-    socket.user_id = user_id;
-  });
-});
 
 server.listen(port, () => {
   console.log('Sunucu çalışıyor: ' + port);
