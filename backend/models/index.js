@@ -1,4 +1,6 @@
-const { Sequelize } = require('sequelize');
+// models/index.js
+
+const { Sequelize } = require('sequelize'); 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   protocol: 'postgres',
@@ -12,12 +14,13 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.User = require('./user')(sequelize, Sequelize);
+// Corrected require paths
+db.User = require('./users')(sequelize, Sequelize);
 db.Game = require('./game')(sequelize, Sequelize);
 db.Cheat = require('./cheat')(sequelize, Sequelize);
 db.Warning = require('./warning')(sequelize, Sequelize);
 
-// İlişkiler
+// Associations
 db.User.hasMany(db.Game, { foreignKey: 'user_id' });
 db.Game.belongsTo(db.User, { foreignKey: 'user_id' });
 
