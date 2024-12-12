@@ -61,16 +61,16 @@
         }
     </style>
     <!-- Slayt resimlerini preload -->
-    <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading1a.webp" as="image">
-    <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading2a.webp" as="image">
-    <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading3a.webp" as="image">
+    <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp" as="image">
+    <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp" as="image">
+    <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp" as="image">
 </head>
 <body>
     <!-- Slayt gösterisi ve yükleme çubuğu -->
     <div class="slideshow">
-        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading1a.webp');"></div>
-        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading2a.webp');"></div>
-        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading3a.webp');"></div>
+        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp');"></div>
+        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp');"></div>
+        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp');"></div>
     </div>
     <div class="loading-bar-container">
         <div class="loading-bar"></div>
@@ -91,7 +91,7 @@
 
         // Service Worker kaydı ve güncelleme bildirimi
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("https://stonemu-8bdeedab7930.herokuapp.com/public/js/sw.js").then((registration) => {
+            navigator.serviceWorker.register("https://stonemu-8bdeedab7930.herokuapp.com/js/sw.js").then((registration) => {
                 console.log("Service Worker registered.");
 
                 // Servis çalışanı güncelleme kontrolü
@@ -207,9 +207,9 @@
             // Yüklenecek tüm kaynaklar
             const resources = [
                 // Resimler
-                "https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading1a.webp",
-                "https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading2a.webp",
-                "https://stonemu-8bdeedab7930.herokuapp.com/public/img/ploading_img/loading3a.webp",
+                "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp",
+                "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp",
+                "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp",
                 // Sayfalar
                 "mainpage.html",
                 "friends.html",
@@ -218,7 +218,7 @@
                 "underconstruction.html",
                 // CSS ve JS dosyaları
                 "css/styles.css",
-                "https://stonemu-8bdeedab7930.herokuapp.com/public/js/main.js"
+                "https://stonemu-8bdeedab7930.herokuapp.com/js/main.js"
                 // Diğer kaynaklarınızı buraya ekleyin
             ];
 
