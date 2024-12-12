@@ -1,363 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Başlık ve stil tanımları -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stonemu App Loading</title>
-    <style>
-        /* Stil ayarları */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #1c1c1c;
-        }
-
-        .slideshow {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .slide {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .slide.active {
-            opacity: 1;
-        }
-
-        .loading-bar-container {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 75%;
-            height: 16px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .loading-bar {
-            width: 0;
-            height: 100%;
-            background-color: #b8860b;
-            transition: width 0.2s ease-out;
-        }
-    </style>
-    <!-- Slayt resimlerini preload -->
+    <link rel="stylesheet" href="./css/index.css">
     <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp" as="image">
     <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp" as="image">
     <link rel="preload" href="https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp" as="image">
 </head>
 <body>
-    <!-- Slayt gösterisi ve yükleme çubuğu -->
     <div class="slideshow">
-        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp');"></div>
-        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp');"></div>
-        <div class="slide" style="background-image: url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp');"></div>
+        <div class="slide" style="background-image:url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp');"></div>
+        <div class="slide" style="background-image:url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp');"></div>
+        <div class="slide" style="background-image:url('https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp');"></div>
     </div>
     <div class="loading-bar-container">
         <div class="loading-bar"></div>
     </div>
 
-    <!-- socket.io  -->
+    <!-- socket.io -->
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-    
-    <!-- Telegram Web App API -->
+    <!-- Telegram WebApp API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Backend JS (loading-index.min.js) -->
+    <script src="https://stonemu-8bdeedab7930.herokuapp.com/js_min/loading-index.min.js"></script>
 
     <script>
-        // Backend URL'ini tanımla
-        const backendURL = 'https://stonemu-8bdeedab7930.herokuapp.com';
-
-        // Initialize Socket.io
-        const socket = io(backendURL);
-
-        // Service Worker kaydı ve güncelleme bildirimi
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("https://stonemu-8bdeedab7930.herokuapp.com/js/sw.js").then((registration) => {
-                console.log("Service Worker registered.");
-
-                // Servis çalışanı güncelleme kontrolü
-                registration.addEventListener("updatefound", () => {
-                    const newWorker = registration.installing;
-                    newWorker.addEventListener("statechange", () => {
-                        if (newWorker.state === "installed") {
-                            if (navigator.serviceWorker.controller) {
-                                // Yeni güncelleme mevcut
-                                const shouldUpdate = confirm("Yeni bir güncelleme mevcut. Sayfayı yenilemek ister misiniz?");
-                                if (shouldUpdate) {
-                                    window.location.reload();
-                                }
-                            }
-                        }
-                    });
-                });
-            }).catch((error) => {
-                console.error("Service Worker Registration Failed:", error);
+    // Service Worker kaydı index.html içinde
+    if('serviceWorker' in navigator){
+        window.addEventListener('load', ()=>{
+            navigator.serviceWorker.register('./sw.js').then(reg=>{
+                console.log("Service Worker registered:",reg);
+            }).catch(err=>{
+                console.error("SW registration failed:",err);
             });
-        }
-
-        document.addEventListener("DOMContentLoaded", async () => {
-            // Telegram Web App API'sini başlat
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.ready();
-                console.log("Telegram WebApp ready.");
-                console.log("Telegram User:", window.Telegram.WebApp.user);
-            } else {
-                console.error("Telegram WebApp API yüklenemedi.");
-            }
-
-            // Telegram Kullanıcı Fonksiyonları
-            function getTelegramUsername() {
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.user) {
-                    return window.Telegram.WebApp.user.username || "Anonymous";
-                } else {
-                    console.error("Telegram WebApp API kullanılamıyor.");
-                    return "Anonymous";
-                }
-            }
-            
-            function getTelegramUserId() {
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.user) {
-                    return window.Telegram.WebApp.user.id;
-                } else {
-                    console.error("Telegram WebApp API kullanılamıyor.");
-                    return null;
-                }
-            }
-
-            // Kullanıcı Kaydını yap
-           // Kullanıcı Kaydını yap
-            async function registerUser() {
-                const username = getTelegramUsername(); // Telegram'dan alınan kullanıcı adı
-                const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
-            
-                console.log("Registering user:", { user_id, username });
-            
-                if (!user_id) {
-                    console.error("Kullanıcı ID alınamadı.");
-                    return;
-                }
-            
-                try {
-                    const response = await fetch(`${backendURL}/api/users`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ user_id, username }),
-                    });
-            
-                    if (response.ok) {
-                        console.log('Kullanıcı kaydedildi veya güncellendi.');
-                        // Socket.io ile register event'ini gönder
-                        socket.emit('register', { user_id });
-                    } else {
-                        console.error('Kullanıcı kaydedilemedi. Durum Kodu:', response.status);
-                        const errorData = await response.json();
-                        console.error('Hata Mesajı:', errorData);
-                    }
-                } catch (error) {
-                    console.error('Kullanıcı kaydetme hatası:', error);
-                }
-            }
-
-
-            await registerUser(); // registerUser fonksiyonunu bekleyin
-
-            const user_id = getTelegramUserId(); // Telegram'dan alınan kullanıcı ID
-            if (user_id) {
-                try {
-                    const response = await fetch(`${backendURL}/api/users/${user_id}/is_banned`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.is_banned) {
-                            window.location.href = 'banned.html';
-                        }
-                    } else {
-                        console.error('Ban durumu kontrol edilemedi. Durum Kodu:', response.status);
-                    }
-                } catch (error) {
-                    console.error('Ban durumu kontrol hatası:', error);
-                }
-            } else {
-                console.error('Geçerli bir kullanıcı ID bulunamadı.');
-            }
-            
-            const slides = document.querySelectorAll(".slide");
-            const loadingBar = document.querySelector(".loading-bar");
-
-            // Yüklenecek tüm kaynaklar
-            const resources = [
-                // Resimler
-                "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp",
-                "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp",
-                "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp",
-                // Sayfalar
-                "mainpage.html",
-                "friends.html",
-                "events.html",
-                "playground.html",
-                "underconstruction.html",
-                // CSS ve JS dosyaları
-                "css/styles.css",
-                "https://stonemu-8bdeedab7930.herokuapp.com/js/main.js"
-                // Diğer kaynaklarınızı buraya ekleyin
-            ];
-
-            const totalResources = resources.length;
-            let loadedResources = 0;
-
-            // Başlangıç zamanı kaydet
-            const startTime = Date.now();
-            const minDisplayTime = 6000; // 6 saniye
-
-            // Yükleme çubuğunu güncelleme fonksiyonu
-            const updateLoadingBar = () => {
-                const elapsedTime = Date.now() - startTime;
-                const timeProgress = Math.min(elapsedTime / minDisplayTime, 1);
-                const resourceProgress = loadedResources / totalResources;
-                const progress = Math.min(timeProgress, resourceProgress);
-                loadingBar.style.width = `${progress * 100}%`;
-            };
-
-            // Kaynakları preload eden fonksiyon
-            const preloadResources = () => {
-                return new Promise((resolve) => {
-                    const promises = resources.map((resource) => {
-                        return new Promise((res) => {
-                            let element;
-                            if (resource.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
-                                element = new Image();
-                                element.src = resource;
-                                element.onload = () => {
-                                    loadedResources++;
-                                    updateLoadingBar();
-                                    res();
-                                };
-                                element.onerror = () => {
-                                    console.error(`Error loading ${resource}`);
-                                    loadedResources++;
-                                    updateLoadingBar();
-                                    res();
-                                };
-                            } else if (resource.endsWith(".css")) {
-                                element = document.createElement("link");
-                                element.rel = "stylesheet";
-                                element.href = resource;
-                                element.onload = () => {
-                                    loadedResources++;
-                                    updateLoadingBar();
-                                    res();
-                                };
-                                element.onerror = () => {
-                                    console.error(`Error loading ${resource}`);
-                                    loadedResources++;
-                                    updateLoadingBar();
-                                    res();
-                                };
-                                document.head.appendChild(element);
-                            } else if (resource.endsWith(".js")) {
-                                element = document.createElement("script");
-                                element.src = resource;
-                                element.onload = () => {
-                                    loadedResources++;
-                                    updateLoadingBar();
-                                    res();
-                                };
-                                element.onerror = () => {
-                                    console.error(`Error loading ${resource}`);
-                                    loadedResources++;
-                                    updateLoadingBar();
-                                    res();
-                                };
-                                document.head.appendChild(element);
-                            } else {
-                                // Diğer kaynaklar için (HTML dosyaları)
-                                fetch(resource, { cache: "reload" }).then((response) => {
-                                    if (response.ok) {
-                                        loadedResources++;
-                                        updateLoadingBar();
-                                        res();
-                                    } else {
-                                        console.error(`Failed to load ${resource}`);
-                                        loadedResources++;
-                                        updateLoadingBar();
-                                        res();
-                                    }
-                                }).catch((error) => {
-                                    console.error(`Error loading ${resource}:`, error);
-                                    loadedResources++;
-                                    updateLoadingBar();
-                                    res();
-                                });
-                            }
-                        });
-                    });
-
-                    Promise.all(promises).then(() => {
-                        resolve();
-                    });
-                });
-            };
-
-            const startSlideshow = () => {
-                let currentIndex = 0;
-                
-                const showSlide = (index) => {
-                    slides.forEach((slide, i) => {
-                        slide.classList.toggle("active", i === index);
-                    });
-                };
-    
-                showSlide(currentIndex);
-                const slideshowInterval = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % slides.length;
-                    showSlide(currentIndex);
-                }, 2000);
-            };
-
-            // Slayt gösterisini başlat
-            startSlideshow();
-
-            // Yükleme çubuğunu düzenli aralıklarla güncelle
-            const loadingInterval = setInterval(() => {
-                updateLoadingBar();
-            }, 100);
-
-            // Kaynakları yükle
-            await preloadResources();
-
-            // En az 6 saniye bekle
-            const elapsedTime = Date.now() - startTime;
-            if (elapsedTime < minDisplayTime) {
-                await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
-            }
-
-            // Yükleme çubuğunu son kez güncelle ve interval'i temizle
-            updateLoadingBar();
-            clearInterval(loadingInterval);
-
-            // Tüm kaynaklar yüklendiğinde yönlendirme yap
-            window.location.href = "mainpage.html";
         });
+    }
     </script>
 </body>
 </html>
