@@ -1,6 +1,10 @@
 // sw.js
 
-const CACHE_NAME = "stonemu-cache-v1";
+// Service Worker'ın çalışması için gereken adımlar
+const CACHE_VERSION = 'v1';
+const CACHE_NAME = `stonemu-cache-${CACHE_VERSION}`;
+
+// Cache önbelleğindeki URL'leri tanımlayın
 const urlsToCache = [
     "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp",
     "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp",
@@ -57,3 +61,18 @@ self.addEventListener("fetch", (event) => {
         })
     );
 });
+
+/*// Cache and network swapping: Ağdan gelen istekleri önbelleğe ekleyin ve daha önceden önbelleğe alınmış olanları sun
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request).then((networkResponse) => {
+                // Ağdan gelen isteği önbelleğe ekleyin
+                return caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
+                });
+            });
+        })
+    );
+});*/
