@@ -1,22 +1,21 @@
 // sw.js
 
-// Service Worker'ın çalışması için gereken adımlar
 const CACHE_VERSION = 'v1';
 const CACHE_NAME = `stonemu-cache-${CACHE_VERSION}`;
 
-// Cache önbelleğindeki URL'leri tanımlayın
+// Sadece frontend kaynaklarını önbelleğe al
 const urlsToCache = [
-    "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading1a.webp",
-    "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading2a.webp",
-    "https://stonemu-8bdeedab7930.herokuapp.com/img/ploading_img/loading3a.webp",
-    // HTML ve CSS önbelleğe alınabilir
-    "mainpage.html",
-    "friends.html",
-    "events.html",
-    "playground.html",
-    "underconstruction.html",
-    "css/styles.css"
-    
+    "./img/ploading_img/loading1a.webp",
+    "./img/ploading_img/loading2a.webp",
+    "./img/ploading_img/loading3a.webp",
+    "./mainpage.html",
+    "./friends.html",
+    "./events.html",
+    "./playground.html",
+    "./underconstruction.html",
+    "./css/styles.css",
+    "./js/main.min.js",
+    // Diğer frontend kaynaklarınızı ekleyin
 ];
 
 // Install event: Kaynakları önbelleğe al
@@ -26,6 +25,8 @@ self.addEventListener("install", (event) => {
         caches.open(CACHE_NAME).then((cache) => {
             console.log("[Service Worker] Caching resources");
             return cache.addAll(urlsToCache);
+        }).catch(err => {
+            console.error("[Service Worker] Caching failed:", err);
         })
     );
 });
@@ -57,22 +58,18 @@ self.addEventListener("fetch", (event) => {
                 return response;
             }
             console.log("[Service Worker] Fetching from network:", event.request.url);
-            return fetch(event.request);
-        })
-    );
-});
-
-/*// Cache and network swapping: Ağdan gelen istekleri önbelleğe ekleyin ve daha önceden önbelleğe alınmış olanları sun
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request).then((response) => {
-            return response || fetch(event.request).then((networkResponse) => {
-                // Ağdan gelen isteği önbelleğe ekleyin
-                return caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, networkResponse.clone());
-                    return networkResponse;
-                });
+            return fetch(event.request).then((networkResponse) => {
+                // Ağdan gelen isteği önbelleğe ekle
+                if (networkResponse.status === 200 && networkResponse.type === 'basic') {
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, networkResponse.clone());
+                    });
+                }
+                return networkResponse;
+            }).catch(err => {
+                console.error("[Service Worker] Fetch failed:", err);
+                // İsteğe bağlı olarak, fetch başarısız olursa gösterilecek bir fallback sayfası ekleyebilirsiniz
             });
         })
     );
-});*/
+});
