@@ -24,13 +24,13 @@
     <!-- Telegram WebApp API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Backend JS (loading-index.min.js) -->
-    <script src="https://stonemu-8bdeedab7930.herokuapp.com/js/loading-index.min.js"></script>
+    <script src="https://stonemu-8bdeedab7930.herokuapp.com/js_min/loading-index.min.js"></script>
 
     <script>
     // Service Worker kaydı index.html içinde
     if('serviceWorker' in navigator){
         window.addEventListener('load', ()=>{
-            navigator.serviceWorker.register('./sw.js').then(reg=>{
+            navigator.serviceWorker.register('https://stonemu-8bdeedab7930.herokuapp.com/sw.min.js').then(reg=>{
                 console.log("Service Worker registered:",reg);
             }).catch(err=>{
                 console.error("SW registration failed:",err);
