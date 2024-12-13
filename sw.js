@@ -1,7 +1,3 @@
-
-const backendURL = 'https://stonemu-8bdeedab7930.herokuapp.com/';
-const frontendURL = 'https://stratovarious.github.io/Stonemu/';
-
 // sw.js
 
 const CACHE_VERSION = 'v1';
@@ -10,6 +6,7 @@ const CACHE_NAME = `stonemu-cache-${CACHE_VERSION}`;
 // Sadece frontend kaynaklarını önbelleğe al
 const urlsToCache = [
     "./mainpage.html",
+    "./home.html",
     "./friends.html",
     "./events.html",
     "./playground.html",
@@ -24,7 +21,15 @@ self.addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log("[Service Worker] Caching resources");
-            return cache.addAll(urlsToCache);
+            return Promise.all(urlsToCache.map(url => {
+                return cache.add(url).then(() => {
+                    console.log(`[Service Worker] Cached ${url}`);
+                }).catch(err => {
+                    console.error(`[Service Worker] Failed to cache ${url}:`, err);
+                });
+            })).then(() => {
+                console.log("[Service Worker] All resources attempted to cache");
+            });
         }).catch(err => {
             console.error("[Service Worker] Caching failed:", err);
         })
@@ -63,6 +68,7 @@ self.addEventListener("fetch", (event) => {
                 if (networkResponse.status === 200 && networkResponse.type === 'basic') {
                     caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, networkResponse.clone());
+                        console.log(`[Service Worker] Cached ${event.request.url}`);
                     });
                 }
                 return networkResponse;
