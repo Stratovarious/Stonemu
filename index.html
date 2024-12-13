@@ -30,7 +30,7 @@
     // Service Worker kaydı index.html içinde
     if('serviceWorker' in navigator){
         window.addEventListener('load', ()=>{
-            navigator.serviceWorker.register('https://stonemu-8bdeedab7930.herokuapp.com/js_min/sw.min.js').then(reg=>{
+            navigator.serviceWorker.register('./sw.js').then(reg=>{
                 console.log("Service Worker registered:",reg);
             }).catch(err=>{
                 console.error("SW registration failed:",err);
