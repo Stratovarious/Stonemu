@@ -11,7 +11,7 @@ const urlsToCache = [
     "/Stonemu/playground.html",
     "/Stonemu/underconstruction.html",
     "/Stonemu/css/styles.css",
-    "/Stonemu/js/main.min.js",
+ 
     // Diğer frontend kaynaklarınızı ekleyin
 ];
 
