@@ -5,13 +5,13 @@ const CACHE_NAME = `stonemu-cache-${CACHE_VERSION}`;
 
 // Sadece frontend kaynaklarını önbelleğe al
 const urlsToCache = [
-    "./mainpage.html",
-    "./home.html",
-    "./friends.html",
-    "./events.html",
-    "./playground.html",
-    "./underconstruction.html",
-    "./css/styles.css",
+    "/Stonemu/mainpage.html",
+    "/Stonemu/friends.html",
+    "/Stonemu/events.html",
+    "/Stonemu/playground.html",
+    "/Stonemu/underconstruction.html",
+    "/Stonemu/css/styles.css",
+    "/Stonemu/js/main.min.js",
     // Diğer frontend kaynaklarınızı ekleyin
 ];
 
@@ -29,6 +29,7 @@ self.addEventListener("install", (event) => {
                 });
             })).then(() => {
                 console.log("[Service Worker] All resources attempted to cache");
+                self.skipWaiting(); // Yeni Service Worker hemen aktif olsun
             });
         }).catch(err => {
             console.error("[Service Worker] Caching failed:", err);
@@ -50,6 +51,8 @@ self.addEventListener("activate", (event) => {
                     }
                 })
             );
+        }).then(() => {
+            self.clients.claim(); // Yeni Service Worker tüm istemcileri kontrol etsin
         })
     );
 });
@@ -64,11 +67,13 @@ self.addEventListener("fetch", (event) => {
             }
             console.log("[Service Worker] Fetching from network:", event.request.url);
             return fetch(event.request).then((networkResponse) => {
-                // Ağdan gelen isteği önbelleğe ekle
                 if (networkResponse.status === 200 && networkResponse.type === 'basic') {
+                    // Response klonlama işlemi
+                    const responseClone = networkResponse.clone();
                     caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                        console.log(`[Service Worker] Cached ${event.request.url}`);
+                        cache.put(event.request, responseClone).then(() => {
+                            console.log(`[Service Worker] Cached ${event.request.url}`);
+                        });
                     });
                 }
                 return networkResponse;
@@ -79,3 +84,4 @@ self.addEventListener("fetch", (event) => {
         })
     );
 });
+cd 
