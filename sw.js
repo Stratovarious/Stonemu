@@ -5,16 +5,16 @@ const CACHE_NAME = `stonemu-cache-${CACHE_VERSION}`;
 
 // Sadece frontend kaynaklarını önbelleğe al
 const urlsToCache = [
-    "./img/ploading_img/loading1a.webp",
-    "./img/ploading_img/loading2a.webp",
-    "./img/ploading_img/loading3a.webp",
+    "https://stonemu-8bdeedab7930.herokuapp.com//img/ploading_img/loading1a.webp",
+    "https://stonemu-8bdeedab7930.herokuapp.com//img/ploading_img/loading2a.webp",
+    "https://stonemu-8bdeedab7930.herokuapp.com//img/ploading_img/loading3a.webp",
     "./mainpage.html",
     "./friends.html",
     "./events.html",
     "./playground.html",
     "./underconstruction.html",
     "./css/styles.css",
-    "./js/main.min.js",
+    "https://stonemu-8bdeedab7930.herokuapp.com//js/main.min.js",
     // Diğer frontend kaynaklarınızı ekleyin
 ];
 
