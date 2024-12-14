@@ -739,57 +739,56 @@ footer {
 /*friends.html Container*/
 /*friends.html Container*/
 /*friends.html Container*/
-.friends-container {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        background-color: white;
-        overflow: hidden;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        color: black;
-        font-family: Arial, sans-serif;
-        background: url('https://stonemu-8bdeedab7930.herokuapp.com/img/friends_img/friends_background.png') no-repeat center center;
-        background-size: 100% 100%;
-    }
-    .friends-upper-section {
-    height: 58%;
+.friends-container { 
+    margin: 0 auto; /* Ortala */
+    padding: 0;
     width: 100%;
+    height: 100%;
+    max-width: 100%; /* Görüntüyü taşırmayı engelle */
+    max-height: 100%; /* Yüksekliği aşmasını engelle */
+    overflow: hidden;
+    position: relative;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Üst ve alt düzenleme */
+    background: url('https://stonemu-8bdeedab7930.herokuapp.com/img/friends_img/friends_background.png') no-repeat center center;
+    background-size: cover;
+    color: black;
+    font-family: Arial, sans-serif;
+}
+
+.friends-upper-section {
+    width: 100%;
+    height: 58%;
     padding: 0;
     margin: 0;
+    display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Elemanları üstten başlat */
-    align-items: flex-start; /* Elemanları sola yasla */
-    }
+    justify-content: center;
+    align-items: center;
+}
     
     .friends-upper-container {
-        position: fixed;
-        width: 100%; /* Konteynerin tam genişlik kaplaması */
-        height: 100%;
         display: flex;
-        flex-direction: column; /* Elemanları dikeyde hizala */
-        left: 28%; /* Sol boşluk */
-        top: 23%; /* Üst boşluk */
+        flex-direction: column;
+        align-items: center; /* Ortala */
+        justify-content: flex-start;
+        height: 58%;
+        padding-top: 10px;
     }
     
     .friends-title-img {
-        width: 30%; /* Friends yazılı resmin genişliği */
-        margin: 0; /* Varsayılan margin sıfırlanır */
-        padding: 0; /* Varsayılan padding sıfırlanır */
-        align-self: flex-start; /* Resmi tamamen sola yasla */
+        width: 50%;
+        margin-bottom: 15px; /* Alt boşluk */
     }
     
+    
     .friends-row {
-        display: flex; /* Satır düzenlemesi için */
-        align-items: center; /* Dikey hizalama */
-        gap: 2px; /* Elemanlar arasında boşluk */
-        margin-top: 10px; /* Satırlar arasında boşluk */
-        margin-left: 1%; /* Soldan kayma */
-        width: 190px; /* Satırların genişliği */
-        height: 100px;
+        width: 80%; /* Genişliği sınırla */
+        margin: 10px auto; /* Her satırı ortala */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
     
     .friends-image {
@@ -798,12 +797,12 @@ footer {
     }
     
     .friends-invite-code {
-        position: relative; /* Çerçeve içinde metin yerleştirme */
-        width: 78%; /* Genişlik */
-        height: 100%; /* Yükseklik */
-        display: flex; /* İçeriği hizalamak için */
-        align-items: center; /* Dikey hizalama */
-        justify-content: flex-start; /* Sola yaslama */
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%; /* Çerçevenin genişliğini kapsar */
+        height: auto; /* Otomatik yükseklik */
     }
     .friends-invite-frame
     .friends-invite-code img{
@@ -813,23 +812,18 @@ footer {
     
     .friends-invite-text {
         position: absolute;
-        top: 24%; /* Çerçeve içindeki metin konumu */
-        left: 22%;
-        color: black;
-        font-size: 10px;
-        text-align: left;
-        background: transparent;
+        top: 50%; /* Ortalamak için */
+        left: 50%;
+        transform: translate(-50%, -50%); /* Gerçek ortalama */
+        font-size: 14px;
         font-weight: bold;
-        text-shadow: 1px 1px 2px #000;
+        color: black;
+        text-shadow: 1px 1px 2px white;
     }
     
-    .friends-action-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        margin-left: 5px; /* Butonları sola kaydır */
-        width: 100%; /* Görsel genişliği */
-        height: auto; /* Yükseklik otomatik */
+    .friends-action-btn img {
+        width: 100%; /* Görsel tam genişlikte */
+        height: auto;
     }
     
     .friends-action-btn img {
@@ -839,10 +833,14 @@ footer {
     }
         
     .friends-lower-section {
-    height: 42%;
-    overflow: hidden; /* Sadece veri kaydırılabilir */
-    background: transparent;
-    width: 100%; /* Tam genişlik */
+        height: 42%;
+        overflow-y: auto; /* Alt kısım için kaydırma ekle */
+        scrollbar-width: none; /* Scrollbar gizle */
+        -ms-overflow-style: none; /* IE için scrollbar gizle */
+    }
+
+    .friends-lower-section::-webkit-scrollbar {
+        display: none; /* Scrollbar gizle */
     }
     
     .friends-table {
@@ -853,20 +851,15 @@ footer {
     }
     
     .friends-table thead {
-        display: table; /* Normal tablo davranışı */
-        width: 100%; /* Tüm genişlik */
-        table-layout: fixed; /* Sütun genişlikleri */
-        position: sticky; /* Başlık sabit kalır */
+        position: sticky; /* Sabit başlık */
         top: 0;
-        z-index: 2; /* Üstte görünür */
-        background: rgba(255, 255, 255, 0.5); /* Transparan arka plan */
+        background: rgba(255, 255, 255, 0.9); /* Hafif transparan */
     }
     
     .friends-table tbody {
-        display: block; /* Sadece veri satırları kaydırılabilir */
-        max-height: calc(42% - 50px); /* Başlık alanını çıkar */
-        overflow-y: auto; /* Yalnızca dikey kaydırma */
-        width: 100%; /* Genişlik eşleşir */
+        overflow-y: auto;
+        display: block; /* Sadece veri kaydırılabilir */
+        max-height: calc(100% - 50px); /* Taşma engellenir */
     }
     
     .friends-table tbody tr {
