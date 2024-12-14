@@ -5,12 +5,12 @@ const CACHE_NAME = `stonemu-cache-${CACHE_VERSION}`;
 
 // Sadece frontend kaynaklarını önbelleğe al
 const urlsToCache = [
-    "/Stonemu/mainpage.html",
-    "/Stonemu/friends.html",
-    "/Stonemu/events.html",
-    "/Stonemu/playground.html",
-    "/Stonemu/underconstruction.html",
-    "/Stonemu/css/styles.css",
+    "/mainpage.html",
+    "/friends.html",
+    "/events.html",
+    "/playground.html",
+    "/underconstruction.html",
+    "/css/styles.css",
  
     // Diğer frontend kaynaklarınızı ekleyin
 ];
