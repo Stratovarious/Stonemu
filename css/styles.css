@@ -414,7 +414,7 @@ footer {
 
 /* Modal ekranın başlangıçta gizli olması */
 .clicker-modal-hidden {
-    display: none;
+    display: none !important;
 }
 
 /* Modal ekranın arkaplanı */
