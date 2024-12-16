@@ -146,8 +146,8 @@ footer {
 .dynamic-content {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
+    /*width: 100%;
+    height: 100%;*/
     overflow: hidden;
     position: relative;
 }
@@ -182,7 +182,7 @@ footer {
     align-items: center;
     padding: 0;
     margin: 1% 8%;
-    height: 10%;
+    /*height: 10%;*/
 }
 
 .top-section .wallet {
@@ -428,7 +428,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Üst katmanda göster */
+    z-index: 9998; /* Üst katmanda göster */
 }
 
 /* Modal içeriğin arkaplanı */
@@ -450,7 +450,7 @@ footer {
     width: 90%;
     max-width: 400px;
     text-align: center;
-    z-index: 1001;
+    z-index: 10000;
 }
 
 /* Boost bölümlerinin tasarımı */
