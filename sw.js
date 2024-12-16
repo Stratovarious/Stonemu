@@ -1,6 +1,6 @@
 // sw.js
 
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v1';
 const CACHE_NAME = `stonemu-cache-${CACHE_VERSION}`;
 
 // Sadece frontend kaynaklarını önbelleğe al
