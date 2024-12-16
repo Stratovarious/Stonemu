@@ -146,8 +146,8 @@ footer {
 .dynamic-content {
     margin: 0;
     padding: 0;
-    /*width: 100%;
-    height: 100%;*/
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     position: relative;
 }
@@ -169,7 +169,7 @@ footer {
     padding: 0;
     width: 100%;
     height: 100%;
-    /*overflow: hidden;*/
+    overflow: hidden;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -182,7 +182,7 @@ footer {
     align-items: center;
     padding: 0;
     margin: 1% 8%;
-    height: 15%;
+    height: 20%;
 }
 
 .top-section .wallet {
