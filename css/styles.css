@@ -26,34 +26,37 @@ html, body {
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
+    display: flex; /* Ana kapsayıcıyı hizalamak için */
+    flex-direction: column;
 }
 
 /* Wrapper */
 #wrapper {
     margin: 0;
     padding: 0;
-    width: 405px; /* Tasarım genişliği */
-    height: 720px; /* Tasarım yüksekliği */
-    position: relative;
-    transform-origin: 0 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Üst ve alt alanı düzgün hizalar */
 }
 
 /* Container (Üst Bölüm) */
 .container {
-    margin: 0;
-    padding: 0;
+    flex: 1 1 auto; /* Dinamik olarak kalan alanı kapla */
     width: 100%;
-    height: 88%; /* %88 Alan */
-    position: relative;
+    /*height: 88%;  %88 Alan */
+    /*position: relative;*/
 }
 
 /* Footer (Alt Bölüm) */
 footer {
-    margin: 0;
+    flex: 0 0 12%; /* Sabit %12 yükseklik */
+    width: 100%;
+    /*margin: 0;
     padding: 0;
     width: 100%;
-    height: 12%; /* %12 Alan */
-    position: relative;
+    height: 12%; %12 Alan */
+    /*position: relative;*/
 }
 
 .footer-content {
